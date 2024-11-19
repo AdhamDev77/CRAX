@@ -1,0 +1,45 @@
+import React from "react";
+import { ComponentConfig } from "../../../packages/core";
+// import styles from "./styles.module.css";
+import { getClassNameFactory } from "../../../packages/core/lib";
+
+// const getClassName = getClassNameFactory("Hero", styles);
+
+export type HeroAgencyProps = {
+  name?: string;
+  slogan?: string;
+  description?: string;
+};
+
+export const HeroAgency: ComponentConfig<HeroAgencyProps> = {
+  label: "Hero (Agency)",
+  fields: {
+    name: { type: "text", label: "Brand Name" },
+    slogan: { type: "text", label: "Slogan" },
+    description: { type: "text", label: "Slogan" },
+  },
+  defaultProps: {
+    name: "Preline Agency:",
+    slogan: "Transforming ideas into reality",
+    description:
+      "It is a creative hub where imagination meets craftsmanship to transform ideas into tangible realities. At Preline Agency, we specialize in turning conceptual visions into concrete forms, whether it be through design, artistry, or technological innovation.",
+  },
+  render: ({ name, slogan, description }: HeroAgencyProps) => {
+    return (
+      <>
+        <div className="bg-neutral-900">
+          <div className="max-w-5xl mx-auto px-4 xl:px-0 pt-24 lg:pt-32 pb-24">
+            <h1 className="font-semibold text-white text-5xl md:text-6xl">
+              <span className="text-[#ff0] ">{name}</span> {slogan}
+            </h1>
+            <div className="max-w-4xl">
+              <p className="mt-5 text-neutral-400 text-lg">
+                {description}
+              </p>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  },
+};

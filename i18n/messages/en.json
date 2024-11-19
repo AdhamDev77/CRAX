@@ -1,0 +1,68 @@
+{
+  "hero": {
+    "title": "Create Stunning Websites Without Code",
+    "subtitle": "CRAX: Way to success",
+    "start": "Get Started",
+    "features": {
+      "visualEditor": {
+        "title": "Visual Editor",
+        "description": "Drag-and-drop interface for intuitive website design. No coding required."
+      },
+      "customCode": {
+        "title": "Custom Code",
+        "description": "Add custom HTML, CSS, and JavaScript when you need more control."
+      },
+      "responsiveDesign": {
+        "title": "Responsive Design",
+        "description": "Your site looks perfect on every device, automatically."
+      },
+      "lightningFast": {
+        "title": "Lightning Fast",
+        "description": "Optimized performance with static site generation and CDN delivery."
+      },
+      "formBuilder": {
+        "title": "Form Builder",
+        "description": "Capture leads and user data with customizable forms."
+      },
+      "secureHosting": {
+        "title": "Secure Hosting",
+        "description": "Enterprise-grade security and reliable hosting included."
+      }
+    },
+    "cta": {
+      "title": "Ready to Build Your Dream Website?",
+      "description": "Join thousands of businesses already creating stunning websites with CRAX.",
+      "cta": "Get Started"
+    }
+  },
+  "Navigation": {
+    "features": "Features",
+    "templates": "Templates",
+    "pricing": "Pricing",
+    "dashboard": "Dashboard",
+    "websites": "My Websites",
+    "settings": "Settings",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "startBuilding": "Start Building",
+    "newWebsite": "New Website"
+  },
+  "signIn": {
+    "title": "Welcome Back!",
+    "subtitle": "Login to CRAX",
+    "emailPlaceholder": "projectmayhem@fc.com",
+    "passwordPlaceholder": "••••••••",
+    "signInButton": "Sign In →",
+    "orSignInWith": "Signin with Google"
+  },
+  "signUp": {
+    "title": "Welcome to CRAX",
+    "subtitle": "Signup, Start your journey online.",
+    "firstNamePlaceholder": "Tyler",
+    "lastNamePlaceholder": "Durden",
+    "emailPlaceholder": "projectmayhem@fc.com",
+    "passwordPlaceholder": "••••••••",
+    "signUpButton": "Sign up →",
+    "orSignUpWith": "Google"
+  }
+}

@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  firstName     String
+  lastName      String
+  email         String    @unique
+  emailVerified DateTime?
+  password      String
+  image         String?
+  sites         Site[]    @relation("UserSites")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Site {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  path            String   @unique
+  description     String?
+  content         Json
+  metaTitle       String?
+  metaDescription String?
+  metaIcon        String?
+  bgColor         String   @default("white")
+  font            String?
+  pages           Page[]   @relation("SitePages")
+  userId          String   @db.ObjectId
+  mediaLibrary    String[]
+  leads           Json[]
+  user            User     @relation("UserSites", fields: [userId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([userId, path])
+}
+
+model Page {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  path        String
+  content     Json
+  isPublished Boolean  @default(false)
+  parentId    String?  @db.ObjectId
+  parent      Page?    @relation("PageHierarchy", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children    Page[]   @relation("PageHierarchy")
+  siteId      String   @db.ObjectId
+  site        Site     @relation("SitePages", fields: [siteId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([siteId, path])
+}
+
+model Template {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  title    String @unique
+  description    String
+  content Json
+  image String
+  category String
+  features String[]
+}
