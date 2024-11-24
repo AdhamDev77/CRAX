@@ -4,7 +4,7 @@ import { ComponentConfig, Field } from "@measured/puck";
 import { ChevronDown, Image, Type, Space, Move } from "lucide-react";
 import MediaUploader from "@/components/MediaUploader";
 import ColorPickerComponent from "@/components/ColorPicker";
-import PaddingAdjustor from "@/components/PaddingAdjustor";
+import SpacingAdjustor from "@/components/SpacingAdjustor";
 import ColorPanel from "@/components/ColorPanel";
 
 export type NavbarLink = {
@@ -22,7 +22,10 @@ export type NavbarProps = {
   fontColor?: string;
   fontSize?: string;
   fontWeight?: string;
-  padding?: string;
+  spacing: {
+    padding: string;
+    margin: string;
+  };
   itemSpacing?: string;
   borderBottom?: boolean;
   borderColor?: string;
@@ -165,11 +168,11 @@ export const Navbar: ComponentConfig<NavbarProps> = {
         { label: "Hide", value: false },
       ],
     },
-    padding: {
-      label: "Padding",
+    spacing: {
+      label: "Spacing",
       type: "custom",
       render: ({ name, onChange, value }) => (
-        <PaddingAdjustor value={value} onChange={onChange} unit="px" />
+        <SpacingAdjustor value={value} onChange={onChange} unit="px" />
       ),
     },
     itemSpacing: {
@@ -191,7 +194,7 @@ export const Navbar: ComponentConfig<NavbarProps> = {
     fontColor: "#1f2937",
     fontSize: "text-base",
     fontWeight: "font-medium",
-    padding: "10px 0px 10px 0px",
+    spacing: { padding: "10px 0px 10px 0px", margin: "0px 0px 0px 0px" },
     itemSpacing: "gap-4",
     borderBottom: true,
     borderColor: "#e5e7eb",
@@ -225,7 +228,7 @@ export const Navbar: ComponentConfig<NavbarProps> = {
     fontColor,
     fontSize,
     fontWeight,
-    padding,
+    spacing,
     itemSpacing,
     borderBottom,
     direction,
@@ -324,7 +327,8 @@ export const Navbar: ComponentConfig<NavbarProps> = {
         style={{
           background: bgColor,
           borderColor: borderBottom ? borderColor : "transparent",
-          padding: padding,
+          padding: spacing.padding,
+          margin: spacing.margin,
         }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

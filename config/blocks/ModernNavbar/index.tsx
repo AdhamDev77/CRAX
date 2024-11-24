@@ -4,7 +4,7 @@ import { ComponentConfig, Field } from "@measured/puck";
 import { ChevronDown, Image, Type, Space } from "lucide-react";
 import MediaUploader from "@/components/MediaUploader";
 import ColorPickerComponent from "@/components/ColorPicker";
-import PaddingAdjustor from "@/components/PaddingAdjustor";
+import SpacingAdjustor from "@/components/SpacingAdjustor";
 import ColorPanel from "@/components/ColorPanel";
 
 export type NavbarLink = {
@@ -22,7 +22,10 @@ export type ModernNavbarProps = {
   fontColor?: string;
   fontSize?: string;
   fontWeight?: string;
-  padding?: string;
+  spacing: {
+    padding: string;
+    margin: string;
+  };
   itemSpacing?: string;
   links: NavbarLink[];
 };
@@ -121,11 +124,11 @@ export const ModernNavbar: ComponentConfig<ModernNavbarProps> = {
         { label: "Bold", value: "font-bold" },
       ],
     },
-    padding: {
-      label: "Padding",
+    spacing: {
+      label: "Spacing",
       type: "custom",
       render: ({ name, onChange, value }) => (
-        <PaddingAdjustor value={value} onChange={onChange} unit="px" />
+        <SpacingAdjustor value={value} onChange={onChange} unit="px" />
       ),
     },
     itemSpacing: {
@@ -173,7 +176,7 @@ export const ModernNavbar: ComponentConfig<ModernNavbarProps> = {
     fontColor: "#1f2937",
     fontSize: "text-lg",
     fontWeight: "font-medium",
-    padding: "4px 0px 4px 0px",
+    spacing: { padding: "4px 0px 4px 0px", margin: "0px 0px 0px 0px" },
     itemSpacing: "gap-4",
     links: [
       { name: "Home", url: "/", type: "single" },
@@ -197,7 +200,7 @@ export const ModernNavbar: ComponentConfig<ModernNavbarProps> = {
     fontColor,
     fontSize,
     fontWeight,
-    padding,
+    spacing,
     itemSpacing,
     links,
   }: ModernNavbarProps) => {
@@ -290,7 +293,8 @@ export const ModernNavbar: ComponentConfig<ModernNavbarProps> = {
             background: scrolled 
               ? `${bgColor}` 
               : bgColor,
-            padding: padding,
+              padding: spacing.padding,
+              margin: spacing.margin,
             backdropFilter: scrolled ? "blur(8px)" : "none",
           }}
         >

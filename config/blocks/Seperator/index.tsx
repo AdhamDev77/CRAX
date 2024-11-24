@@ -5,13 +5,13 @@ import { Separator } from "@/components/ui/separator";
 import { PrecentageOptions } from "@/config/options";
 import { BoldnessOptions } from "@/config/options";
 import ColorPickerComponent from "@/components/ColorPicker";
-import PaddingAdjustor from "@/components/PaddingAdjustor";
+import SpacingAdjustor from "@/components/SpacingAdjustor";
 
 export type SeperatorProps = {
   color: string;
   width: string;
   boldness: string;
-  padding: string;
+  spacing: {padding: string, margin: string};
   justify: string;
 };
 
@@ -44,11 +44,11 @@ export const Seperator: ComponentConfig<SeperatorProps> = {
         { label: "Right", value: "end" },
       ],
     },
-    padding: {
-      label: "Padding",
+    spacing: {
+      label: "Spacing",
       type: "custom",
       render: ({ name, onChange, value }) => (
-        <PaddingAdjustor value={value} onChange={onChange} unit="px" />
+        <SpacingAdjustor value={value} onChange={onChange} unit="px" />
       ),
     },
   },
@@ -57,11 +57,11 @@ export const Seperator: ComponentConfig<SeperatorProps> = {
     width: "100%",
     boldness: "2px",
     justify: "center",
-    padding: "10px 0px 10px 0px",
+    spacing: { padding: "10px 0px 10px 0px", margin: "0px 0px 0px 0px" }
   },
-  render: ({ color, width, boldness, justify, padding }) => {
+  render: ({ color, width, boldness, justify, spacing }) => {
     return (
-      <div className="flex w-full" style={{ padding, justifyContent: justify }}>
+      <div className="flex w-full" style={{ padding: spacing.padding, margin: spacing.margin, justifyContent: justify }}>
         <Separator
           style={{ backgroundColor: color, width, height: boldness }}
         />

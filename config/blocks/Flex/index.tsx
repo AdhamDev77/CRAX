@@ -6,10 +6,12 @@ import { DropZone } from "../../../packages/core/components/DropZone";
 import { Section } from "../../components/Section";
 import ColorPickerComponent from "@/components/ColorPicker";
 import MediaUploader from "@/components/MediaUploader";
-import PaddingAdjustor from "@/components/PaddingAdjustor";
+import SpacingAdjustor from "@/components/SpacingAdjustor";
 import Slider from "@/components/Slider";
 import { X } from "lucide-react";
+import { spacingOptions } from "@/config/options";
 import ColorPanel from "@/components/ColorPanel";
+import BoxShadowAdjustor from "@/components/BoxShadowAdjustor";
 
 const getClassName = getClassNameFactory("Flex", styles);
 
@@ -20,12 +22,39 @@ export type FlexProps = {
   imageUrls?: string[];
   backgroundStyle?: string;
   sections: { minItemWidth?: number }[];
-  padding: string;
+  spacing: {
+    padding: string;
+    margin: string;
+  };
   animationStyle?: string;
+  gap?: string;
+  boxShadow?: string;
+  widthType: "full" | "auto"; // New property for width control
 };
 
 export const Flex: ComponentConfig<FlexProps> = {
   fields: {
+    sections: {
+      label: "Sections",
+      type: "array",
+      arrayFields: {
+        minItemWidth: {
+          label: "Minimum Item Width",
+          type: "number",
+          min: 0,
+        },
+      },
+      getItemSummary: (_, id = -1) => `Section ${id + 1}`,
+    },
+    widthType: {
+      // New field for width control
+      label: "Width Type",
+      type: "radio",
+      options: [
+        { label: "Full Width", value: "full" },
+        { label: "Auto Width", value: "auto" },
+      ],
+    },
     backgroundType: {
       label: "Background Type",
       type: "radio",
@@ -119,23 +148,22 @@ export const Flex: ComponentConfig<FlexProps> = {
         { label: "Parallax", value: "parallax" },
       ],
     },
-    sections: {
-      label: "Sections",
-      type: "array",
-      arrayFields: {
-        minItemWidth: {
-          label: "Minimum Item Width",
-          type: "number",
-          min: 0,
-        },
-      },
-      getItemSummary: (_, id = -1) => `Section ${id + 1}`,
+    gap: {
+      label: "Gap",
+      type: "select",
+      options: spacingOptions,
     },
-    padding: {
-      label: "Padding",
+    boxShadow: {
       type: "custom",
       render: ({ name, onChange, value }) => (
-        <PaddingAdjustor value={value} onChange={onChange} unit="px" />
+        <BoxShadowAdjustor value={value} onChange={onChange} />
+      ),
+    },
+    spacing: {
+      label: "Spacing",
+      type: "custom",
+      render: ({ name, onChange, value }) => (
+        <SpacingAdjustor value={value} onChange={onChange} unit="px" />
       ),
     },
   },
@@ -143,9 +171,12 @@ export const Flex: ComponentConfig<FlexProps> = {
     sections: [{}, {}],
     backgroundType: "color",
     bgColor: "#ffffff",
+    gap: "16px",
     backgroundStyle: "normal",
+    boxShadow: '0px 0px 0px rgba(0, 0, 0, 0)',
     animationStyle: "fade",
-    padding: "20px 0px 20px 0px",
+    spacing: { padding: "20px 0px 20px 0px", margin: "0px 0px 0px 0px" },
+    widthType: "full", // Default to full width
   },
   resolveFields: async (data, { fields }) => {
     // Conditionally show/hide fields based on backgroundType
@@ -182,31 +213,41 @@ export const Flex: ComponentConfig<FlexProps> = {
   },
   render: ({
     sections,
-    padding,
+    spacing,
     backgroundType,
     bgColor,
+    gap,
     imageUrl,
     imageUrls,
     backgroundStyle,
+    widthType, // New prop
+    boxShadow,
   }) => {
     const backgroundAttachment =
       backgroundStyle === "parallax" ? "fixed" : "scroll";
 
     return (
-<Section
-  style={{
-    background:
-      backgroundType === "color" && bgColor
-        ? bgColor
-        : backgroundType === "image" && imageUrl
-        ? `${bgColor ? `${bgColor}, ` : ""}url(${imageUrl})`
-        : undefined,
-    backgroundSize: backgroundType === "image" ? "cover" : undefined,
-    backgroundPosition: backgroundType === "image" ? "center" : undefined,
-    backgroundRepeat: backgroundType === "image" ? "no-repeat" : undefined,
-    backgroundAttachment: backgroundType === "image" ? backgroundAttachment : undefined,
-  }}
->
+      <Section
+        style={{
+          background:
+            backgroundType === "color" && bgColor
+              ? bgColor
+              : backgroundType === "image" && imageUrl
+              ? `${bgColor ? `${bgColor}, ` : ""}url(${imageUrl})`
+              : undefined,
+          backgroundSize: backgroundType === "image" ? "cover" : undefined,
+          backgroundPosition: backgroundType === "image" ? "center" : undefined,
+          backgroundRepeat:
+            backgroundType === "image" ? "no-repeat" : undefined,
+          backgroundAttachment:
+            backgroundType === "image" ? backgroundAttachment : undefined,
+          width: widthType === "auto" ? "auto" : "100%", // New style
+          height: widthType === "auto" ? "auto" : "100%", // New style
+          margin: widthType === "auto" ? "0 auto" : undefined, // Center if auto width
+          zIndex: 40,
+          boxShadow,
+        }}
+      >
         {backgroundType === "slider" && imageUrls && imageUrls.length > 0 && (
           <div
             style={{
@@ -222,9 +263,23 @@ export const Flex: ComponentConfig<FlexProps> = {
             <Slider images={imageUrls} />
           </div>
         )}
-        <div style={{ padding }} className={getClassName()}>
+        <div
+          style={{
+            padding: spacing.padding,
+            margin: spacing.margin,
+            gap,
+            width: widthType === "auto" ? "fit-content" : "100%", // New style
+          }}
+          className="flex"
+        >
           {sections.map((section, idx) => (
-            <div key={idx} className={getClassName("item")}>
+            <div
+              key={idx}
+              className={getClassName("item")}
+              style={{
+                width: widthType === "auto" ? "auto" : "100%", // New style
+              }}
+            >
               <DropZone zone={`item-${idx}`} />
             </div>
           ))}

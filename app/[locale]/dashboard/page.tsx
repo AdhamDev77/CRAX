@@ -100,6 +100,7 @@ import EmptyDashboard from "./_components/EmptyDashboard";
 import { Button } from "@/components/ui/button";
 import theme from "tailwindcss/defaultTheme";
 import { useTheme } from "next-themes";
+import AnalyticsDashboard from "./_components/AnalyticsDashboard";
 
 export default function Page() {
   const { data: session, status } = useSession();
@@ -635,20 +636,9 @@ export default function Page() {
                   />
                   {selectedTab === "Analytics" && (
                     <>
-                      <div className="flex gap-2 items-center">
-                        {activeSite.metaIcon ? (
-                          <img
-                            className="w-6"
-                            alt={`${activeSite.name} project`}
-                            src={activeSite.metaIcon}
-                          />
-                        ) : (
-                          <LucideAppWindow />
-                        )}
-                        <h1 className="text-lg">{activeSite.name} Project</h1>
-                      </div>
                       {/* <AreaChartAnalytics /> */}
-                      <BarListAnalytics />
+                      {/* <BarListAnalytics /> */}
+                      <AnalyticsDashboard activeSite={activeSite} />
                     </>
                   )}
                   {selectedTab === "Media library" && (

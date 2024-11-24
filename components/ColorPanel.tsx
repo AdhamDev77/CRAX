@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Plus, Palette } from "lucide-react";
 import ColorPickerComponent from "./ColorPicker";
 
@@ -221,9 +221,12 @@ const ColorPanel = ({ name, value = "#ffffff", onChange }) => {
       onOpenChange={setShowGradientCustomizer}
     >
       <DialogContent className="sm:max-w-[425px] max-h-[85vh] overflow-y-auto">
+
         <div className="space-y-4">
           <div className="space-y-2">
-            <h3 className="text-lg font-semibold">Custom Gradient</h3>
+          <DialogHeader>
+          <DialogTitle className="text-lg font-semibold">Custom Gradient</DialogTitle>
+        </DialogHeader>
             <div
               className="h-24 rounded-lg transition-all"
               style={{

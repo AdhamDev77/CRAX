@@ -10,7 +10,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Suspense } from "react";
 import { Inter, Roboto, Lora, Playfair_Display, Source_Code_Pro, 
   Montserrat, Open_Sans, Merriweather, Fira_Code, Dancing_Script } from 'next/font/google'
-import Navbar from "./_components/Navbar";
+  import { Analytics } from "@vercel/analytics/react"
 
 export const inter = Inter({
   subsets: ['latin'],
@@ -133,6 +133,7 @@ export default async function LocaleLayout({
           </Suspense>
         </NextIntlClientProvider>
       </body>
+      <Analytics />
     </html>
   );
 }

@@ -32,7 +32,7 @@ export const VerticalSpace: ComponentConfig<VerticalSpaceProps> = {
   },
   render: ({ size, bgColor }) => {
     return (
-      <div style={{ backgroundColor: bgColor, height: size, width: "100%" }} />
+      <div style={{ backgroundColor: bgColor, height: size, width: "100%", zIndex:10 }} />
     );
   },
 };
