@@ -2,7 +2,7 @@ import React from 'react';
 import { Bar, BarChart, Line, LineChart, ResponsiveContainer, XAxis, YAxis, Tooltip, TooltipProps } from "recharts";
 import { Activity, ArrowDown, ArrowUp, Globe, Users, Coffee, Clock, MousePointer } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-
+//norhan
 const visitorsData = [
   { name: "Jan 1", total: 1257 },
   { name: "Jan 2", total: 1896 },
