@@ -1,0 +1,68 @@
+{
+  "hero": {
+    "title": "أنشئ مواقع مذهلة بدون كود",
+    "subtitle": "CRAX: طريق النجاح",
+    "start": "ابدأ الآن",
+    "features": {
+      "visualEditor": {
+        "title": "محرر مرئي",
+        "description": "واجهة سحب وإفلات لتصميم مواقع ويب بسهولة ودون الحاجة إلى البرمجة."
+      },
+      "customCode": {
+        "title": "كود مخصص",
+        "description": "أضف HTML وCSS وجافا سكريبت مخصصة عند الحاجة لمزيد من التحكم."
+      },
+      "responsiveDesign": {
+        "title": "تصميم متجاوب",
+        "description": "يظهر موقعك بشكل مثالي على جميع الأجهزة تلقائيًا."
+      },
+      "lightningFast": {
+        "title": "سرعة فائقة",
+        "description": "أداء محسن بتوليد الموقع الثابت وتوزيع عبر CDN."
+      },
+      "formBuilder": {
+        "title": "منشئ النماذج",
+        "description": "اجمع بيانات العملاء والمستخدمين بنماذج قابلة للتخصيص."
+      },
+      "secureHosting": {
+        "title": "استضافة آمنة",
+        "description": "أمان على مستوى المؤسسات واستضافة موثوقة متضمنة."
+      }
+    },
+    "cta": {
+      "title": "جاهز لبناء موقع أحلامك؟",
+      "description": "انضم إلى آلاف الشركات التي تنشئ مواقع مذهلة باستخدام CRAX.",
+      "cta": "ابدأ الآن"
+    }
+  },
+  "Navigation": {
+    "features": "الميزات",
+    "templates": "القوالب",
+    "pricing": "التسعير",
+    "dashboard": "لوحة التحكم",
+    "websites": "مواقعي",
+    "settings": "الإعدادات",
+    "signIn": "تسجيل الدخول",
+    "signOut": "تسجيل الخروج",
+    "startBuilding": "ابدأ البناء",
+    "newWebsite": "موقع جديد"
+  },
+  "signIn": {
+    "title": "مرحبًا بعودتك!",
+    "subtitle": "تسجيل الدخول إلى CRAX",
+    "emailPlaceholder": "projectmayhem@fc.com",
+    "passwordPlaceholder": "••••••••",
+    "signInButton": "تسجيل الدخول →",
+    "orSignInWith": "تسجيل الدخول باستخدام جوجل"
+  },
+  "signUp": {
+    "title": "مرحبًا بك في CRAX",
+    "subtitle": "اشترك، وابدأ رحلتك على الإنترنت.",
+    "firstNamePlaceholder": "تايلر",
+    "lastNamePlaceholder": "دوردن",
+    "emailPlaceholder": "projectmayhem@fc.com",
+    "passwordPlaceholder": "••••••••",
+    "signUpButton": "اشترك →",
+    "orSignUpWith": "جوجل"
+  }
+}

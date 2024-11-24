@@ -1,0 +1,2866 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 10% 3.9%;
+    --radius: 0.5rem;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --font-inter: 'Inter', sans-serif;
+    --font-roboto: 'Roboto', sans-serif;
+    --font-lora: 'Lora', serif;
+    --font-playfair: 'Playfair Display', serif;
+    --font-source-code: 'Source Code Pro', monospace;
+    --font-montserrat: 'Montserrat', sans-serif;
+    --font-open-sans: 'Open Sans', sans-serif;
+    --font-merriweather: 'Merriweather', serif;
+    --font-fira-code: 'Fira Code', monospace;
+    --font-dancing-script: 'Dancing Script', cursive;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --font-inter: 'Inter', sans-serif;
+    --font-roboto: 'Roboto', sans-serif;
+    --font-lora: 'Lora', serif;
+    --font-playfair: 'Playfair Display', serif;
+    --font-source-code: 'Source Code Pro', monospace;
+    --font-montserrat: 'Montserrat', sans-serif;
+    --font-open-sans: 'Open Sans', sans-serif;
+    --font-merriweather: 'Merriweather', serif;
+    --font-fira-code: 'Fira Code', monospace;
+    --font-dancing-script: 'Dancing Script', cursive;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.font-inter {
+  font-family: var(--font-inter) !important;
+}
+
+.font-roboto {
+  font-family: var(--font-roboto) !important;
+}
+
+.font-lora {
+  font-family: var(--font-lora) !important;
+}
+
+.font-playfair {
+  font-family: var(--font-playfair) !important;
+}
+
+.font-source-code {
+  font-family: var(--font-source-code) !important;
+}
+
+.font-montserrat {
+  font-family: var(--font-montserrat) !important;
+}
+
+.font-open-sans {
+  font-family: var(--font-open-sans) !important;
+}
+
+.font-merriweather {
+  font-family: var(--font-merriweather) !important;
+}
+
+.font-fira-code {
+  font-family: var(--font-fira-code) !important;
+}
+
+.font-dancing-script {
+  font-family: var(--font-dancing-script) !important;
+}
+
+
+
+
+
+
+
+
+
+/*!**********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!./packages/core/styles.css ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************/
+  @import url("https://rsms.me/inter/inter.css");
+
+  /*!****************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!./packages/core/styles/color.css ***!
+    \****************************************************************************************************************************************************************************************************************************************************************************/
+
+  
+  
+  /*!*********************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!./packages/core/styles/typography.css ***!
+    \*********************************************************************************************************************************************************************************************************************************************************************************/
+  :root {
+    /**
+       * Modular Scale
+       *
+       * 2:1 - octave - 2.0
+       *
+       * Base: 12px
+       *
+       * Interval: 5
+       *
+       * http://spencermortensen.com/articles/typographic-scale/
+       *
+       * Spacing unit: 16px * 1.5 = 24px
+       *
+       * Root/html font-size is undefined (browser default)
+       *
+       * 1rem = 16px
+       */
+  
+    /* Unitless font sizes
+         ======================================================================== */
+  
+    --puck-font-size-scale-base-unitless: 12;
+    --puck-font-size-xxxs-unitless: 12;
+    --puck-font-size-xxs-unitless: 14;
+    --puck-font-size-xs-unitless: 16;
+    --puck-font-size-s-unitless: 18;
+    --puck-font-size-m-unitless: 21;
+    --puck-font-size-l-unitless: 24;
+    --puck-font-size-xl-unitless: 28;
+    --puck-font-size-xxl-unitless: 36;
+    --puck-font-size-xxxl-unitless: 48;
+    --puck-font-size-xxxxl-unitless: 56;
+  
+    /* Descriptive font sizes
+         ======================================================================== */
+  
+    --puck-font-size-xxxs: calc(1rem * var(--puck-font-size-xxxs-unitless) / 16);
+    --puck-font-size-xxs: calc(1rem * var(--puck-font-size-xxs-unitless) / 16);
+    --puck-font-size-xs: calc(1rem * var(--puck-font-size-xs-unitless) / 16);
+    --puck-font-size-s: calc(1rem * var(--puck-font-size-s-unitless) / 16);
+    --puck-font-size-m: calc(1rem * var(--puck-font-size-m-unitless) / 16);
+    --puck-font-size-l: calc(1rem * var(--puck-font-size-l-unitless) / 16);
+    --puck-font-size-xl: calc(1rem * var(--puck-font-size-xl-unitless) / 16);
+    --puck-font-size-xxl: calc(1rem * var(--puck-font-size-xxl-unitless) / 16);
+    --puck-font-size-xxxl: calc(1rem * var(--puck-font-size-xxxl-unitless) / 16);
+    --puck-font-size-xxxxl: calc(
+      1rem * var(--puck-font-size-xxxxl-unitless) / 16
+    );
+  
+    /* Functional font sizes
+        ========================================================================= */
+  
+    --puck-font-size-base: var(--puck-font-size-xs);
+  
+    /* Descriptive line heights
+        ========================================================================= */
+  
+    --line-height-reset: 1;
+    --line-height-xs: calc(
+      var(--space-m-unitless) / var(--puck-font-size-m-unitless)
+    );
+    --line-height-s: calc(
+      var(--space-m-unitless) / var(--puck-font-size-s-unitless)
+    );
+    --line-height-m: calc(
+      var(--space-m-unitless) / var(--puck-font-size-xs-unitless)
+    );
+    --line-height-l: calc(
+      var(--space-m-unitless) / var(--puck-font-size-xxs-unitless)
+    );
+    --line-height-xl: calc(
+      var(--space-m-unitless) / var(--puck-font-size-scale-base-unitless)
+    );
+  
+    /* Functional line heights
+        ========================================================================= */
+  
+    --line-height-base: var(--line-height-m);
+  
+    /* Font families
+    ======================================================================== */
+  
+    --fallback-font-stack: -apple-system, BlinkMacSystemFont, Segoe UI,
+      Helvetica Neue, sans-serif, Apple Color Emoji, Segoe UI Emoji,
+      Segoe UI Symbol;
+  
+    --puck-font-family: Inter, var(--fallback-font-stack);
+    --puck-font-family-monospaced: ui-monospace, "Cascadia Code",
+      "Source Code Pro", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  }
+  
+  @supports (font-variation-settings: normal) {
+    :root {
+      --puck-font-family: InterVariable, var(--fallback-font-stack);
+    }
+  }
+  
+  /*!************************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/ActionBar/styles.module.css ***!
+    \************************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_ActionBar__u2vYw {
+    display: flex;
+    width: auto;
+    padding: 4px;
+    padding-right: 4px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-radius: 8px;
+    background: var(--puck-color-grey-01);
+    color: var(--puck-color-white);
+    font-family: var(--puck-font-family);
+    gap: 4px;
+    min-height: 26px;
+  }
+  
+  .styles_ActionBar-actionsLabel__rzljf {
+    color: var(--puck-color-grey-08);
+    display: flex;
+    font-size: var(--puck-font-size-xxxs);
+    font-weight: 500;
+    justify-content: center;
+    align-items: center;
+    padding-left: 8px;
+    padding-right: 8px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .styles_ActionBar-group__2PqjE {
+    border-inline-start: 0.5px solid var(--puck-color-grey-05); /* Fractional value required due to scaling */
+    display: flex;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  
+  .styles_ActionBar-group__2PqjE:last-of-type {
+    padding-right: 0;
+  }
+  
+  .styles_ActionBar-group__2PqjE:empty {
+    display: none;
+  }
+  
+  .styles_ActionBar-action__BADw8 {
+    background: transparent;
+    border: none;
+    color: var(--puck-color-grey-08);
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 50ms ease-in;
+  }
+  
+  .styles_ActionBar-action__BADw8:focus-visible {
+    outline: 2px solid var(--puck-color-azure-05);
+    outline-offset: -2px;
+  }
+  
+  @media (hover: hover) and (pointer: fine) {
+    .styles_ActionBar-action__BADw8:hover {
+      color: var(--puck-color-azure-06);
+      transition: none;
+    }
+  }
+  
+  .styles_ActionBar-action__BADw8:active {
+    color: var(--puck-color-azure-07);
+    transition: none;
+  }
+  
+  /*!************************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/AutoField/styles.module.css ***!
+    \************************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_Input__wuLqi {
+    color: var(--puck-color-grey-04);
+    padding: 16px;
+    padding-bottom: 12px;
+    display: block;
+  }
+  
+  .styles_Input__wuLqi .styles_Input__wuLqi {
+    padding: 0px;
+  }
+  
+  .styles_Input__wuLqi * {
+    box-sizing: border-box;
+  }
+  
+  .styles_Input__wuLqi + .styles_Input__wuLqi {
+    border-top: 1px solid var(--puck-color-grey-09);
+    margin-top: 8px;
+  }
+  
+  .styles_Input__wuLqi .styles_Input__wuLqi + .styles_Input__wuLqi {
+    border-top: 0px;
+    margin-top: 12px;
+  }
+  
+  .styles_Input-label__lHLWK {
+    align-items: center;
+    color: var(--puck-color-grey-04);
+    display: flex;
+    padding-bottom: 12px;
+    font-size: var(--puck-font-size-xxs);
+    font-weight: 600;
+  }
+  
+  .styles_Input-labelIcon__BNZX7 {
+    color: var(--puck-color-grey-07);
+    display: flex;
+    margin-right: 4px;
+    padding-left: 4px;
+  }
+  
+  .styles_Input-disabledIcon__E2IcX {
+    color: var(--puck-color-grey-05);
+    margin-left: auto;
+  }
+  
+  .styles_Input-input__We_Es {
+    background: var(--puck-color-white);
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--puck-color-grey-09);
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 12px 15px;
+    transition: border-color 50ms ease-in;
+    width: 100%;
+  }
+  
+  select.styles_Input-input__We_Es {
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none; /* Safari */
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%23c3c3c3'><polygon points='0,0 100,0 50,50'/></svg>")
+      no-repeat;
+    background-size: 12px;
+    background-position: calc(100% - 12px) calc(50% + 3px);
+    background-repeat: no-repeat;
+    background-color: var(--puck-color-white);
+    cursor: pointer;
+  }
+  
+  @media (hover: hover) and (pointer: fine) {
+    .styles_Input__wuLqi:has(> input):hover .styles_Input-input__We_Es:not([readonly]),
+    .styles_Input__wuLqi:has(> textarea):hover .styles_Input-input__We_Es:not([readonly]) {
+      border-color: var(--puck-color-grey-05);
+      transition: none;
+    }
+    .styles_Input__wuLqi:has(> select):hover .styles_Input-input__We_Es:not([disabled]) {
+      background-color: var(--puck-color-azure-12);
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%235a5a5a'><polygon points='0,0 100,0 50,50'/></svg>");
+      border-color: var(--puck-color-grey-05);
+      transition: none;
+    }
+  }
+  
+  .styles_Input-input__We_Es:focus {
+    border-color: var(--puck-color-grey-05);
+    outline: 2px solid var(--puck-color-azure-05);
+    transition: none;
+  }
+  
+  .styles_Input--readOnly__2KKqY > .styles_Input-input__We_Es,
+  .styles_Input--readOnly__2KKqY > select.styles_Input-input__We_Es {
+    background-color: var(--puck-color-grey-11);
+    border-color: var(--puck-color-grey-09);
+    color: var(--puck-color-grey-04);
+    cursor: default;
+    opacity: 1;
+    outline: 0;
+    transition: none;
+  }
+  
+  .styles_Input-radioGroupItems__CYIHD {
+    display: flex;
+    border: 1px solid var(--puck-color-grey-09);
+    border-radius: 4px;
+    flex-wrap: wrap;
+  }
+  
+  .styles_Input-radio__sV6xg {
+    border-right: 1px solid var(--puck-color-grey-09);
+    flex-grow: 1;
+  }
+  
+  .styles_Input-radio__sV6xg:first-of-type {
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+  }
+  
+  .styles_Input-radio__sV6xg:first-of-type .styles_Input-radioInner__IOrWS {
+    border-bottom-left-radius: 3px;
+    border-top-left-radius: 3px;
+  }
+  
+  .styles_Input-radio__sV6xg:last-of-type {
+    border-bottom-right-radius: 4px;
+    border-right: 0;
+    border-top-right-radius: 4px;
+  }
+  
+  .styles_Input-radio__sV6xg:last-of-type .styles_Input-radioInner__IOrWS {
+    border-bottom-right-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+  
+  .styles_Input-radioInner__IOrWS {
+    background-color: var(--puck-color-white);
+    color: var(--puck-color-grey-04);
+    cursor: pointer;
+    font-size: var(--puck-font-size-xxxs);
+    padding: 8px 12px;
+    text-align: center;
+    transition: background-color 50ms ease-in;
+  }
+  
+  .styles_Input-radio__sV6xg:has(:focus-visible) {
+    outline: 2px solid var(--puck-color-azure-05);
+    outline-offset: 2px;
+    position: relative;
+  }
+  
+  @media (hover: hover) and (pointer: fine) {
+    .styles_Input-radioInner__IOrWS:hover {
+      background-color: var(--puck-color-azure-12);
+      transition: none;
+    }
+  }
+  
+  .styles_Input--readOnly__2KKqY .styles_Input-radioInner__IOrWS {
+    background-color: var(--puck-color-white);
+    color: var(--puck-color-grey-04);
+    cursor: default;
+  }
+  
+  .styles_Input-radio__sV6xg .styles_Input-radioInput__Tiw3S:checked ~ .styles_Input-radioInner__IOrWS {
+    background-color: var(--puck-color-azure-11);
+    color: var(--puck-color-azure-04);
+    font-weight: 500;
+  }
+  
+  .styles_Input--readOnly__2KKqY .styles_Input-radioInput__Tiw3S:checked ~ .styles_Input-radioInner__IOrWS {
+    background-color: var(--puck-color-grey-11);
+    color: var(--puck-color-grey-04);
+  }
+  
+  .styles_Input-radio__sV6xg .styles_Input-radioInput__Tiw3S {
+    clip: rect(0 0 0 0);
+    clip-path: inset(100%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+  
+  textarea.styles_Input-input__We_Es {
+    margin-bottom: -4px; /* Remove strange bottom border */
+  }
+  
+  /*!******************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/AutoField/fields/ArrayField/styles.module.css ***!
+    \******************************************************************************************************************************************************************************************************************************************************************************************************************/
+  /**
+   * ArrayField
+   */
+  
+  .styles_ArrayField__mywEd {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--puck-color-grey-09);
+    border: 1px solid var(--puck-color-grey-09);
+    border-radius: 4px;
+  }
+  
+  .styles_ArrayField--isDraggingFrom__GNlsU {
+    background-color: var(--puck-color-azure-11);
+    overflow: hidden;
+  }
+  
+  .styles_ArrayField-addButton__1FVTN {
+    background-color: var(--puck-color-white);
+    border: none;
+    border-radius: 3px;
+    display: flex;
+    color: var(--puck-color-azure-05);
+    justify-content: center;
+    cursor: pointer;
+    width: 100%;
+    margin: 0;
+    padding: 14px; /* Retain same height as other items */
+    text-align: left;
+    transition: background-color 50ms ease-in;
+  }
+  
+  .styles_ArrayField--hasItems__N3zi7 > .styles_ArrayField-addButton__1FVTN {
+    border-top: 1px solid var(--puck-color-grey-09);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  
+  .styles_ArrayField-addButton__1FVTN:focus-visible {
+    outline: 2px solid var(--puck-color-azure-05);
+    outline-offset: 2px;
+    position: relative;
+  }
+  
+  @media (hover: hover) and (pointer: fine) {
+    .styles_ArrayField__mywEd:not(.styles_ArrayField--isDraggingFrom__GNlsU) > .styles_ArrayField-addButton__1FVTN:hover {
+      background: var(--puck-color-azure-12);
+      color: var(--puck-color-azure-04);
+      transition: none;
+    }
+  }
+  
+  .styles_ArrayField__mywEd:not(.styles_ArrayField--isDraggingFrom__GNlsU) > .styles_ArrayField-addButton__1FVTN:active {
+    background: var(--puck-color-azure-11);
+    color: var(--puck-color-azure-04);
+    transition: none;
+  }
+  
+  /**
+   * ArrayFieldItem
+   */
+  
+  .styles_ArrayFieldItem__PkaET {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    display: block;
+    position: relative;
+  }
+  
+  /* Pseudo-border so we can remove border whilst dragging. Last item will be 1px larger, but it's imperceptible. */
+  .styles_ArrayFieldItem__PkaET:not(.styles_ArrayFieldItem--isDragging__W_76P):not(:first-of-type)::before {
+    background-color: var(--puck-color-grey-09);
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    content: "";
+    z-index: 1;
+    top: -1px;
+  }
+  
+  .styles_ArrayFieldItem--isExpanded__tG9RU::before {
+    display: none;
+  }
+  
+  .styles_ArrayFieldItem--isExpanded__tG9RU {
+    border-bottom: 0;
+    outline-offset: 0px !important; /* Important helps to override Nextra docs */
+    outline: 1px solid var(--puck-color-azure-07) !important; /* Important helps to override Nextra docs */
+    z-index: 2;
+  }
+  
+  .styles_ArrayFieldItem--isDragging__W_76P {
+    box-shadow: color-mix(in srgb, var(--puck-color-grey-06) 25%, transparent) 0
+      3px 6px 0;
+  }
+  
+  .styles_ArrayFieldItem--isDragging__W_76P .styles_ArrayFieldItem-summary__nc9WB:active {
+    background-color: var(--puck-color-white);
+  }
+  
+  .styles_ArrayFieldItem__PkaET + .styles_ArrayFieldItem__PkaET {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  
+  .styles_ArrayFieldItem-summary__nc9WB {
+    background: var(--puck-color-white);
+    color: var(--puck-color-grey-04);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    justify-content: space-between;
+    font-size: var(--puck-font-size-xxs);
+    list-style: none;
+    padding: 12px 15px;
+    padding-bottom: 13px; /* Add one additional px to account for pseudo border */
+    position: relative;
+    overflow: hidden;
+    transition: background-color 50ms ease-in;
+  }
+  
+  .styles_ArrayFieldItem__PkaET:first-of-type > .styles_ArrayFieldItem-summary__nc9WB {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+  
+  .styles_ArrayField--addDisabled__G5nqe
+    > .styles_ArrayFieldItem__PkaET:last-of-type:not(.styles_ArrayFieldItem--isExpanded__tG9RU)
+    > .styles_ArrayFieldItem-summary__nc9WB {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+  }
+  
+  .styles_ArrayField--addDisabled__G5nqe > .styles_ArrayFieldItem--isExpanded__tG9RU:last-of-type {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+  }
+  
+  .styles_ArrayFieldItem-summary__nc9WB:focus-visible {
+    outline: 2px solid var(--puck-color-azure-05);
+    outline-offset: 2px;
+  }
+  
+  @media (hover: hover) and (pointer: fine) {
+    .styles_ArrayFieldItem-summary__nc9WB:hover {
+      background-color: var(--puck-color-azure-12);
+      transition: none;
+    }
+  }
+  
+  .styles_ArrayFieldItem-summary__nc9WB:active {
+    background-color: var(--puck-color-azure-11);
+    transition: none;
+  }
+  
+  .styles_ArrayFieldItem--isExpanded__tG9RU > .styles_ArrayFieldItem-summary__nc9WB {
+    background: var(--puck-color-azure-11);
+    color: var(--puck-color-azure-04);
+    font-weight: 600;
+    transition: none;
+  }
+  
+  .styles_ArrayFieldItem-body__aiYvQ {
+    background: var(--puck-color-white);
+    display: none;
+  }
+  
+  .styles_ArrayFieldItem--isExpanded__tG9RU > .styles_ArrayFieldItem-body__aiYvQ {
+    display: block;
+  }
+  
+  .styles_ArrayFieldItem-fieldset__I5_FZ {
+    border: none;
+    border-top: 1px solid var(--puck-color-grey-09);
+    margin: 0;
+    min-width: 0; /* Needed to ensure External input doesn't overflow, see https://stackoverflow.com/a/53784508 */
+    padding: 16px 15px;
+  }
+  
+  .styles_ArrayFieldItem-rhs__1vgZr {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  
+  .styles_ArrayFieldItem-actions__PJh1_ {
+    color: var(--puck-color-grey-04);
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+  }
+  
+  .styles_ArrayFieldItem-summary__nc9WB:focus-within
+    > .styles_ArrayFieldItem-rhs__1vgZr
+    > .styles_ArrayFieldItem-actions__PJh1_,
+  .styles_ArrayFieldItem-summary__nc9WB:hover > .styles_ArrayFieldItem-rhs__1vgZr > .styles_ArrayFieldItem-actions__PJh1_ {
+    opacity: 1;
+  }
+  
+  /*!*****************************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/IconButton/IconButton.module.css ***!
+    \*****************************************************************************************************************************************************************************************************************************************************************************************************/
+  .IconButton_IconButton__5iVUe {
+    align-items: center;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    color: currentColor;
+    display: flex;
+    font-family: var(--puck-font-family);
+    justify-content: center;
+    padding: 4px;
+    transition: background-color 50ms ease-in, color 50ms ease-in;
+  }
+  
+  .IconButton_IconButton__5iVUe:focus-visible {
+    outline: 2px solid var(--puck-color-azure-05);
+    outline-offset: -2px;
+  }
+  
+  @media (hover: hover) and (pointer: fine) {
+    .IconButton_IconButton__5iVUe:hover:not(.IconButton_IconButton--disabled__kR8Ku) {
+      background: var(--puck-color-azure-12);
+      color: var(--puck-color-azure-04);
+      cursor: pointer;
+      transition: none;
+    }
+  }
+  
+  .IconButton_IconButton__5iVUe:active {
+    background: var(--puck-color-azure-11);
+    transition: none;
+  }
+  
+  .IconButton_IconButton-title__YnXAL {
+    clip: rect(0 0 0 0);
+    clip-path: inset(100%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+  
+  .IconButton_IconButton--disabled__kR8Ku {
+    color: var(--puck-color-grey-07);
+  }
+  
+  /*!*********************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/Loader/styles.module.css ***!
+    \*********************************************************************************************************************************************************************************************************************************************************************************************/
+  @keyframes styles_loader-animation__jUnCs {
+    0% {
+      transform: rotate(0deg) scale(1);
+    }
+    50% {
+      transform: rotate(180deg) scale(0.8);
+    }
+    100% {
+      transform: rotate(360deg) scale(1);
+    }
+  }
+  
+  .styles_Loader__blN8E {
+    background: transparent;
+    border-radius: 100%;
+    border: 2px solid currentColor;
+    border-bottom-color: transparent;
+    display: inline-block;
+    animation: styles_loader-animation__jUnCs 1s 0s infinite linear;
+    animation-fill-mode: both;
+  }
+  
+  /*!***********************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/DragIcon/styles.module.css ***!
+    \***********************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_DragIcon__5hMNV {
+    color: var(--puck-color-grey-05);
+    cursor: grab;
+    padding: 4px;
+    border-radius: 4px;
+  }
+  
+  .styles_DragIcon--disabled__TJ3gg {
+    cursor: no-drop;
+  }
+  
+  @media (hover: hover) and (pointer: fine) {
+    .styles_DragIcon__5hMNV:not(.styles_DragIcon--disabled__TJ3gg):hover {
+      color: var(--puck-color-azure-05);
+      background-color: var(--puck-color-azure-12);
+    }
+  }
+  
+  /*!****************************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/ExternalInput/styles.module.css ***!
+    \****************************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_ExternalInput-actions__HojYw {
+    display: flex;
+  }
+  
+  .styles_ExternalInput-button__liQI2 {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--puck-color-white);
+    border: 1px solid var(--puck-color-grey-09);
+    border-radius: 4px;
+    color: var(--puck-color-azure-04);
+    padding: 12px 16px;
+    font-weight: 500;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    transition: background-color 50ms ease-in;
+    position: relative;
+    overflow: hidden;
+    flex-grow: 1;
+  }
+  
+  .styles_ExternalInput--dataSelected__eLoMt .styles_ExternalInput-button__liQI2 {
+    color: var(--puck-color-grey-03);
+    display: block;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+  
+  .styles_ExternalInput--readOnly__hAq5G .styles_ExternalInput-button__liQI2 {
+    background-color: var(--puck-color-grey-11);
+  }
+  
+  .styles_ExternalInput-detachButton___uY5n {
+    border: 1px solid var(--puck-color-grey-09);
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    background-color: var(--puck-color-grey-12);
+    color: var(--puck-color-grey-05);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    position: relative;
+    transition: background-color 50ms ease-in, color 50ms ease-in;
+    margin-left: -1px;
+  }
+  
+  .styles_ExternalInput-button__liQI2:focus-visible,
+  .styles_ExternalInput-detachButton___uY5n:focus-visible {
+    outline: 2px solid var(--puck-color-azure-05);
+    outline-offset: 2px;
+    z-index: 1;
+  }
+  
+  @media (hover: hover) and (pointer: fine) {
+    .styles_ExternalInput__iWe1f:not(.styles_ExternalInput--readOnly__hAq5G) .styles_ExternalInput-button__liQI2:hover,
+    .styles_ExternalInput__iWe1f:not(.styles_ExternalInput--readOnly__hAq5G)
+      .styles_ExternalInput-detachButton___uY5n:hover {
+      background: var(--puck-color-azure-12);
+      transition: none;
+    }
+  
+    .styles_ExternalInput__iWe1f:not(.styles_ExternalInput--readOnly__hAq5G)
+      .styles_ExternalInput-detachButton___uY5n:hover {
+      color: var(--puck-color-azure-04);
+    }
+  }
+  
+  .styles_ExternalInput__iWe1f:not(.styles_ExternalInput--readOnly__hAq5G) .styles_ExternalInput-button__liQI2:active,
+  .styles_ExternalInput__iWe1f:not(.styles_ExternalInput--readOnly__hAq5G)
+    .styles_ExternalInput-detachButton___uY5n:active {
+    background: var(--puck-color-azure-11);
+    transition: none;
+  }
+  
+  .styles_ExternalInputModal__qONbL {
+    color: var(--puck-color-black);
+    display: grid;
+    grid-template-rows: min-content minmax(128px, 100%) min-content;
+    grid-template-columns: 100%;
+    position: relative;
+    min-height: 50dvh;
+    max-height: 90dvh;
+  }
+  
+  .styles_ExternalInputModal-grid__S_ngX {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  @media (min-width: 458px) {
+    .styles_ExternalInputModal-grid__S_ngX {
+      display: grid;
+      grid-template-columns: 100%;
+    }
+  
+    .styles_ExternalInputModal--filtersToggled__nvVxw .styles_ExternalInputModal-grid__S_ngX {
+      grid-template-columns: 25% 75%;
+    }
+  }
+  
+  .styles_ExternalInputModal-filters__li_77 {
+    border-bottom: 1px solid var(--puck-color-grey-09);
+  }
+  
+  .styles_ExternalInputModal--filtersToggled__nvVxw .styles_ExternalInputModal-filters__li_77 {
+    display: none; /* Hide filters by default on smaller viewports */
+  }
+  
+  @media (min-width: 458px) {
+    .styles_ExternalInputModal-filters__li_77 {
+      border-right: 1px solid var(--puck-color-grey-09);
+      display: none;
+    }
+  
+    .styles_ExternalInputModal--filtersToggled__nvVxw .styles_ExternalInputModal-filters__li_77 {
+      display: block; /* Show filters by default on larger viewports */
+    }
+  }
+  
+  .styles_ExternalInputModal-masthead__4JVe7 {
+    background-color: var(--puck-color-grey-12);
+    border-bottom: 1px solid var(--puck-color-grey-09);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding: 24px;
+  }
+  
+  .styles_ExternalInputModal-tableWrapper__ZWzD3 {
+    position: relative;
+    overflow-x: auto;
+    overflow-y: auto;
+    flex-grow: 1;
+  }
+  
+  .styles_ExternalInputModal-table__EtC1b {
+    border-collapse: unset;
+    border-spacing: 0px;
+    color: var(--puck-color-grey-02);
+    position: relative;
+    z-index: 0;
+    min-width: 100%;
+  }
+  
+  .styles_ExternalInputModal-thead___j_RU {
+    background-color: var(--puck-color-white);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  
+  .styles_ExternalInputModal-th__5fcpP {
+    border-bottom: 1px solid var(--puck-color-grey-09);
+    color: var(--puck-color-grey-04);
+    font-weight: 500;
+    font-size: 14px;
+    padding: 16px 24px;
+  }
+  
+  .styles_ExternalInputModal-td__ZQIVP {
+    border-bottom: 1px solid var(--puck-color-grey-10);
+    padding: 16px 24px;
+  }
+  
+  .styles_ExternalInputModal-tr__UXYKH .styles_ExternalInputModal-td__ZQIVP:first-of-type {
+    font-weight: 500;
+    width: 1%; /* Prevent growing */
+    white-space: nowrap; /* Prevent growing */
+  }
+  
+  @media (hover: hover) and (pointer: fine) {
+    .styles_ExternalInputModal-tbody__8S9wV .styles_ExternalInputModal-tr__UXYKH:hover {
+      background: var(--puck-color-azure-12);
+      color: var(--puck-color-azure-04);
+      cursor: pointer;
+      position: relative;
+      margin-left: -5px;
+    }
+  
+    .styles_ExternalInputModal-tbody__8S9wV
+      .styles_ExternalInputModal-tr__UXYKH:hover
+      .styles_ExternalInputModal-td__ZQIVP:first-of-type {
+      border-left: 4px solid var(--puck-color-azure-04);
+      padding-left: 20px;
+    }
+  }
+  
+  .styles_ExternalInputModal-tbody__8S9wV
+    .styles_ExternalInputModal-tr__UXYKH:last-of-type
+    .styles_ExternalInputModal-td__ZQIVP {
+    border-bottom: none;
+  }
+  
+  .styles_ExternalInputModal-tableWrapper__ZWzD3 {
+    display: none;
+  }
+  
+  .styles_ExternalInputModal--hasData__8i43L .styles_ExternalInputModal-tableWrapper__ZWzD3 {
+    display: block;
+  }
+  
+  .styles_ExternalInputModal-loadingBanner__msfVC {
+    display: none;
+    background-color: color-mix(
+      in srgb,
+      var(--puck-color-white) 90%,
+      transparent
+    );
+    padding: 64px;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  
+  .styles_ExternalInputModal--isLoading__M01o1 .styles_ExternalInputModal-loadingBanner__msfVC {
+    display: flex;
+  }
+  
+  .styles_ExternalInputModal-searchForm__QKadM {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    flex-grow: 1;
+  }
+  
+  @media (min-width: 458px) {
+    .styles_ExternalInputModal-searchForm__QKadM {
+      flex-wrap: nowrap;
+    }
+  }
+  
+  .styles_ExternalInputModal-search__snMxL {
+    display: flex;
+    background: var(--puck-color-white);
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--puck-color-grey-09);
+    border-radius: 4px;
+    flex-grow: 1;
+    transition: border-color 50ms ease-in;
+  }
+  
+  .styles_ExternalInputModal-search__snMxL:focus-within {
+    border-color: var(--puck-color-grey-05);
+    outline: 2px solid var(--puck-color-azure-05);
+    transition: none;
+  }
+  
+  @media (hover: hover) and (pointer: fine) {
+    .styles_ExternalInputModal-search__snMxL:hover {
+      border-color: var(--puck-color-grey-05);
+      transition: none;
+    }
+  }
+  
+  .styles_ExternalInputModal-searchIcon__eIuyB {
+    align-items: center;
+    background: var(--puck-color-grey-12);
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+    border-right: 1px solid var(--puck-color-grey-09);
+    color: var(--puck-color-grey-07);
+    display: flex;
+    justify-content: center;
+    padding: 12px 15px;
+    transition: color 50ms ease-in;
+  }
+  
+  .styles_ExternalInputModal-search__snMxL:focus-within .styles_ExternalInputModal-searchIcon__eIuyB {
+    color: var(--puck-color-grey-04);
+    transition: none;
+  }
+  
+  @media (hover: hover) and (pointer: fine) {
+    .styles_ExternalInputModal-search__snMxL:hover .styles_ExternalInputModal-searchIcon__eIuyB {
+      color: var(--puck-color-grey-04);
+      transition: none;
+    }
+  }
+  
+  .styles_ExternalInputModal-searchIconText__VQCfm {
+    clip: rect(0 0 0 0);
+    clip-path: inset(100%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+  
+  .styles_ExternalInputModal-searchInput__gFzIM {
+    border: none;
+    border-radius: 4px;
+    background: var(--puck-color-white);
+    font-family: inherit;
+    font-size: 14px;
+    padding: 12px 15px;
+    width: 100%;
+  }
+  
+  .styles_ExternalInputModal-searchInput__gFzIM:focus {
+    outline: 0;
+  }
+  
+  .styles_ExternalInputModal-searchActions__p7CPa {
+    display: flex;
+    gap: 8px;
+    height: 44px;
+    width: 100%;
+  }
+  
+  @media (min-width: 458px) {
+    .styles_ExternalInputModal-searchActions__p7CPa {
+      width: auto;
+    }
+  }
+  
+  .styles_ExternalInputModal-searchActionIcon__5G2Nw {
+    align-self: center;
+  }
+  
+  .styles_ExternalInputModal-footer__lnAY3 {
+    background-color: var(--puck-color-grey-12);
+    border-top: 1px solid var(--puck-color-grey-09);
+    color: var(--puck-color-grey-04);
+    font-weight: 500;
+    font-size: 14px;
+    padding: 16px;
+    text-align: right;
+  }
+  
+  /*!********************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/Modal/styles.module.css ***!
+    \********************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_Modal__MS8TR {
+    background: color-mix(in srgb, var(--puck-color-black) 75%, transparent);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+    padding: 32px;
+  }
+  
+  .styles_Modal--isOpen__NrNQe {
+    display: flex;
+  }
+  
+  .styles_Modal-inner__4lVe_ {
+    width: 100%;
+    max-width: 1024px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--puck-color-white);
+    display: flex;
+    flex-direction: column;
+    max-height: 90dvh;
+  }
+  
+  /*!**********************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/Heading/styles.module.css ***!
+    \**********************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_Heading__g3sVS {
+    display: block;
+    color: var(--puck-color-black);
+    font-weight: 700;
+    margin: 0;
+  }
+  
+  .styles_Heading__g3sVS b {
+    font-weight: 700;
+  }
+  
+  .styles_Heading--xxxxl__xwyY_ {
+    font-size: var(--puck-font-size-xxxxl);
+    letter-spacing: 0.08ch;
+    font-weight: 800;
+  }
+  
+  .styles_Heading--xxxl__i0w7U {
+    font-size: var(--puck-font-size-xxxl);
+  }
+  
+  .styles_Heading--xxl__cNTEs {
+    font-size: var(--puck-font-size-xxl);
+  }
+  
+  .styles_Heading--xl__NW9bh {
+    font-size: var(--puck-font-size-xl);
+  }
+  
+  .styles_Heading--l__csvf8 {
+    font-size: var(--puck-font-size-l);
+  }
+  
+  .styles_Heading--m__o8kfl {
+    font-size: var(--puck-font-size-m);
+  }
+  
+  .styles_Heading--s__3Sp8Z {
+    font-size: var(--puck-font-size-s);
+  }
+  
+  .styles_Heading--xs__ZM2LG {
+    font-size: var(--puck-font-size-xs);
+  }
+  
+  /*!*********************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/Button/Button.module.css ***!
+    \*********************************************************************************************************************************************************************************************************************************************************************************************/
+  .Button_Button__Zvf__ {
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: var(--puck-color-white);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.05ch;
+    font-family: var(--puck-font-family);
+    font-size: 14px;
+    font-weight: 400;
+    box-sizing: border-box;
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 50ms ease-in;
+    cursor: pointer;
+    white-space: nowrap;
+    margin: 0;
+  }
+  
+  .Button_Button__Zvf__:hover,
+  .Button_Button__Zvf__:active {
+    transition: none;
+  }
+  
+  .Button_Button--medium__1K6Tn {
+    min-height: 34px;
+    padding-bottom: 7px;
+    padding-left: 19px;
+    padding-right: 19px;
+    padding-top: 7px;
+  }
+  
+  .Button_Button--large__ONo01 {
+    padding-bottom: 11px;
+    padding-left: 19px;
+    padding-right: 19px;
+    padding-top: 11px;
+  }
+  
+  .Button_Button-icon__NuI_g {
+    margin-top: 2px;
+  }
+  
+  .Button_Button--primary__FrkDI {
+    background: var(--puck-color-azure-04);
+  }
+  
+  .Button_Button__Zvf__:focus-visible {
+    outline: 2px solid var(--puck-color-azure-05);
+    outline-offset: 2px;
+  }
+  
+  @media (hover: hover) and (pointer: fine) {
+    .Button_Button--primary__FrkDI:hover {
+      background-color: var(--puck-color-azure-03);
+    }
+  }
+  
+  .Button_Button--primary__FrkDI:active {
+    background-color: var(--puck-color-azure-02);
+  }
+  
+  .Button_Button--secondary__c4qEe {
+    border: 1px solid currentColor;
+    color: currentColor;
+  }
+  
+  @media (hover: hover) and (pointer: fine) {
+    .Button_Button--secondary__c4qEe:hover {
+      background-color: var(--puck-color-azure-12);
+      color: var(--puck-color-black);
+    }
+  }
+  
+  .Button_Button--secondary__c4qEe:active {
+    background-color: var(--puck-color-azure-11);
+    color: var(--puck-color-black);
+  }
+  
+  .Button_Button--flush__JjfZn {
+    border-radius: 0;
+  }
+  
+  .Button_Button--disabled__80O5D,
+  .Button_Button--disabled__80O5D:hover {
+    background-color: var(--puck-color-grey-07);
+    color: var(--puck-color-grey-03);
+    cursor: not-allowed;
+  }
+  
+  .Button_Button--fullWidth__fljQm {
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .Button_Button-spinner__8tqFu {
+    padding-left: 8px;
+  }
+  
+  /*!*******************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/AutoField/fields/ObjectField/styles.module.css ***!
+    \*******************************************************************************************************************************************************************************************************************************************************************************************************************/
+  /**
+   * ObjectField
+   */
+  
+  .styles_ObjectField__HmmFa {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--puck-color-white);
+    border: 1px solid var(--puck-color-grey-09);
+    border-radius: 4px;
+  }
+  
+  .styles_ObjectField-fieldset__EteyS {
+    border: none;
+    margin: 0;
+    min-width: 0; /* Needed to ensure External input doesn't overflow, see https://stackoverflow.com/a/53784508 */
+    padding: 16px 15px;
+  }
+  
+  /*!*********************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/Drawer/styles.module.css ***!
+    \*********************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_Drawer__E89J1 {
+    font-family: var(--puck-font-family);
+  }
+  
+  .styles_DrawerItem--disabled__6smD9 .styles_DrawerItem-draggable__7kE5E {
+    background: var(--puck-color-grey-11);
+    color: var(--puck-color-grey-05);
+    cursor: not-allowed; /** Move this out of inline styles */
+  }
+  
+  .styles_DrawerItem-default__0CFUZ .styles_DrawerItem-draggableWrapper__5yQ3E {
+    /* padding required here to prevent bug when cancelling a drag) */
+    padding-bottom: 12px;
+  }
+  
+  .styles_DrawerItem__tC_F0:last-of-type .styles_DrawerItem-default__0CFUZ .styles_DrawerItem-draggableWrapper__5yQ3E {
+    padding-bottom: 0;
+  }
+  
+  .styles_DrawerItem-draggable__7kE5E {
+    background: var(--puck-color-white);
+    padding: 12px;
+    display: flex;
+    border: 1px var(--puck-color-grey-09) solid;
+    border-radius: 4px;
+    font-size: var(--puck-font-size-xxs);
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 50ms ease-in, color 50ms ease-in;
+  }
+  
+  .styles_DrawerItem__tC_F0:focus-visible {
+    outline: 0;
+  }
+  
+  .styles_Drawer__E89J1:not(.styles_Drawer--isDraggingFrom__EyL_B)
+    .styles_DrawerItem__tC_F0:focus-visible
+    .styles_DrawerItem-draggable__7kE5E {
+    border-radius: 4px;
+    outline: 2px solid var(--puck-color-azure-05);
+    outline-offset: 2px;
+  }
+  
+  @media (hover: hover) and (pointer: fine) {
+    .styles_Drawer__E89J1:not(.styles_Drawer--isDraggingFrom__EyL_B)
+      .styles_DrawerItem__tC_F0:not(.styles_DrawerItem--disabled__6smD9)
+      .styles_DrawerItem-draggable__7kE5E:hover {
+      background-color: var(--puck-color-azure-12);
+      color: var(--puck-color-azure-04);
+      transition: none;
+    }
+  }
+  
+  .styles_DrawerItem-name__hjZda {
+    width: 100%;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  /*!*********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/DraggableComponent/styles.module.css ***!
+    \*********************************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_DraggableComponent__a_JEb {
+    pointer-events: auto;
+  
+    --overlay-background: color-mix(
+      in srgb,
+      var(--puck-color-azure-08) 30%,
+      transparent
+    );
+  }
+  
+  .styles_DraggableComponent--isDragging__1nZ2f {
+    background: color-mix(in srgb, var(--puck-color-azure-08) 10%, transparent);
+    overflow: hidden;
+  }
+  
+  .styles_DraggableComponent-contents__bGAet {
+    position: relative; /* Reset stacking context */
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  /* Prevent margin collapsing  */
+  .styles_DraggableComponent-contents__bGAet::before,
+  .styles_DraggableComponent-contents__bGAet::after {
+    content: " ";
+    display: table;
+  }
+  
+  .styles_DraggableComponent-overlay__8ce2i {
+    cursor: pointer;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    outline-offset: -2px;
+    position: absolute;
+    pointer-events: none;
+    box-sizing: border-box;
+    z-index: 1;
+  }
+  
+  .styles_DraggableComponent__a_JEb:focus-visible > .styles_DraggableComponent-overlay__8ce2i {
+    outline: 1px solid var(--puck-color-azure-05);
+  }
+  
+  .styles_DraggableComponent--isDragging__1nZ2f > .styles_DraggableComponent-overlay__8ce2i {
+    outline: 2px var(--puck-color-azure-09) solid !important;
+  }
+  
+  .styles_DraggableComponent-loadingOverlay__ZRpPw {
+    background: var(--puck-color-white);
+    color: var(--puck-color-grey-03);
+    border-radius: 4px;
+    display: flex;
+    padding: 8px;
+    top: 8px;
+    right: 8px;
+    position: absolute;
+    pointer-events: all;
+    box-sizing: border-box;
+    opacity: 0.8;
+    z-index: 1;
+  }
+  
+  .styles_DraggableComponent__a_JEb:hover:not(.styles_DraggableComponent--isLocked__RZ02B)
+    > .styles_DraggableComponent-overlay__8ce2i {
+    background: var(--overlay-background);
+    pointer-events: none;
+  }
+  
+  .styles_DraggableComponent--forceHover__WzhPm > .styles_DraggableComponent-overlay__8ce2i {
+    background: var(--overlay-background);
+    pointer-events: none;
+  }
+  
+  .styles_DraggableComponent__a_JEb:not(.styles_DraggableComponent--isSelected__qRfGo):hover
+    > .styles_DraggableComponent-overlay__8ce2i {
+    outline: 2px var(--puck-color-azure-09) solid !important;
+  }
+  
+  .styles_DraggableComponent--indicativeHover__eNIEz > .styles_DraggableComponent-overlay__8ce2i {
+    pointer-events: none;
+  }
+  
+  /* Won't work in FF */
+  .styles_DraggableComponent__a_JEb:not(.styles_DraggableComponent--isSelected__qRfGo):has(
+      .styles_DraggableComponent__a_JEb:hover > .styles_DraggableComponent-overlay__8ce2i
+    )
+    > .styles_DraggableComponent-overlay__8ce2i {
+    display: none;
+  }
+  
+  .styles_DraggableComponent--isSelected__qRfGo > .styles_DraggableComponent-overlay__8ce2i {
+    outline: 2px var(--puck-color-azure-07) solid !important;
+  }
+  
+  .styles_DraggableComponent--isSelected__qRfGo > .styles_DraggableComponent-actionsOverlay__YcXjO {
+    display: block;
+    position: sticky;
+    z-index: 2;
+  }
+  
+  .styles_DraggableComponent-actions__jVxF9 {
+    position: absolute;
+    width: auto;
+    cursor: grab;
+    display: none;
+    pointer-events: auto;
+    box-sizing: border-box;
+    transform-origin: right top;
+  }
+  
+  .styles_DraggableComponent--isSelected__qRfGo
+    > .styles_DraggableComponent-actionsOverlay__YcXjO
+    > .styles_DraggableComponent-actions__jVxF9 {
+    display: flex;
+  }
+  
+  /*!***********************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/DropZone/styles.module.css ***!
+    \***********************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_DropZone__E1TvP {
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    min-height: 100%;
+    outline-offset: -2px;
+    width: 100%;
+  }
+  
+  .styles_DropZone-content__mVLzi {
+    min-height: 128px;
+    height: 100%;
+  }
+  
+  .styles_DropZone--userIsDragging__Cb2dK .styles_DropZone-content__mVLzi {
+    pointer-events: all;
+  }
+  
+  .styles_DropZone--userIsDragging__Cb2dK:not(.styles_DropZone--draggingOverArea__NRkch):not(
+      .styles_DropZone--draggingNewComponent__XJcog
+    )
+    > .styles_DropZone-content__mVLzi {
+    pointer-events: none;
+  }
+  
+  .styles_DropZone--isAreaSelected__ugsaZ,
+  .styles_DropZone--draggingOverArea__NRkch:not(:has(.styles_DropZone--hoveringOverArea__RcAuK)),
+  .styles_DropZone--hoveringOverArea__RcAuK:not(.styles_DropZone--isDisabled__XKsNO):not(
+      .styles_DropZone--isRootZone__UxpPf
+    ):not(.styles_DropZone--hasChildren__EvcFG) {
+    background: color-mix(in srgb, var(--puck-color-azure-09) 30%, transparent);
+    outline: 2px dashed var(--puck-color-azure-08);
+  }
+  
+  .styles_DropZone__E1TvP:not(.styles_DropZone--hasChildren__EvcFG) {
+    background: color-mix(in srgb, var(--puck-color-azure-09) 30%, transparent);
+    outline: 2px dashed var(--puck-color-azure-08);
+  }
+  
+  .styles_DropZone--isDestination__KIvWz {
+    outline: 2px dashed var(--puck-color-azure-04) !important;
+  }
+  
+  .styles_DropZone--isDestination__KIvWz:not(.styles_DropZone--isRootZone__UxpPf) {
+    background: color-mix(
+      in srgb,
+      var(--puck-color-azure-09) 30%,
+      transparent
+    ) !important;
+  }
+  
+  .styles_DropZone-item__40u2C {
+    position: relative;
+  }
+  
+  .styles_DropZone-hitbox__7EbrV {
+    position: absolute;
+    bottom: -12px;
+    height: 24px;
+    width: 100%;
+    z-index: 1;
+  }
+  
+  /*!*****************************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/SidebarSection/styles.module.css ***!
+    \*****************************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_SidebarSection__ybkgJ {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    color: var(--puck-color-black);
+  }
+  
+  .styles_SidebarSection__ybkgJ:last-of-type {
+    flex-grow: 1;
+  }
+  
+  .styles_SidebarSection-title__XfFuF {
+    background: var(--puck-color-white);
+    padding: 16px;
+    border-bottom: 1px solid var(--puck-color-grey-09);
+    border-top: 1px solid var(--puck-color-grey-09);
+    overflow-x: auto;
+  }
+  
+  .styles_SidebarSection--noBorderTop__fWOlD > .styles_SidebarSection-title__XfFuF {
+    border-top: 0px;
+  }
+  
+  .styles_SidebarSection-content__kfTJ6 {
+    padding: 16px;
+  }
+  
+  .styles_SidebarSection--noPadding__NmW1f > .styles_SidebarSection-content__kfTJ6 {
+    padding: 0px;
+  }
+  
+  .styles_SidebarSection--noPadding__NmW1f > .styles_SidebarSection-content__kfTJ6:last-child {
+    padding-bottom: 4px;
+  }
+  
+  .styles_SidebarSection__ybkgJ:last-of-type .styles_SidebarSection-content__kfTJ6 {
+    border-bottom: none;
+    flex-grow: 1;
+  }
+  
+  .styles_SidebarSection-breadcrumbLabel__xRQ_q {
+    background: none;
+    border: 0;
+    border-radius: 2px;
+    color: var(--puck-color-azure-04);
+    cursor: pointer;
+    font: inherit;
+    flex-shrink: 0;
+    padding: 0;
+    transition: color 50ms ease-in;
+  }
+  
+  .styles_SidebarSection-breadcrumbLabel__xRQ_q:focus-visible {
+    outline: 2px solid var(--puck-color-azure-05);
+    outline-offset: 2px;
+  }
+  
+  @media (hover: hover) and (pointer: fine) {
+    .styles_SidebarSection-breadcrumbLabel__xRQ_q:hover {
+      color: var(--puck-color-azure-03);
+      transition: none;
+    }
+  }
+  
+  .styles_SidebarSection-breadcrumbLabel__xRQ_q:active {
+    color: var(--puck-color-azure-02);
+    transition: none;
+  }
+  
+  .styles_SidebarSection-breadcrumbs__1y7aq {
+    align-items: center;
+    display: flex;
+    gap: 4px;
+  }
+  
+  .styles_SidebarSection-breadcrumb___Qykn {
+    align-items: center;
+    display: flex;
+    gap: 4px;
+  }
+  
+  .styles_SidebarSection-heading__eGfWh {
+    padding-right: 16px;
+  }
+  
+  .styles_SidebarSection-loadingOverlay__JIVuA {
+    background: var(--puck-color-white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    position: absolute;
+    z-index: 1;
+    pointer-events: all;
+    box-sizing: border-box;
+    opacity: 0.8;
+  }
+  
+  /*!**********************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/MenuBar/styles.module.css ***!
+    \**********************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_MenuBar__8fYe4 {
+    background-color: var(--puck-color-white);
+    border-bottom: 1px solid var(--puck-color-grey-09);
+    display: none;
+    left: 0;
+    margin-top: 1px;
+    padding: 8px 16px;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    z-index: 2;
+  }
+  
+  .styles_MenuBar--menuOpen__JR7F1 {
+    display: block;
+  }
+  
+  @media (min-width: 638px) {
+    .styles_MenuBar__8fYe4 {
+      border: none;
+      display: block;
+      margin-top: 0;
+      overflow-y: visible;
+      padding: 0;
+      position: static;
+    }
+  }
+  
+  .styles_MenuBar-inner__9ZEOq {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    justify-content: flex-end;
+  }
+  
+  @media (min-width: 638px) {
+    .styles_MenuBar-inner__9ZEOq {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+    }
+  }
+  
+  .styles_MenuBar-history__ewHGp {
+    display: flex;
+  }
+  
+  /*!*******************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/Puck/styles.module.css ***!
+    \*******************************************************************************************************************************************************************************************************************************************************************************************/
+  /*
+   * Puck's responsive layout uses minimum viewport widths slightly _below_ common
+   * framework/device breakpoints, and ensures that the width of the resulting
+   * Puck page preview (zoomed at 75%) is slightly _above_ common framework/device
+   * breakpoints. This can help alleviate some of the pain when editing responsive
+   * pages in a preview area that is narrower than the reported viewport width.
+   *
+   * Viewport | Puck page @ zoom 0.75
+   * --------------------------------
+   * -        | 322px
+   * 766px    | 322px
+   * 990px    | 604px
+   * 1022px   | 646px
+   * 1198px   | 801px
+   * 1398px   | 1025px
+   * 1598px   | 1212px
+   */
+  
+  .styles_Puck__LdRA2 {
+    --puck-space-px: 16px;
+    font-family: var(--puck-font-family);
+  }
+  
+  .styles_Puck-portal__IvN1D {
+    position: relative;
+    z-index: 2;
+  }
+  
+  /* Puck Layout */
+  
+  .styles_PuckLayout__kKo6E {
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+  }
+  
+  .styles_PuckLayout-inner__sF5a1 {
+    --puck-frame-width: auto;
+    --puck-side-bar-width: 0px;
+    display: grid;
+    grid-template-areas: "header header header" "left editor right";
+    grid-template-columns: 0 var(--puck-frame-width) 0;
+    grid-template-rows: min-content auto;
+    height: 100dvh;
+    position: relative;
+    z-index: 0;
+  }
+  
+  .styles_PuckLayout--mounted__EOBtH .styles_PuckLayout-inner__sF5a1 {
+    --puck-side-bar-width: 186px;
+  }
+  
+  .styles_PuckLayout--leftSideBarVisible__hS_bj .styles_PuckLayout-inner__sF5a1 {
+    grid-template-columns:
+      var(--puck-side-bar-width) var(--puck-frame-width)
+      0;
+  }
+  
+  .styles_PuckLayout--rightSideBarVisible__E1qxZ .styles_PuckLayout-inner__sF5a1 {
+    grid-template-columns:
+      0 var(--puck-frame-width)
+      var(--puck-side-bar-width);
+  }
+  
+  .styles_PuckLayout--leftSideBarVisible__hS_bj.styles_PuckLayout--rightSideBarVisible__E1qxZ
+    .styles_PuckLayout-inner__sF5a1 {
+    grid-template-columns:
+      var(--puck-side-bar-width) var(--puck-frame-width)
+      var(--puck-side-bar-width);
+  }
+  
+  @media (min-width: 458px) {
+    .styles_PuckLayout-mounted__6bEoN .styles_PuckLayout-inner__sF5a1 {
+      --puck-frame-width: minmax(266px, auto);
+    }
+  }
+  
+  @media (min-width: 638px) {
+    .styles_PuckLayout__kKo6E .styles_PuckLayout-inner__sF5a1 {
+      --puck-side-bar-width: minmax(186px, 250px);
+    }
+  }
+  
+  @media (min-width: 766px) {
+    .styles_PuckLayout__kKo6E .styles_PuckLayout-inner__sF5a1 {
+      --puck-frame-width: auto;
+    }
+  }
+  
+  @media (min-width: 990px) {
+    .styles_PuckLayout__kKo6E .styles_PuckLayout-inner__sF5a1 {
+      --puck-side-bar-width: 256px;
+    }
+  }
+  
+  @media (min-width: 1198px) {
+    .styles_PuckLayout__kKo6E .styles_PuckLayout-inner__sF5a1 {
+      --puck-side-bar-width: 274px;
+    }
+  }
+  
+  @media (min-width: 1398px) {
+    .styles_PuckLayout__kKo6E .styles_PuckLayout-inner__sF5a1 {
+      --puck-side-bar-width: 290px;
+    }
+  }
+  
+  @media (min-width: 1598px) {
+    .styles_PuckLayout__kKo6E .styles_PuckLayout-inner__sF5a1 {
+      --puck-side-bar-width: 320px;
+    }
+  }
+  
+  .styles_PuckLayout-header__IA2gv {
+    background: var(--puck-color-white);
+    border-bottom: 1px solid var(--puck-color-grey-09);
+    color: var(--puck-color-black);
+    grid-area: header;
+    position: relative;
+    max-width: 100vw;
+  }
+  
+  .styles_PuckLayout-headerInner__AHFgN {
+    align-items: end;
+    display: grid;
+    gap: var(--puck-space-px);
+    grid-template-areas: "left middle right";
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-rows: auto;
+    padding: var(--puck-space-px);
+  }
+  
+  .styles_PuckLayout-headerToggle__uVPM2 {
+    color: var(--puck-color-grey-05);
+    display: flex;
+    margin-left: -4px;
+    padding-top: 2px;
+  }
+  
+  .styles_PuckLayout--rightSideBarVisible__E1qxZ .styles_PuckLayout-rightSideBarToggle__oL4CJ,
+  .styles_PuckLayout--leftSideBarVisible__hS_bj .styles_PuckLayout-leftSideBarToggle__ilKiU {
+    color: var(--puck-color-black);
+  }
+  
+  .styles_PuckLayout-headerTitle__t5NOc {
+    align-self: center;
+  }
+  
+  .styles_PuckLayout-headerPath__LLNDa {
+    font-family: var(--puck-font-family-monospaced);
+    font-size: var(--puck-font-size-xxs);
+    font-weight: normal;
+    word-break: break-all;
+  }
+  
+  .styles_PuckLayout-headerTools__EGaet {
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+  }
+  
+  .styles_PuckLayout-menuButton__JDkLm {
+    color: var(--puck-color-grey-05);
+    margin-left: -4px;
+  }
+  
+  .styles_PuckLayout--menuOpen__otc7F .styles_PuckLayout-menuButton__JDkLm {
+    color: var(--puck-color-black);
+  }
+  
+  @media (min-width: 638px) {
+    .styles_PuckLayout-menuButton__JDkLm {
+      display: none;
+    }
+  }
+  
+  .styles_PuckLayout-leftSideBar__SfJZl {
+    background: var(--puck-color-grey-12);
+    border-right: 1px solid var(--puck-color-grey-09);
+    display: flex;
+    flex-direction: column;
+    grid-area: left;
+    overflow-y: auto;
+  }
+  
+  .styles_PuckLayout-rightSideBar__6yQvp {
+    background: var(--puck-color-white);
+    border-left: 1px solid var(--puck-color-grey-09);
+    display: flex;
+    flex-direction: column;
+    grid-area: right;
+    overflow-y: auto;
+  }
+  
+  /*!*************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/Puck/components/Fields/styles.module.css ***!
+    \*************************************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_PuckFields__oTkVv {
+    position: relative;
+    font-family: var(--puck-font-family);
+  }
+  
+  .styles_PuckFields--isLoading__eHaUX {
+    min-height: 48px; /* Ensure there is sufficient room for loader if no fields */
+  }
+  
+  .styles_PuckFields-loadingOverlay___WpF6 {
+    background: var(--puck-color-white);
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    height: 100%;
+    width: 100%;
+    top: 0px;
+    position: absolute;
+    z-index: 1;
+    pointer-events: all;
+    box-sizing: border-box;
+    opacity: 0.8;
+  }
+  
+  .styles_PuckFields-loadingOverlayInner__UxQEw {
+    display: flex;
+    padding: 16px;
+    position: sticky;
+    top: 0;
+  }
+  
+  /*!****************************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/ComponentList/styles.module.css ***!
+    \****************************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_ComponentList__2sh9G {
+    max-width: 100%;
+  }
+  
+  .styles_ComponentList--isExpanded__p_zL9 + .styles_ComponentList__2sh9G {
+    margin-top: 12px;
+  }
+  
+  .styles_ComponentList-content__kM9Gx {
+    display: none;
+  }
+  
+  .styles_ComponentList--isExpanded__p_zL9 > .styles_ComponentList-content__kM9Gx {
+    display: block;
+  }
+  
+  .styles_ComponentList-title__KH844 {
+    background-color: #000000;
+    border: 0;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    font: inherit;
+    font-size: var(--puck-font-size-xxxs);
+    list-style: none;
+    margin-bottom: 6px;
+    padding: 8px;
+    text-transform: uppercase;
+    transition: background-color 50ms ease-in, color 50ms ease-in;
+    gap: 4px;
+    border-radius: 4px;
+    width: 100%;
+  }
+  
+  .styles_ComponentList-title__KH844:focus-visible {
+    outline: 2px solid var(--puck-color-azure-05);
+    outline-offset: 2px;
+  }
+  
+  @media (hover: hover) and (pointer: fine) {
+    .styles_ComponentList-title__KH844:hover {
+      background-color: var(--puck-color-azure-11);
+      color: var(--puck-color-azure-04);
+      transition: none;
+    }
+  }
+  
+  .styles_ComponentList-title__KH844:active {
+    background-color: var(--puck-color-azure-10);
+    transition: none;
+  }
+  
+  .styles_ComponentList-titleIcon__uZry_ {
+    margin-left: auto;
+  }
+  
+  /*!**************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/Puck/components/Preview/styles.module.css ***!
+    \**************************************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_PuckPreview__G7bdw {
+    height: 100%;
+  }
+  
+  .styles_PuckPreview-frame__wdcps {
+    border: none;
+    min-height: 100%;
+    width: 100%;
+  }
+  
+  /*!************************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/LayerTree/styles.module.css ***!
+    \************************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_LayerTree___yheY {
+    color: var(--puck-color-grey-03);
+    font-family: var(--puck-font-family);
+    font-size: var(--puck-font-size-xxs);
+    margin: 0;
+    position: relative;
+    list-style: none;
+    padding: 0;
+  }
+  
+  .styles_LayerTree-zoneTitle__v4Lkl {
+    color: var(--puck-color-grey-05);
+    font-size: var(--puck-font-size-xxxs);
+    text-transform: uppercase;
+  }
+  
+  .styles_LayerTree-helper__lnl41 {
+    text-align: center;
+    color: var(--puck-color-grey-07);
+    margin: 8px 4px;
+  }
+  
+  .styles_Layer__NttGW {
+    position: relative;
+    border: 1px solid transparent;
+    border-radius: 4px;
+  }
+  
+  .styles_Layer-inner__UXhUx {
+    border: 1px solid transparent;
+    border-radius: 4px;
+    transition: color 50ms ease-in;
+  }
+  
+  .styles_Layer--containsZone___0WT5 > .styles_Layer-inner__UXhUx {
+    padding-left: 0;
+  }
+  
+  .styles_Layer-clickable__hQhDu {
+    align-items: center;
+    background: none;
+    border: 0;
+    border-radius: 4px;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    font: inherit;
+    padding-left: 12px;
+    padding-right: 4px;
+    width: 100%;
+  }
+  
+  .styles_Layer-clickable__hQhDu:focus-visible {
+    outline: 2px solid var(--puck-color-azure-05);
+    outline-offset: 2px;
+    position: relative;
+    z-index: 1;
+  }
+  
+  @media (hover: hover) and (pointer: fine) {
+    .styles_Layer__NttGW:not(.styles_Layer--isSelected__zRrcX) > .styles_Layer-inner__UXhUx:hover {
+      border-color: var(--puck-color-azure-10);
+      background: var(--puck-color-azure-11);
+      color: var(--puck-color-azure-04);
+      transition: none;
+    }
+  }
+  
+  .styles_Layer--isSelected__zRrcX {
+    border-color: var(--puck-color-azure-08);
+  }
+  
+  .styles_Layer--isSelected__zRrcX > .styles_Layer-inner__UXhUx {
+    background: var(--puck-color-azure-10);
+  }
+  
+  .styles_Layer--isSelected__zRrcX > .styles_Layer-inner__UXhUx > .styles_Layer-clickable__hQhDu > .styles_Layer-chevron__7dcfq,
+  .styles_Layer--childIsSelected__rqNEo > .styles_Layer-inner__UXhUx > .styles_Layer-clickable__hQhDu > .styles_Layer-chevron__7dcfq {
+    transform: scaleY(-1);
+  }
+  
+  .styles_Layer-zones___nca9 {
+    display: none;
+    margin-left: 12px;
+  }
+  
+  .styles_Layer--isSelected__zRrcX > .styles_Layer-zones___nca9,
+  .styles_Layer--childIsSelected__rqNEo > .styles_Layer-zones___nca9 {
+    display: block;
+  }
+  
+  .styles_Layer-zones___nca9 > .styles_LayerTree___yheY {
+    margin-left: 12px;
+  }
+  
+  .styles_Layer-title__x4znG,
+  .styles_LayerTree-zoneTitle__v4Lkl {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin: 8px 4px;
+    overflow-x: hidden;
+  }
+  
+  .styles_Layer-name__1T3_5 {
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .styles_Layer-icon__6muS0 {
+    color: var(--puck-color-rose-07);
+    margin-top: 4px;
+  }
+  
+  .styles_Layer-zoneIcon__zPNNx {
+    color: var(--puck-color-grey-08);
+    margin-top: 4px;
+  }
+  
+  /*!*******************************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/ViewportControls/styles.module.css ***!
+    \*******************************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_ViewportControls__lcJZp {
+    display: flex;
+    background: var(--puck-color-grey-11);
+    box-sizing: border-box;
+    border-left: 2px solid var(--puck-color-grey-11);
+    justify-content: center;
+    gap: 8px;
+    min-width: 358px;
+    padding-bottom: 16px;
+    padding-left: var(--puck-space-px);
+    padding-right: var(--puck-space-px);
+    z-index: 1;
+  }
+  
+  .styles_ViewportControls-divider__nyxxf {
+    border-right: 1px solid var(--puck-color-grey-09);
+    margin-left: 8px;
+    margin-right: 8px;
+  }
+  
+  .styles_ViewportControls-zoomSelect__mvgDJ {
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none; /* Safari */
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' fill='%23c3c3c3'><polygon points='0,0 100,0 50,50'/></svg>")
+      no-repeat;
+    background-size: 10px;
+    background-position: calc(100% - 12px) calc(50% + 3px);
+    background-repeat: no-repeat;
+    border: 0;
+    font-size: var(--puck-font-size-xxxs);
+    padding: 0;
+    width: 96px;
+  }
+  
+  .styles_ViewportButton--isActive__FDFa0 .styles_ViewportButton-inner__hoamW {
+    color: var(--puck-color-azure-04);
+  }
+  
+  /*!*************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/Puck/components/Canvas/styles.module.css ***!
+    \*************************************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_PuckCanvas__s_cq9 {
+    background: var(--puck-color-grey-11);
+    display: flex;
+    grid-area: editor;
+    flex-direction: column;
+    padding: var(--puck-space-px);
+    overflow: auto;
+  }
+  
+  @media (min-width: 1198px) {
+    .styles_PuckCanvas__s_cq9 {
+      padding: calc(var(--puck-space-px) * 1.5);
+      padding-top: var(--puck-space-px);
+    }
+  
+    .styles_PuckCanvas__s_cq9:not(.styles_PuckCanvas__s_cq9:has(.styles_PuckCanvas-controls__yOz7l)) {
+      padding-top: calc(var(--puck-space-px) * 1.5);
+    }
+  }
+  
+  .styles_PuckCanvas-inner__RQGRh {
+    box-sizing: border-box;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    min-width: 358px;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+  
+  .styles_PuckCanvas-root__jNEfM {
+    background: white;
+    border: 1px solid var(--puck-color-grey-09);
+    box-sizing: border-box;
+    min-width: 321px;
+    position: absolute;
+    pointer-events: none;
+    transform-origin: top;
+    top: 0;
+    bottom: 0;
+    opacity: 0;
+  }
+  
+  @media (min-width: 1198px) {
+    .styles_PuckCanvas-root__jNEfM {
+      min-width: unset;
+    }
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    .styles_PuckCanvas-root__jNEfM {
+      transition: none !important;
+    }
+  }
+  
+  .styles_PuckCanvas--ready__wfE4x .styles_PuckCanvas-root__jNEfM {
+    pointer-events: unset;
+    opacity: 1;
+  }
+  
+  .styles_PuckCanvas-loader__I_MM_ {
+    align-items: center;
+    color: var(--puck-color-grey-06);
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    transition: opacity 250ms ease-out;
+    opacity: 0;
+  }
+  
+  .styles_PuckCanvas--showLoader___xxuX .styles_PuckCanvas-loader__I_MM_ {
+    opacity: 1;
+  }
+  
+  .styles_PuckCanvas--showLoader___xxuX.styles_PuckCanvas--ready__wfE4x .styles_PuckCanvas-loader__I_MM_ {
+    opacity: 0;
+    height: 0;
+    transition: none;
+  }
+  
+  /*!***********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/plugin-heading-analyzer/src/HeadingAnalyzer.module.css ***!
+    \***********************************************************************************************************************************************************************************************************************************************************************************************************/
+  .HeadingAnalyzer_HeadingAnalyzer__xtuTd {
+    display: block;
+  }
+  
+  .HeadingAnalyzer_HeadingAnalyzer-cssWarning__wjN9t {
+    display: none !important;
+  }
+  
+  .HeadingAnalyzer_HeadingAnalyzerItem__2fqoB {
+    display: inline;
+  }
+  
+  .HeadingAnalyzer_HeadingAnalyzerItem--missing__Vjmze {
+    color: var(--puck-color-red-04);
+  }
+  
+  /*!**************************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./packages/core/components/OutlineList/styles.module.css ***!
+    \**************************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_OutlineList__V493Q {
+    color: var(--puck-color-grey-03);
+    font-family: var(--puck-font-family);
+    margin: 0;
+    padding-left: 16px;
+    position: relative;
+    list-style: none;
+  }
+  
+  .styles_OutlineList__V493Q::before {
+    background: var(--puck-color-grey-08);
+    position: absolute;
+    left: -1px;
+    top: 0px;
+    width: 1px;
+    height: calc(100% - 9px);
+    content: "";
+  }
+  
+  .styles_OutlineListItem__BOhpf {
+    position: relative;
+    margin-bottom: 4px;
+  }
+  
+  .styles_OutlineListItem__BOhpf::before {
+    background: var(--puck-color-grey-08);
+    position: absolute;
+    left: -17px;
+    top: 9px;
+    width: 13px;
+    height: 1px;
+    content: "";
+  }
+  
+  .styles_OutlineListItem--clickable__XQp9d {
+    cursor: pointer;
+    transition: color 50ms ease-in;
+  }
+  
+  .styles_OutlineListItem--clickable__XQp9d:focus-visible {
+    outline: 2px solid var(--puck-color-azure-05);
+    outline-offset: 2px;
+  }
+  
+  @media (hover: hover) and (pointer: fine) {
+    .styles_OutlineListItem--clickable__XQp9d:hover {
+      color: var(--puck-color-azure-04);
+      transition: none;
+    }
+  }
+  
+  .styles_OutlineListItem--clickable__XQp9d:active {
+    color: var(--puck-color-azure-03);
+    transition: none;
+  }
+  
+  .styles_OutlineListItem__BOhpf > .styles_OutlineList__V493Q {
+    margin: 8px 0;
+  }
+  
+  /*!***************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./config/blocks/ButtonGroup/styles.module.css ***!
+    \***************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_ButtonGroup-actions__j2Xi8 {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  
+  .styles_ButtonGroup--center__RVq7O .styles_ButtonGroup-actions__j2Xi8 {
+    justify-content: center;
+  }
+  
+  /*!***************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./config/components/Section/styles.module.css ***!
+    \***************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_Section__4tQXe:not(.styles_Section__4tQXe .styles_Section__4tQXe) {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  
+  @media (min-width: 768px) {
+    .styles_Section__4tQXe:not(.styles_Section__4tQXe .styles_Section__4tQXe) {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+  }
+  
+  .styles_Section__4tQXe:not(.styles_Section__4tQXe .styles_Section__4tQXe) .styles_Section-inner__8sPWU {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+  }
+  
+  /*!*********************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./config/blocks/ModernButtonGroup/styles.module.css ***!
+    \*********************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_ButtonGroup-actions__M_JUS {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  
+  .styles_ButtonGroup--center__o8IjC .styles_ButtonGroup-actions__M_JUS {
+    justify-content: center;
+  }
+  
+  /*!********************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./config/blocks/Card/styles.module.css ***!
+    \********************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_Card__cpwca {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 16px;
+    width: 100%;
+  }
+  
+  .styles_Card--card__VBBgz {
+    background: white;
+    box-shadow: rgba(140, 152, 164, 0.25) 0px 3px 6px 0px;
+    border-radius: 8px;
+    flex: 1;
+    max-width: 100%;
+    margin-left: unset;
+    margin-right: unset;
+    padding: 24px;
+    align-items: flex-start;
+    width: auto;
+  }
+  
+  .styles_Card-icon__d4grs {
+    border-radius: 256px;
+    background: var(--puck-color-azure-09);
+    color: var(--puck-color-azure-06);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 64px;
+    height: 64px;
+  }
+  
+  .styles_Card-title__B6_Z7 {
+    font-size: 22px;
+    text-align: center;
+  }
+  
+  .styles_Card--card__VBBgz .styles_Card-title__B6_Z7 {
+    text-align: left;
+  }
+  
+  .styles_Card-description__fk7M0 {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--puck-color-grey-05);
+    text-align: center;
+    font-weight: 300;
+  }
+  
+  .styles_Card--card__VBBgz .styles_Card-description__fk7M0 {
+    text-align: left;
+  }
+  
+  /*!***********************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./config/blocks/Columns/styles.module.css ***!
+    \***********************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_Columns__e_oyl {
+    display: flex;
+    gap: 24px;
+    grid-template-columns: repeat(12, 1fr);
+    flex-direction: column;
+    min-height: 0; /* NEW */
+    min-width: 0; /* NEW; needed for Firefox */
+  }
+  
+  @media (min-width: 768px) {
+    .styles_Columns__e_oyl {
+      display: grid;
+    }
+  }
+  
+  /*!********************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./config/blocks/Hero/styles.module.css ***!
+    \********************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_Hero__AO43E {
+    background-image: linear-gradient(
+      rgba(255, 255, 255, 0),
+      rgb(247, 250, 255) 100%
+    );
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  
+  .styles_Hero-inner__1sGAv {
+    display: flex;
+    align-items: center;
+    position: relative;
+    gap: 48px;
+    flex-wrap: wrap;
+    z-index: 1;
+  }
+  
+  @media (min-width: 1024px) {
+    .styles_Hero-inner__1sGAv {
+      flex-wrap: nowrap;
+    }
+  }
+  
+  .styles_Hero__AO43E h1 {
+    line-height: 1.1;
+    font-size: 48px;
+    margin: 0;
+  }
+  
+  @media (min-width: 768px) {
+    .styles_Hero__AO43E h1 {
+      font-size: 64px;
+    }
+  }
+  
+  .styles_Hero-subtitle__qAT6c {
+    color: var(--puck-color-grey-05);
+    font-size: var(--puck-font-size-m);
+    line-height: 1.5;
+    margin: 0;
+    margin-bottom: 8px;
+    font-weight: 300;
+  }
+  
+  .styles_Hero--hasImageBackground__a9rkW .styles_Hero-subtitle__qAT6c {
+    color: var(--puck-color-grey-03);
+  }
+  
+  .styles_Hero-image__ZxOrj {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+  }
+  
+  .styles_Hero-imageOverlay__d2XJa {
+    background-image: linear-gradient(
+      -90deg,
+      rgb(247, 250, 255, 0.7) 0%,
+      rgb(247, 250, 255, 0.7) 80%
+    );
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+  }
+  
+  @media (min-width: 768px) {
+    .styles_Hero--left__Lfc_v .styles_Hero-imageOverlay__d2XJa {
+      background-image: linear-gradient(
+        -90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgb(247, 250, 255) 70%
+      );
+    }
+  }
+  
+  .styles_Hero-bg__C9qWB img {
+    height: 100%;
+  }
+  
+  .styles_Hero-content__Uk3w1 {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+  }
+  
+  @media (min-width: 768px) {
+    .styles_Hero--hasImageBackground__a9rkW .styles_Hero-content__Uk3w1 {
+      max-width: 50%;
+    }
+  }
+  
+  .styles_Hero--center__FabKN .styles_Hero-inner__1sGAv {
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .styles_Hero--center__FabKN .styles_Hero-content__Uk3w1 {
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+  }
+  
+  .styles_Hero-actions__HqNfN {
+    display: flex;
+    gap: 16px;
+  }
+  
+  /*!********************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./config/blocks/Flex/styles.module.css ***!
+    \********************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_Flex__AEdmk {
+    display: flex;
+    gap: 24px;
+    min-height: 0;
+    min-width: 0;
+    flex-wrap: wrap;
+  }
+  
+  .styles_Flex-item__4FHQa {
+    flex: 1;
+  }
+  
+  /*!*********************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./config/blocks/Logos/styles.module.css ***!
+    \*********************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_Logos__DB_IX {
+    background-color: var(--puck-color-grey-02);
+  }
+  
+  .styles_Logos-items__Bwhaa {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 64px;
+    padding-top: 64px;
+    gap: 24px;
+    filter: grayscale(1) brightness(100);
+    opacity: 0.8;
+  }
+  
+  /*!*********************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./config/blocks/Stats/styles.module.css ***!
+    \*********************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_Stats-items__l__Rg {
+    background-image: linear-gradient(
+      120deg,
+      var(--puck-color-azure-03) 0%,
+      var(--puck-color-azure-05) 100%
+    );
+    border-radius: 24px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 72px;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 auto;
+    max-width: 768px;
+    padding: 64px 16px;
+  }
+  
+  @media (min-width: 768px) {
+    .styles_Stats-items__l__Rg {
+      padding: 64px 24px;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .styles_Stats-items__l__Rg {
+      grid-template-columns: 1fr 1fr;
+      padding: 128px 24px;
+      max-width: 100%;
+    }
+  }
+  
+  .styles_Stats-item__PlhuR {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    gap: 8px;
+    overflow: hidden;
+    width: 100%;
+  }
+  
+  .styles_Stats-icon__0TgQS {
+    border-radius: 256px;
+    background: var(--puck-color-azure-09);
+    color: var(--puck-color-azure-06);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 64px;
+    height: 64px;
+  }
+  
+  .styles_Stats-label__vi5dx {
+    font-size: 22px;
+    text-align: center;
+    font-weight: 600;
+    opacity: 0.8;
+  }
+  
+  .styles_Stats-value__yTRfS {
+    font-size: 72px;
+    line-height: 1;
+    font-weight: 700;
+  }
+  
+  /*!******************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./config/blocks/PartnersAgency/styles.module.css ***!
+    \******************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_Logos__IzWEL {
+    background-color: var(--puck-color-grey-02);
+  }
+  
+  .styles_Logos-items__Ukudz {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 64px;
+    padding-top: 64px;
+    gap: 24px;
+    filter: grayscale(1) brightness(100);
+    opacity: 0.8;
+  }
+  
+  /*!*************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./config/blocks/CardLink2/styles.module.css ***!
+    \*************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_Card__NHw4T {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 16px;
+    width: 100%;
+  }
+  
+  .styles_Card--card__WgNp5 {
+    background: white;
+    box-shadow: rgba(140, 152, 164, 0.25) 0px 3px 6px 0px;
+    border-radius: 8px;
+    flex: 1;
+    max-width: 100%;
+    margin-left: unset;
+    margin-right: unset;
+    padding: 24px;
+    align-items: flex-start;
+    width: auto;
+  }
+  
+  .styles_Card-icon__Q54_5 {
+    border-radius: 256px;
+    background: var(--puck-color-azure-09);
+    color: var(--puck-color-azure-06);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 64px;
+    height: 64px;
+  }
+  
+  .styles_Card-title__IeKo7 {
+    font-size: 22px;
+    text-align: center;
+  }
+  
+  .styles_Card--card__WgNp5 .styles_Card-title__IeKo7 {
+    text-align: left;
+  }
+  
+  .styles_Card-description__iUewP {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--puck-color-grey-05);
+    text-align: center;
+    font-weight: 300;
+  }
+  
+  .styles_Card--card__WgNp5 .styles_Card-description__iUewP {
+    text-align: left;
+  }
+  
+  /*!**************************************************************************************************************************************************************************************************************************************************************************************!*\
+    !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[5].use[3]!./config/components/Header/styles.module.css ***!
+    \**************************************************************************************************************************************************************************************************************************************************************************************/
+  .styles_Header__apfgC {
+    align-items: center;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1280px;
+    padding: 24px 16px;
+  }
+  
+  @media (min-width: 768px) {
+    .styles_Header__apfgC {
+      padding: 24px;
+    }
+  }
+  
+  .styles_Header-logo__Jc_g3 {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: 1.4;
+    opacity: 0.8;
+  }
+  
+  .styles_Header-items__bcoWI {
+    display: flex;
+    gap: 24px;
+    margin-left: auto;
+  }
+  
+  @media (min-width: 1024px) {
+    .styles_Header-items__bcoWI {
+      gap: 32px;
+    }
+  }
+  
+  

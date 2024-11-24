@@ -1,0 +1,55 @@
+// {
+//   "extends": "./tsconfig/nextjs.json",
+//   "compilerOptions": {
+//     "moduleResolution": "bundler",
+//     "plugins": [{ "name": "next" }],
+//     "baseUrl": ".", // Base URL is the project root
+//     "paths": {
+//       "@/core": ["../../packages/core"],
+//       "@/core/*": ["../../packages/core/*"],
+//       "@measured/puck": ["../../packages/core"],
+//       "@/plugin-heading-analyzer": ["../../packages/plugin-heading-analyzer"],
+//       "@/plugin-heading-analyzer/*": [
+//         "../../packages/plugin-heading-analyzer/*"
+//       ],
+//       "@/": ["./"], // Alias for the root directory
+//       "@/*": ["./*"] // Alias for all files in the root directory
+//     }
+//   },
+//   "include": [
+//     "next-env.d.ts",
+//     "**/*.ts",
+//     "**/*.tsx",
+//     ".next/types/**/*.ts",
+//     "tailwind.config.js",
+//   ],
+//   "exclude": ["node_modules"]
+// }
+
+{
+  "extends": "./tsconfig/nextjs.json",
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "plugins": [{ "name": "next" }],
+    "baseUrl": ".", // Base URL is the project root
+    "paths": {
+      "@/core": ["../../packages/core"],
+      "@/core/*": ["../../packages/core/*"],
+      "@measured/puck": ["../../packages/core"],
+      "@/plugin-heading-analyzer": ["../../packages/plugin-heading-analyzer"],
+      "@/plugin-heading-analyzer/*": [
+        "../../packages/plugin-heading-analyzer/*"
+      ],
+      "@/": ["./"], // Alias for the root directory
+      "@/*": ["./*"] // Alias for all files in the root directory
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "tailwind.config.js",
+  ],
+  "exclude": ["node_modules"]
+}

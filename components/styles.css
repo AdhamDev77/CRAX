@@ -1,0 +1,48 @@
+.editor-container {
+  max-width: 700px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.toolbar {
+  display: flex;
+  gap: 8px;
+  background: #ffffff;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.toolbar-button {
+  background-color: #f3f4f6;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.toolbar-button.active,
+.toolbar-button:hover {
+  background-color: #e5e7eb;
+}
+
+.toolbar-select {
+  border: 1px solid #d1d5db;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: #ffffff;
+}
+
+.toolbar-color-picker {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+.editor-content {
+  background: #ffffff;
+  min-height: 300px;
+  font-size: 16px;
+}
