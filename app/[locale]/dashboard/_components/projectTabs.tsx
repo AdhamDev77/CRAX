@@ -102,7 +102,7 @@ const ProjectTabs = ({ onTabChange, selectedSite }: ProjectTabsProps) => {
   };
 
   return (
-    <div className="mb-6 mt-4 flex flex-wrap items-center gap-2">
+    <div className="mb-3 mt-4 flex flex-wrap items-center gap-2">
       {tabs.map((tab) => (
         <Tab
           text={tab}
