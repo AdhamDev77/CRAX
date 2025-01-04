@@ -1,29 +1,44 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable @next/next/no-img-element */
-import React, { useState } from "react";
+import React from "react";
 import { ComponentConfig } from "../../../packages/core/types";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../packages/core/lib";
-import { Button } from "../../../packages/core/components/Button";
 import { Section } from "../../components/Section";
-import ColorPickerComponent from "@/components/ColorPicker";
+import ColorPanel from "@/components/ColorPanel";
+import BorderRadiusAdjuster from "@/components/BorderRadiusAdjustor";
 
 const getClassName = getClassNameFactory("ButtonGroup", styles);
 
 export type ButtonGroupProps = {
   align?: string;
-  buttons: { label: string; href: string; variant: "primary" | "secondary" }[];
+  buttons: { label: string; href: string; variant: string }[];
   bgColor: string;
+  fontColor: string;
+  borderRadius: string;
 };
 
 export const ButtonGroup: ComponentConfig<ButtonGroupProps> = {
   label: "Button Group",
   fields: {
     bgColor: {
+      label: "Background Color",
       type: "custom",
-      render: ({ name, onChange, value }) => {
-        return <ColorPickerComponent name={name} onChange={onChange} value={value} />;
-      },
+      render: ({ name, onChange, value }) => (
+        <ColorPanel name={name} value={value} onChange={onChange} />
+      ),
+    },
+    fontColor: {
+      label: "Font Color",
+      type: "custom",
+      render: ({ name, onChange, value }) => (
+        <ColorPanel name={name} value={value} onChange={onChange} />
+      ),
+    },
+    borderRadius: {
+      label: "Border Radius",
+      type: "custom",
+      render: ({ onChange, value }) => (
+        <BorderRadiusAdjuster value={value} onChange={onChange} />
+      ),
     },
     buttons: {
       type: "array",
@@ -32,7 +47,7 @@ export const ButtonGroup: ComponentConfig<ButtonGroupProps> = {
         label: { type: "text" },
         href: { type: "text" },
         variant: {
-          type: "radio",
+          type: "select",
           options: [
             { label: "primary", value: "primary" },
             { label: "secondary", value: "secondary" },
@@ -55,23 +70,37 @@ export const ButtonGroup: ComponentConfig<ButtonGroupProps> = {
     },
   },
   defaultProps: {
-    buttons: [{ label: "Learn more", href: "#", variant: "primary" }],
-    bgColor: "#fff"
+    buttons: [
+      {
+        label: "Button",
+        href: "#",
+        variant: "primary",
+      },
+    ],
+    bgColor: "#428af5",
+    fontColor: "#fff",
+    borderRadius: "0px",
   },
-  render: ({ align, buttons, bgColor, puck }) => {
+  render: ({ align, buttons, bgColor, fontColor, borderRadius, puck }) => {
     return (
-      <Section style={{ backgroundColor: bgColor, justifyContent: align}}>
+      <Section style={{ justifyContent: align }}>
         <div className={getClassName("actions")}>
           {buttons.map((button, i) => (
-            <Button
+            <a
               key={i}
+              className="p-2 px-3 rounded-md hover:opacity-80"
+              style={{
+                background: button.variant === "primary" ? bgColor : fontColor,
+                borderRadius,
+                border: button.variant === "secondary" ? `1px solid ${bgColor.split(',')[1]?.trim() || bgColor}` : "none"
+              }}
               href={button.href}
-              variant={button.variant}
-              size="large"
               tabIndex={puck.isEditing ? -1 : undefined}
             >
-              {button.label}
-            </Button>
+              <span style={{ color: button.variant === "primary" ? fontColor : bgColor.split(',')[1]?.trim() || bgColor }}>
+                {button.label}
+              </span>
+            </a>
           ))}
         </div>
       </Section>

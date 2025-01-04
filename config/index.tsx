@@ -10,6 +10,7 @@ import {
 } from "./blocks/HeroImagesSlider";
 import { Heading, HeadingProps } from "./blocks/Heading";
 import { Flex, FlexProps } from "./blocks/Flex";
+import { Grid, GridProps } from "./blocks/Grid";
 import { Image, ImageProps } from "./blocks/Image";
 import { Logos, LogosProps } from "./blocks/Logos";
 import { Stats, StatsProps } from "./blocks/Stats";
@@ -32,6 +33,7 @@ import { Testimonials, TestimonialsProps } from "./blocks/Testimonals";
 import { ContactForm, ContactFormProps } from "./blocks/ContactForm";
 import { SocialPreview, SocialPreviewProps } from "./blocks/SocialmediaPost";
 import { Timeline, TimelineProps } from "./blocks/Timeline";
+import { SimpleCard, SimpleCardProps } from "./blocks/SimpleCard";
 
 import Root, { RootProps } from "./root";
 
@@ -47,6 +49,7 @@ export type Props = {
   HeroImagesSlider: HeroImagesSliderProps;
   Heading: HeadingProps;
   Flex: FlexProps;
+  Grid: GridProps;
   Logos: LogosProps;
   LensCard: LensProps;
   Stats: StatsProps;
@@ -69,6 +72,7 @@ export type Props = {
   ContactForm: ContactFormProps;
   SocialPreview: SocialPreviewProps;
   Timeline: TimelineProps;
+  SimpleCard: SimpleCardProps;
 };
 
 export type UserConfig = any;
@@ -84,23 +88,58 @@ export const conf: UserConfig = {
   },
   categories: {
     layout: {
-      components: ["Columns", "Flex", "VerticalSpace"],
+      title: "Layout Components",
+      components: ["Columns", "Flex", "Grid", "VerticalSpace", "Seperator"],
     },
-    Navbars: {
+    navigation: {
+      title: "Navigation",
       components: ["Navbar", "ModernNavbar"],
     },
-    Announcments: {
+    announcements: {
+      title: "Announcements",
       components: ["Announcement1"],
     },
-    Landing: {
+    landing: {
+      title: "Landing Sections",
       components: ["Hero", "HeroAgency", "HeroImagesSlider"],
     },
+    media: {
+      title: "Media",
+      components: ["Image", "Video", "VideoSecion", "MapLocation", "SocialPreview"],
+    },
     typography: {
+      title: "Typography",
       components: ["Heading", "Text"],
     },
+    cards: {
+      title: "Card Components",
+      components: [
+        "Card",
+        "CardLink",
+        "CardLink2",
+        "LensCard",
+        "SimpleCard",
+      ],
+    },
+    logos: {
+      title: "Logos and Partners",
+      components: ["Logos", "PartnersAgency"],
+    },
+    statistics: {
+      title: "Statistics and Testimonials",
+      components: ["Stats", "Testimonials"],
+    },
+    forms: {
+      title: "Forms",
+      components: ["ContactForm", "FAQ"],
+    },
     interactive: {
-      title: "Actions",
-      components: ["ButtonGroup"],
+      title: "Interactive Elements",
+      components: ["ButtonGroup", "ModernButtonGroup"],
+    },
+    timeline: {
+      title: "Timelines",
+      components: ["Timeline"],
     },
   },
   components: {
@@ -122,6 +161,7 @@ export const conf: UserConfig = {
     Heading,
     LensCard,
     Flex,
+    Grid,
     Logos,
     Stats,
     Text,
@@ -133,7 +173,8 @@ export const conf: UserConfig = {
     Testimonials,
     ContactForm,
     SocialPreview,
-    Timeline
+    Timeline,
+    SimpleCard,
   },
 };
 

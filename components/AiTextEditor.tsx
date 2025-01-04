@@ -12,7 +12,7 @@ import Highlight from "@tiptap/extension-highlight";
 import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
 import Placeholder from "@tiptap/extension-placeholder";
-import Underline from '@tiptap/extension-underline';
+import Underline from "@tiptap/extension-underline";
 
 import {
   Dialog,
@@ -22,8 +22,19 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 import {
   Bold,
   Italic,
@@ -52,7 +63,84 @@ import {
   Code,
   Heading3,
   Quote,
+  LineChart,
 } from "lucide-react";
+
+// Line height extension
+const LineHeightExtension = Extension.create({
+  name: "lineHeight",
+  addOptions() {
+    return {
+      types: ["paragraph", "heading"],
+      defaultLineHeight: "normal",
+    };
+  },
+  addGlobalAttributes() {
+    return [
+      {
+        types: this.options.types,
+        attributes: {
+          lineHeight: {
+            default: "normal",
+            renderHTML: (attributes) => {
+              if (!attributes.lineHeight) return {};
+              return { style: `line-height: ${attributes.lineHeight}` };
+            },
+            parseHTML: (element) => element.style.lineHeight || "normal",
+          },
+        },
+      },
+    ];
+  },
+  addCommands() {
+    return {
+      setLineHeight:
+        (lineHeight: string) =>
+        ({ commands }) => {
+          return this.options.types.every((type) =>
+            commands.updateAttributes(type, { lineHeight })
+          );
+        },
+    };
+  },
+});
+
+const BackgroundColor = Extension.create({
+  name: "backgroundColor",
+  addOptions() {
+    return {
+      types: ["textStyle"],
+    };
+  },
+  addGlobalAttributes() {
+    return [
+      {
+        types: this.options.types,
+        attributes: {
+          backgroundColor: {
+            default: null,
+            parseHTML: (element) => element.style.backgroundColor || null,
+            renderHTML: (attributes) => {
+              if (!attributes.backgroundColor) return {};
+              return {
+                style: `background-color: ${attributes.backgroundColor}`,
+              };
+            },
+          },
+        },
+      },
+    ];
+  },
+  addCommands() {
+    return {
+      setBackgroundColor:
+        (backgroundColor) =>
+        ({ chain }) => {
+          return chain().setMark("textStyle", { backgroundColor }).run();
+        },
+    };
+  },
+});
 
 // Font size extension
 const FontSize = Extension.create({
@@ -93,7 +181,7 @@ const FontSize = Extension.create({
 // Custom underline extension with styling
 const CustomUnderline = Underline.configure({
   HTMLAttributes: {
-    class: 'underline decoration-1',
+    class: "underline decoration-1",
   },
 });
 
@@ -133,7 +221,6 @@ const aiCommands = {
 
 type AiCommand = keyof typeof aiCommands;
 
-// Client-side only editor component
 const Editor = dynamic(
   () =>
     Promise.resolve(({ editor }: { editor: any }) => (
@@ -143,187 +230,199 @@ const Editor = dynamic(
 );
 
 export const AiTextEditor: React.FC<NovelEditorProps> = ({
-    name,
-    value,
-    onChange,
-  }) => {
-    const [mounted, setMounted] = useState(false);
-    const [isGenerating, setIsGenerating] = useState(false);
-    const [generatedText, setGeneratedText] = useState<string | null>(null);
+  name,
+  value,
+  onChange,
+}) => {
+  const [mounted, setMounted] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedText, setGeneratedText] = useState<string | null>(null);
 
-    const applyFontSize = (size: string) => {
-        editor?.chain().focus().setFontSize(size).run();
-      };
-    
-    const applyColor = (color: string) => {
-        editor?.chain().focus().setColor(color).run();
-    };
-    
-    const applyTextAlign = (alignment: string) => {
-        editor?.chain().focus().setTextAlign(alignment).run();
-    };
-    
-    const editor = useEditor({
-      extensions: [
-        StarterKit.configure({
-          bulletList: {
-            keepMarks: true,
-            keepAttributes: false,
-          },
-          orderedList: {
-            keepMarks: true,
-            keepAttributes: false,
-          },
-          heading: {
-            levels: [1, 2, 3],
-          },
-        }),
-        TextAlign.configure({
-          types: ["heading", "paragraph"],
-          alignments: ["left", "center", "right"],
-          defaultAlignment: "left",
-        }),
-        TextStyle,
-        Typography,
-        Focus.configure({
-          className: "ring-2 ring-blue-500",
-          mode: "all",
-        }),
-        Color.configure({
-          types: ["textStyle"],
-        }),
-        Highlight.configure({
-          multicolor: true,
-          HTMLAttributes: {
-            class: "highlight-marker",
-          },
-        }),
-        TaskList.configure({
-          HTMLAttributes: {
-            class: "task-list",
-          },
-        }),
-        TaskItem.configure({
-          nested: true,
-          HTMLAttributes: {
-            class: "task-item",
-          },
-        }),
-        Placeholder.configure({
-          placeholder: ({ node }) => {
-            if (node.type.name === "heading") return "What's the title?";
-            return "Press '/' for commands, or start writing...";
-          },
-          showOnlyCurrent: true,
-        }),
-        CustomUnderline,
-        FontSize,
-      ],
-      content: value || "",
-      onUpdate: ({ editor }) => {
-        const htmlContent = editor.getHTML();
-        onChange(htmlContent);
-      },
-      editorProps: {
-        attributes: {
-          class:
-            "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl focus:outline-none max-w-none min-h-[200px]",
+  const applyFontSize = (size: string) => {
+    editor?.chain().focus().setFontSize(size).run();
+  };
+
+  const applyBackgroundColor = (color: string) => {
+    editor?.chain().focus().setBackgroundColor(color).run();
+  };
+
+  const applyColor = (color: string) => {
+    editor?.chain().focus().setColor(color).run();
+  };
+
+  const applyTextAlign = (alignment: string) => {
+    editor?.chain().focus().setTextAlign(alignment).run();
+  };
+
+  const applyLineHeight = (height: string) => {
+    editor?.chain().focus().setLineHeight(height).run();
+  };
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({
+        bulletList: {
+          keepMarks: true,
+          keepAttributes: false,
         },
+        orderedList: {
+          keepMarks: true,
+          keepAttributes: false,
+        },
+        heading: {
+          levels: [1, 2, 3],
+        },
+      }),
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
+        alignments: ["left", "center", "right"],
+        defaultAlignment: "left",
+      }),
+      TextStyle,
+      Typography,
+      Focus.configure({
+        className: "ring-2 ring-blue-500",
+        mode: "all",
+      }),
+      Color.configure({
+        types: ["textStyle"],
+      }),
+      Highlight.configure({
+        multicolor: true,
+        HTMLAttributes: {
+          class: "highlight-marker",
+        },
+      }),
+      TaskList.configure({
+        HTMLAttributes: {
+          class: "task-list",
+        },
+      }),
+      TaskItem.configure({
+        nested: true,
+        HTMLAttributes: {
+          class: "task-item",
+        },
+      }),
+      Placeholder.configure({
+        placeholder: ({ node }) => {
+          if (node.type.name === "heading") return "What's the title?";
+          return "Press '/' for commands, or start writing...";
+        },
+        showOnlyCurrent: true,
+      }),
+      CustomUnderline,
+      FontSize,
+      LineHeightExtension,
+      BackgroundColor,
+    ],
+    content: value || "",
+    onUpdate: ({ editor }) => {
+      const htmlContent = editor.getHTML();
+      onChange(htmlContent);
+    },
+    editorProps: {
+      attributes: {
+        class:
+          "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl focus:outline-none max-w-none min-h-[200px]",
       },
-    });
-  
-    useEffect(() => {
-      setMounted(true);
-    }, []);
-  
-    useEffect(() => {
-      if (editor && value !== editor.getHTML()) {
-        editor.commands.setContent(value);
-      }
-    }, [value, editor]);
-  
-    useEffect(() => {
-      if (generatedText && editor && !isGenerating) {
-        const currentCursor = editor.state.selection.from;
-        editor.commands.insertContent(generatedText);
-        editor.commands.focus(currentCursor + generatedText.length);
-      }
-    }, [generatedText, editor, isGenerating]);
-  
-    const getSelectedText = () => {
-      if (!editor) return "";
-      return editor.state.selection.empty
-        ? editor.getText()
-        : editor.state.doc.cut(
-            editor.state.selection.from,
-            editor.state.selection.to
-          ).textContent;
-    };
-  
-    const handleAiCommand = async (command: AiCommand) => {
-      if (!editor || isGenerating) return;
-      setIsGenerating(true);
-      const selectedText = getSelectedText();
-  
-      if (!selectedText || selectedText.trim() === "") {
-        console.warn("No text selected or empty text for AI command.");
-        setIsGenerating(false);
-        return;
-      }
-  
-      try {
-        const response = await axios.post("/api/generate", {
-          prompt: `${aiCommands[command].prompt}${selectedText.trim()}`,
-        });
-        if (response.data) {
-          setGeneratedText(response.data.text);
-        }
-      } catch (error) {
-        console.error("Error generating text:", error);
-      } finally {
-        setIsGenerating(false);
-      }
-    };
-  
-    const ToolbarButton = ({ 
-      onClick, 
-      isActive, 
-      icon: Icon, 
-      tooltip,
-      disabled = false 
-    }: { 
-      onClick: () => void, 
-      isActive?: boolean, 
-      icon: any, 
-      tooltip: string,
-      disabled?: boolean 
-    }) => (
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClick}
-              className={`${isActive ? "bg-secondary" : ""} ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
-              disabled={disabled}
-            >
-              <Icon className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>{tooltip}</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    );
+    },
+  });
 
-    if (!mounted) {
-      return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (editor && value !== editor.getHTML()) {
+      editor.commands.setContent(value);
+    }
+  }, [value, editor]);
+
+  useEffect(() => {
+    if (generatedText && editor && !isGenerating) {
+      const currentCursor = editor.state.selection.from;
+      editor.commands.insertContent(generatedText);
+      editor.commands.focus(currentCursor + generatedText.length);
+    }
+  }, [generatedText, editor, isGenerating]);
+
+  const getSelectedText = () => {
+    if (!editor) return "";
+    return editor.state.selection.empty
+      ? editor.getText()
+      : editor.state.doc.cut(
+          editor.state.selection.from,
+          editor.state.selection.to
+        ).textContent;
+  };
+
+  const handleAiCommand = async (command: AiCommand) => {
+    if (!editor || isGenerating) return;
+    setIsGenerating(true);
+    const selectedText = getSelectedText();
+
+    if (!selectedText || selectedText.trim() === "") {
+      console.warn("No text selected or empty text for AI command.");
+      setIsGenerating(false);
+      return;
     }
 
-    // Add custom styles for highlight colors
-    const customStyles = `
+    try {
+      const response = await axios.post("/api/generate", {
+        prompt: `${aiCommands[command].prompt}${selectedText.trim()}`,
+      });
+      if (response.data) {
+        setGeneratedText(response.data.text);
+      }
+    } catch (error) {
+      console.error("Error generating text:", error);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const ToolbarButton = ({
+    onClick,
+    isActive,
+    icon: Icon,
+    tooltip,
+    disabled = false,
+  }: {
+    onClick: () => void;
+    isActive?: boolean;
+    icon: any;
+    tooltip: string;
+    disabled?: boolean;
+  }) => (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onClick}
+            className={`${isActive ? "bg-secondary" : ""} ${
+              disabled ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            disabled={disabled}
+          >
+            <Icon className="h-4 w-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{tooltip}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+
+  if (!mounted) {
+    return null;
+  }
+
+  // Add custom styles for highlight colors
+  const customStyles = `
       .highlight-marker {
         background-color: #fef08a;
         border-radius: 0.25rem;
@@ -380,7 +479,9 @@ export const AiTextEditor: React.FC<NovelEditorProps> = ({
                 isActive={editor?.isActive("underline")}
                 icon={UnderlineIcon}
                 tooltip="Underline"
-                disabled={!editor?.can().chain().focus().toggleUnderline().run()}
+                disabled={
+                  !editor?.can().chain().focus().toggleUnderline().run()
+                }
               />
               <ToolbarButton
                 onClick={() => editor?.chain().focus().toggleStrike().run()}
@@ -394,7 +495,9 @@ export const AiTextEditor: React.FC<NovelEditorProps> = ({
                 isActive={editor?.isActive("highlight")}
                 icon={Highlighter}
                 tooltip="Highlight"
-                disabled={!editor?.can().chain().focus().toggleHighlight().run()}
+                disabled={
+                  !editor?.can().chain().focus().toggleHighlight().run()
+                }
               />
             </div>
 
@@ -405,14 +508,20 @@ export const AiTextEditor: React.FC<NovelEditorProps> = ({
                 isActive={editor?.isActive("bulletList")}
                 icon={List}
                 tooltip="Bullet List"
-                disabled={!editor?.can().chain().focus().toggleBulletList().run()}
+                disabled={
+                  !editor?.can().chain().focus().toggleBulletList().run()
+                }
               />
               <ToolbarButton
-                onClick={() => editor?.chain().focus().toggleOrderedList().run()}
+                onClick={() =>
+                  editor?.chain().focus().toggleOrderedList().run()
+                }
                 isActive={editor?.isActive("orderedList")}
                 icon={ListOrdered}
                 tooltip="Numbered List"
-                disabled={!editor?.can().chain().focus().toggleOrderedList().run()}
+                disabled={
+                  !editor?.can().chain().focus().toggleOrderedList().run()
+                }
               />
               <ToolbarButton
                 onClick={() => editor?.chain().focus().toggleTaskList().run()}
@@ -422,59 +531,98 @@ export const AiTextEditor: React.FC<NovelEditorProps> = ({
                 disabled={!editor?.can().chain().focus().toggleTaskList().run()}
               />
               <ToolbarButton
-                onClick={() => editor?.chain().focus().sinkListItem('listItem').run()}
+                onClick={() =>
+                  editor?.chain().focus().sinkListItem("listItem").run()
+                }
                 icon={Indent}
                 tooltip="Indent"
-                disabled={!editor?.can().chain().focus().sinkListItem('listItem').run()}
+                disabled={
+                  !editor?.can().chain().focus().sinkListItem("listItem").run()
+                }
               />
               <ToolbarButton
-                onClick={() => editor?.chain().focus().liftListItem('listItem').run()}
+                onClick={() =>
+                  editor?.chain().focus().liftListItem("listItem").run()
+                }
                 icon={Outdent}
                 tooltip="Outdent"
-                disabled={!editor?.can().chain().focus().liftListItem('listItem').run()}
+                disabled={
+                  !editor?.can().chain().focus().liftListItem("listItem").run()
+                }
               />
             </div>
 
             {/* Headings Section */}
             <div className="flex items-center gap-1 border-r pr-2">
               <ToolbarButton
-                onClick={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()}
+                onClick={() =>
+                  editor?.chain().focus().toggleHeading({ level: 1 }).run()
+                }
                 isActive={editor?.isActive("heading", { level: 1 })}
                 icon={Heading1}
                 tooltip="Heading 1"
-                disabled={!editor?.can().chain().focus().toggleHeading({ level: 1 }).run()}
+                disabled={
+                  !editor
+                    ?.can()
+                    .chain()
+                    .focus()
+                    .toggleHeading({ level: 1 })
+                    .run()
+                }
               />
               <ToolbarButton
-                onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
+                onClick={() =>
+                  editor?.chain().focus().toggleHeading({ level: 2 }).run()
+                }
                 isActive={editor?.isActive("heading", { level: 2 })}
                 icon={Heading2}
                 tooltip="Heading 2"
-                disabled={!editor?.can().chain().focus().toggleHeading({ level: 2 }).run()}
+                disabled={
+                  !editor
+                    ?.can()
+                    .chain()
+                    .focus()
+                    .toggleHeading({ level: 2 })
+                    .run()
+                }
               />
               <ToolbarButton
-                onClick={() => editor?.chain().focus().toggleHeading({ level: 3 }).run()}
+                onClick={() =>
+                  editor?.chain().focus().toggleHeading({ level: 3 }).run()
+                }
                 isActive={editor?.isActive("heading", { level: 3 })}
                 icon={Heading3}
                 tooltip="Heading 3"
-                disabled={!editor?.can().chain().focus().toggleHeading({ level: 3 }).run()}
+                disabled={
+                  !editor
+                    ?.can()
+                    .chain()
+                    .focus()
+                    .toggleHeading({ level: 3 })
+                    .run()
+                }
               />
             </div>
 
             {/* Block Formatting Section */}
             <div className="flex items-center gap-1 border-r pr-2">
-                    <ToolbarButton
+              <ToolbarButton
                 onClick={() => editor?.chain().focus().toggleBlockquote().run()}
                 isActive={editor?.isActive("blockquote")}
                 icon={Quote}
                 tooltip="Quote"
-                disabled={!editor?.can().chain().focus().toggleBlockquote().run()}
+                disabled={
+                  !editor?.can().chain().focus().toggleBlockquote().run()
+                }
               />
               <ToolbarButton
                 onClick={() => editor?.chain().focus().toggleCodeBlock().run()}
                 isActive={editor?.isActive("codeBlock")}
                 icon={Code}
                 tooltip="Code Block"
-                disabled={!editor?.can().chain().focus().toggleCodeBlock().run()}
+                disabled={
+                  !editor?.can().chain().focus().toggleCodeBlock().run()
+                }
               />
             </div>
 
@@ -505,16 +653,38 @@ export const AiTextEditor: React.FC<NovelEditorProps> = ({
 
             {/* Font Size and Color Section */}
             <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <LineChart className="h-4 w-4" />
+                <Select onValueChange={applyLineHeight} defaultValue="normal">
+                  <SelectTrigger className="w-[100px]">
+                    <SelectValue placeholder="Line Height" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="normal">Normal</SelectItem>
+                    <SelectItem value="1">1</SelectItem>
+                    <SelectItem value="1.25">1.25</SelectItem>
+                    <SelectItem value="1.5">1.5</SelectItem>
+                    <SelectItem value="2">2</SelectItem>
+                    <SelectItem value="2.5">2.5</SelectItem>
+                    <SelectItem value="3">3</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4">
               <Select onValueChange={applyFontSize} disabled={!editor}>
                 <SelectTrigger className="w-[100px]">
                   <SelectValue placeholder="Size" />
                 </SelectTrigger>
                 <SelectContent>
-                  {[10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48, 56, 64].map((size) => (
-                    <SelectItem key={size} value={`${size}px`}>
-                      {size}px
-                    </SelectItem>
-                  ))}
+                  {[10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 40, 48, 56, 64].map(
+                    (size) => (
+                      <SelectItem key={size} value={`${size}px`}>
+                        {size}px
+                      </SelectItem>
+                    )
+                  )}
                 </SelectContent>
               </Select>
               <div className="flex gap-1 justify-center items-center">
@@ -526,6 +696,17 @@ export const AiTextEditor: React.FC<NovelEditorProps> = ({
                   disabled={!editor}
                 />
               </div>
+            </div>
+
+            <div className="flex gap-1 justify-center items-center">
+              <Highlighter className="h-5 w-5" />
+              <input
+                type="color"
+                onChange={(e) => applyBackgroundColor(e.target.value)}
+                className="bg-transparent border-none outline-none w-8 h-8 cursor-pointer"
+                disabled={!editor}
+                title="Background Color"
+              />
             </div>
 
             {/* Undo/Redo Section */}
@@ -563,9 +744,9 @@ export const AiTextEditor: React.FC<NovelEditorProps> = ({
 
           {/* Editor Content */}
           <div className="prose-container relative">
-            <EditorContent 
-              editor={editor} 
-              className="rounded-lg border p-4 min-h-[300px] prose prose-sm sm:prose lg:prose-lg xl:prose-2xl focus:outline-none" 
+            <EditorContent
+              editor={editor}
+              className="rounded-lg border p-4 min-h-[300px] prose prose-sm sm:prose lg:prose-lg xl:prose-2xl focus:outline-none"
             />
           </div>
         </div>

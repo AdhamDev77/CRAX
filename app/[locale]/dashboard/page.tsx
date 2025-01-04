@@ -101,6 +101,7 @@ import { Button } from "@/components/ui/button";
 import theme from "tailwindcss/defaultTheme";
 import { useTheme } from "next-themes";
 import AnalyticsDashboard from "./_components/AnalyticsDashboard";
+import Footer from "../_components/footer";
 
 export default function Page() {
   const { data: session, status } = useSession();

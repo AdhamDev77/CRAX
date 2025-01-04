@@ -552,7 +552,6 @@ export function Puck<
                 }
               }}
             >
-
               <DropZoneProvider
                 value={{
                   data,

@@ -1,70 +1,30 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState } from "react";
 import { ComponentConfig } from "../../../packages/core";
-import ColorPicker from "react-pick-color";
-import { Brush, Edit, Edit2, X } from "lucide-react";
-import ColorPickerComponent from "@/components/ColorPicker";
 
 export type VideoSecionProps = {
-  bgColor: string;
-  textColor: string;
-  title: string;
-  subtitle: string;
   backgroundImage: string;
   videoUrl: string;
   buttonText: string;
-  showGradientShapes: string;
 };
 
 export const VideoSecion: ComponentConfig<VideoSecionProps> = {
   label: "Video Section",
   fields: {
-    bgColor: {
-      type: "custom",
-      render: ({ name, onChange, value }) => {
-        return <ColorPickerComponent name={name} onChange={onChange} value={value} />;
-      },
-    },
-    textColor: {
-      type: "custom",
-      render: ({ name, onChange, value }) => {
-        return <ColorPickerComponent name={name} onChange={onChange} value={value} />;
-      },
-    },
-    title: { type: "text", label: "Title" },
-    subtitle: { type: "text", label: "Subtitle" },
     backgroundImage: { type: "text", label: "Background Image URL" },
     videoUrl: { type: "text", label: "Video URL (YouTube or Vimeo)" },
     buttonText: { type: "text", label: "Button Text" },
-    showGradientShapes: {
-      type: "radio",
-      options: [
-        { label: "show", value: "show" },
-        { label: "hide", value: "hide" },
-      ],
-      label: "Show Gradient Shapes",
-    },
   },
   defaultProps: {
-    bgColor: "#ffffff",
-    textColor: "#000000",
-    title: "Designed for you to get more simple",
-    subtitle: "Build your business here. Take it anywhere.",
     backgroundImage:
       "https://images.unsplash.com/photo-1606868306217-dbf5046868d2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1020&q=80",
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     buttonText: "Play the overview",
-    showGradientShapes: "show",
   },
   render: ({
-    title,
-    subtitle,
     backgroundImage,
     videoUrl,
     buttonText,
-    showGradientShapes,
-    bgColor,
-    textColor,
   }: VideoSecionProps) => {
     const isYouTube =
       videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be");
@@ -80,23 +40,9 @@ export const VideoSecion: ComponentConfig<VideoSecionProps> = {
     }
     const [showVideo, setShowVideo] = useState(false);
     return (
-      <div
-        className="relative overflow-hidden"
-        style={{ backgroundColor: bgColor }}
-      >
-        <div className="mx-auto py-10">
-          <div className="max-w-2xl text-center mx-auto">
-            <h1
-              className="block text-3xl font-bold sm:text-4xl md:text-5xl"
-              style={{ color: textColor }}
-              dangerouslySetInnerHTML={{ __html: title }}
-            ></h1>
-            <p className="mt-3 text-lg opacity-75" style={{ color: textColor }}>
-              {subtitle}
-            </p>
-          </div>
-
-          <div className="mt-10 relative max-w-5xl mx-auto">
+      <div className="relative overflow-hidden">
+        <div className="mx-auto">
+          <div className="relative max-w-5xl mx-auto">
             {!showVideo && (
               <div
                 className="w-full object-cover h-96 sm:h-[480px] bg-no-repeat bg-center bg-cover rounded-xl"
@@ -140,17 +86,6 @@ export const VideoSecion: ComponentConfig<VideoSecionProps> = {
               </div>
             )}
 
-            {showGradientShapes === "show" && (
-              <>
-                <div className="absolute bottom-12 -start-20 -z-[1] size-48 bg-gradient-to-b from-orange-500 to-white p-px rounded-lg dark:to-neutral-900">
-                  <div className="bg-white size-48 rounded-lg dark:bg-neutral-900"></div>
-                </div>
-
-                <div className="absolute -top-12 -end-20 -z-[1] size-48 bg-gradient-to-t from-blue-600 to-cyan-400 p-px rounded-full">
-                  <div className="bg-white size-48 rounded-full dark:bg-neutral-900"></div>
-                </div>
-              </>
-            )}
           </div>
         </div>
       </div>

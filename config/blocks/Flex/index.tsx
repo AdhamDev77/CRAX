@@ -33,6 +33,7 @@ export type FlexProps = {
 };
 
 export const Flex: ComponentConfig<FlexProps> = {
+  label: "Flex",
   fields: {
     sections: {
       label: "Sections",
@@ -176,7 +177,9 @@ export const Flex: ComponentConfig<FlexProps> = {
     boxShadow: '0px 0px 0px rgba(0, 0, 0, 0)',
     animationStyle: "fade",
     spacing: { padding: "20px 0px 20px 0px", margin: "0px 0px 0px 0px" },
-    widthType: "full", // Default to full width
+    widthType: "full",
+    imageUrl: 'https://png.pngtree.com/background/20230616/original/pngtree-faceted-abstract-background-in-3d-with-shimmering-iridescent-metallic-texture-of-picture-image_3653595.jpg', // Explicitly set to null
+    imageUrls: ['https://png.pngtree.com/background/20230616/original/pngtree-faceted-abstract-background-in-3d-with-shimmering-iridescent-metallic-texture-of-picture-image_3653595.jpg'], // Explicitly set to empty array
   },
   resolveFields: async (data, { fields }) => {
     // Conditionally show/hide fields based on backgroundType
@@ -220,44 +223,59 @@ export const Flex: ComponentConfig<FlexProps> = {
     imageUrl,
     imageUrls,
     backgroundStyle,
-    widthType, // New prop
+    widthType,
     boxShadow,
   }) => {
     const backgroundAttachment =
       backgroundStyle === "parallax" ? "fixed" : "scroll";
 
+    // Determine the background style based on background type and available images
+    const backgroundStyles = (() => {
+      switch (backgroundType) {
+        case "color":
+          return { 
+            background: bgColor || 'transparent' 
+          };
+        
+        case "image":
+          return imageUrl ? {
+            background: `url(${imageUrl})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            backgroundAttachment: backgroundAttachment,
+          } : {};
+        
+        case "slider":
+          return imageUrls && imageUrls.length > 0 ? {} : {};
+        
+        default:
+          return {};
+      }
+    })();
+
     return (
       <Section
         style={{
-          background:
-            backgroundType === "color" && bgColor
-              ? bgColor
-              : backgroundType === "image" && imageUrl
-              ? `${bgColor ? `${bgColor}, ` : ""}url(${imageUrl})`
-              : undefined,
-          backgroundSize: backgroundType === "image" ? "cover" : undefined,
-          backgroundPosition: backgroundType === "image" ? "center" : undefined,
-          backgroundRepeat:
-            backgroundType === "image" ? "no-repeat" : undefined,
-          backgroundAttachment:
-            backgroundType === "image" ? backgroundAttachment : undefined,
-          width: widthType === "auto" ? "auto" : "100%", // New style
-          height: widthType === "auto" ? "auto" : "100%", // New style
-          margin: widthType === "auto" ? "0 auto" : undefined, // Center if auto width
+          ...backgroundStyles,
+          width: widthType === "auto" ? "auto" : "100%",
+          height: widthType === "auto" ? "auto" : "100%",
+          margin: widthType === "auto" ? "0 auto" : undefined,
           zIndex: 40,
           boxShadow,
+          position: "relative", // Ensure proper positioning for slider
         }}
       >
         {backgroundType === "slider" && imageUrls && imageUrls.length > 0 && (
           <div
             style={{
               position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
+              top: 0,
+              left: 0,
               width: "100%",
               height: "100%",
               zIndex: -1,
+              overflow: "hidden", // Prevent potential overflow
             }}
           >
             <Slider images={imageUrls} />
@@ -268,7 +286,7 @@ export const Flex: ComponentConfig<FlexProps> = {
             padding: spacing.padding,
             margin: spacing.margin,
             gap,
-            width: widthType === "auto" ? "fit-content" : "100%", // New style
+            width: widthType === "auto" ? "fit-content" : "100%",
           }}
           className="flex"
         >
@@ -277,7 +295,7 @@ export const Flex: ComponentConfig<FlexProps> = {
               key={idx}
               className={getClassName("item")}
               style={{
-                width: widthType === "auto" ? "auto" : "100%", // New style
+                width: widthType === "auto" ? "auto" : "100%",
               }}
             >
               <DropZone zone={`item-${idx}`} />

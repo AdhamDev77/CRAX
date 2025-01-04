@@ -17,6 +17,7 @@ export type ComponentConfig<
 > = {
   render: PuckComponent<RenderProps>;
   label?: any;
+  image?: any;
   defaultProps?: FieldProps;
   fields?: Fields<FieldProps>;
   permissions?: Partial<Permissions>;

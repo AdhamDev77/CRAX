@@ -62,19 +62,19 @@ export const CardLink: ComponentConfig<CardLinkProps> = {
     return (
       /* eslint-disable @next/next/no-img-element */
       <a
-        className="group relative block rounded-xl focus:outline-none"
+        className="group relative block rounded-xl focus:outline-none w-full"
         href={link}
       >
         <div className="shrink-0 relative rounded-xl overflow-hidden w-full h-[350px] before:absolute before:inset-x-0 before:z-[1] before:size-full before:bg-gradient-to-t before:from-gray-900/70">
           <img
-            className="size-full absolute top-0 start-0 object-cover"
+            className="w-full h-full min-h-[350px] absolute top-0 start-0 object-cover"
             src={imageUrl}
             alt="Blog Image"
           />
         </div>
 
         <div className="absolute bottom-0 inset-x-0 z-10">
-          <div className="flex flex-col h-full p-4 sm:p-6">
+          <div className="flex flex-col h-full w-full p-4 sm:p-6">
             <h3 className="text-lg sm:text-3xl font-semibold text-white group-hover:text-white/80 group-focus:text-white/80">
               {MainText}
             </h3>

@@ -8,6 +8,7 @@ import { Section } from "../../components/Section";
 import { X, Brush } from "lucide-react";
 import ColorPicker from "react-pick-color";
 import ColorPickerComponent from "@/components/ColorPicker";
+import ColorPanel from "@/components/ColorPanel";
 
 const getClassName = getClassNameFactory("Stats", styles);
 
@@ -18,31 +19,18 @@ export type StatsProps = {
   }[];
   bgColor: string;
   fontColor: string;
-  cardColor1: string;
-  cardColor2: string;
 };
 
 export const Stats: ComponentConfig<StatsProps> = {
   fields: {
     bgColor: {
+      label: "Background Color",
       type: "custom",
-      render: ({ name, onChange, value }) => {
-        return <ColorPickerComponent name={name} onChange={onChange} value={value} />;
-      },
+      render: ({ name, onChange, value }) => (
+        <ColorPanel name={name} value={value} onChange={onChange} />
+      ),
     },
     fontColor: {
-      type: "custom",
-      render: ({ name, onChange, value }) => {
-        return <ColorPickerComponent name={name} onChange={onChange} value={value} />;
-      },
-    },
-    cardColor1: {
-      type: "custom",
-      render: ({ name, onChange, value }) => {
-        return <ColorPickerComponent name={name} onChange={onChange} value={value} />;
-      },
-    },
-    cardColor2: {
       type: "custom",
       render: ({ name, onChange, value }) => {
         return <ColorPickerComponent name={name} onChange={onChange} value={value} />;
@@ -68,15 +56,13 @@ export const Stats: ComponentConfig<StatsProps> = {
         description: "1,000",
       },
     ],
-    bgColor: "#ffffff",
+    bgColor: "#000",
     fontColor: "#ffffff",
-    cardColor1: "#ffffff",
-    cardColor2: "#ffffff",
   },
-  render: ({ items, bgColor, fontColor, cardColor1, cardColor2}) => {
+  render: ({ items, bgColor, fontColor}) => {
     return (
       <Section className={getClassName()} maxWidth={"916px"}  style={{ backgroundColor: bgColor}}>
-        <div className={getClassName("items")} style={{background: `linear-gradient(to bottom right, ${cardColor1}, ${cardColor2})`!, }}>
+        <div className={getClassName("items")} style={{background: bgColor, }}>
           {items.map((item, i) => (
             <div key={i} className={getClassName("item")}>
               <div className={getClassName("label")} style={{ color: fontColor, opacity: 0.8}}>{item.title}</div>

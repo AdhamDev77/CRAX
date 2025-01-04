@@ -15,6 +15,11 @@ import { useTranslations } from "next-intl";
 import { BentoGridDemo } from "./_components/HeroBento";
 import { FeaturesSectionDemo } from "./_components/HeroBentoMain";
 import Navbar from "./_components/Navbar";
+import { RainbowButton } from "@/components/ui/rainbow-button";
+import { HeroVideo } from "./_components/HeroVideo";
+import ShineBorder from "@/components/ui/shine-border";
+import Footer from "./_components/footer";
+
 
 const HomePage = () => {
   const MotionDiv = motion.div;
@@ -77,20 +82,24 @@ const HomePage = () => {
 
             <motion.div variants={itemVariants} className="z-20">
               <Link href="/signin">
-                <Button size="lg" className="shadow-2xl mb-10">
+                <Button className="mb-6">
                   {t("hero.start")}
                 </Button>
               </Link>
             </motion.div>
 
             <motion.div variants={itemVariants}>
-              <AnimatedImage
+              {/* <AnimatedImage
                 src="/image.webp"
                 alt="Image"
                 width={650}
                 height={650}
                 className="w-full h-auto max-w-6xl mx-auto rounded-2xl shadow-lg"
-              />
+              /> */}
+
+
+              <HeroVideo />
+
             </motion.div>
           </MotionDiv>
         </div>
@@ -145,6 +154,7 @@ const HomePage = () => {
     </section>
 
     </div>
+    <Footer />
     </>
   );
 };

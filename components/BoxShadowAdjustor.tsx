@@ -16,9 +16,20 @@ const PRESETS = [
   { name: "Hard", value: "0px 8px 16px rgba(0, 0, 0, 0.15)" },
 ];
 
-// Helper function to parse box shadow string
-const parseBoxShadow = (boxShadow: string) => {
-  if (boxShadow && boxShadow.length > 0) {
+// Helper function to parse box shadow string with default values
+const parseBoxShadow = (boxShadow: string | undefined) => {
+  // If no boxShadow is provided, return default values
+  if (!boxShadow) {
+    return {
+      offsetX: 0,
+      offsetY: 2,
+      blur: 4,
+      spread: 0,
+      color: "rgba(0, 0, 0, 0.1)",
+    };
+  }
+
+  try {
     const parts = boxShadow.split(" ");
     return {
       offsetX: parseInt(parts[0]) || 0,
@@ -27,16 +38,23 @@ const parseBoxShadow = (boxShadow: string) => {
       spread: parseInt(parts[3]) || 0,
       color: parts.slice(4).join(" ") || "rgba(0, 0, 0, 0.1)",
     };
+  } catch (error) {
+    // Fallback to default values if parsing fails
+    return {
+      offsetX: 0,
+      offsetY: 2,
+      blur: 4,
+      spread: 0,
+      color: "rgba(0, 0, 0, 0.1)",
+    };
   }
 };
 
-const BoxShadowAdjuster = ({ value, onChange }: BoxShadowProps) => {
+const BoxShadowAdjuster = ({ value = "0px 2px 4px 0px rgba(0, 0, 0, 0.1)", onChange }: BoxShadowProps) => {
   const [isEnabled, setIsEnabled] = useState(true);
 
-  // Parse the initial value
-  const parsedValue = parseBoxShadow(
-    value || "0px 2px 4px 0px rgba(0, 0, 0, 0.1)"
-  );
+  // Parse the initial value with fallback
+  const parsedValue = parseBoxShadow(value);
 
   const [offsetX, setOffsetX] = useState(parsedValue.offsetX);
   const [offsetY, setOffsetY] = useState(parsedValue.offsetY);

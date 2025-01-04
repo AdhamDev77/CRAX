@@ -48,6 +48,13 @@ export type Data<
   Props extends DefaultComponentProps = DefaultComponentProps,
   RootProps extends DefaultComponentProps = DefaultRootFieldProps
 > = {
+  [x: string]: any;
+  data: any;
+  data: any;
+  data: any;
+  data: any;
+  [x: string]: any;
+  find(arg0: (item: { props: { id: string; }; }) => boolean): unknown;
   root: RootData<RootProps>;
   content: Content<Props>;
   zones?: Record<string, Content<Props>>;

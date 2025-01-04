@@ -11,6 +11,7 @@ import { getZoneId } from "../../lib/get-zone-id";
 import { useAppContext } from "../Puck/context";
 import { DropZoneProps } from "./types";
 import { ComponentConfig, PuckContext } from "../../types";
+import ComponentSaveForm from "../ComponentSaveForm";
 
 // Add this interface to define the shape of your content
 interface Content {
@@ -58,7 +59,10 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
 
   // Add this to handle server/client mismatch
   const [mounted, setMounted] = useState(false);
-  
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [matchedContent, setMatchedContent] = useState();
+  const [matchedZones, setMatchedZones] = useState();
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -186,8 +190,9 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
   if (!mounted) {
     return null; // Or a loading placeholder that matches your server-side render
   }
-  
+
   return (
+    <>
     <div
       className={getClassName({
         isRootZone,
@@ -275,107 +280,233 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                   <div
                     key={item.props.id}
                     className={getClassName("item")}
-                    style={{ zIndex: isDragging ? 1 : undefined}}
+                    style={{ zIndex: isDragging ? 1 : undefined }}
                   >
                     {/* Safely access root properties with optional chaining */}
-                      <DropZoneProvider
-                        value={{
-                          ...ctx,
-                          areaId: componentId,
+                    <DropZoneProvider
+                      value={{
+                        ...ctx,
+                        areaId: componentId,
+                      }}
+                    >
+                      <DraggableComponent
+                        label={label}
+                        id={`draggable-${componentId}`}
+                        index={i}
+                        isSelected={isSelected}
+                        isLocked={userIsDragging}
+                        forceHover={
+                          hoveringComponent === componentId && !userIsDragging
+                        }
+                        isDragDisabled={!canDrag}
+                        indicativeHover={
+                          userIsDragging &&
+                          containsZone &&
+                          hoveringArea === componentId
+                        }
+                        isLoading={
+                          appContext.componentState[componentId]?.loadingCount >
+                          0
+                        }
+                        onMount={() => {
+                          ctx.registerPath!({
+                            index: i,
+                            zone: zoneCompound,
+                          });
                         }}
-                        >
-                        <DraggableComponent
-                          label={label}
-                          id={`draggable-${componentId}`}
-                          index={i}
-                          isSelected={isSelected}
-                          isLocked={userIsDragging}
-                          forceHover={
-                            hoveringComponent === componentId && !userIsDragging
-                          }
-                          isDragDisabled={!canDrag}
-                          indicativeHover={
-                            userIsDragging &&
-                            containsZone &&
-                            hoveringArea === componentId
-                          }
-                          isLoading={
-                            appContext.componentState[componentId]
-                              ?.loadingCount > 0
-                          }
-                          onMount={() => {
-                            ctx.registerPath!({
-                              index: i,
-                              zone: zoneCompound,
-                            });
-                          }}
-                          onClick={(e) => {
-                            setItemSelector({
-                              index: i,
-                              zone: zoneCompound,
-                            });
-                            e.stopPropagation();
-                          }}
-                          onMouseDown={(e) => {
-                            e.stopPropagation();
-                            setZoneWillDrag(zone);
-                          }}
-                          onMouseOver={(e) => {
-                            e.stopPropagation();
+                        onClick={(e) => {
+                          setItemSelector({
+                            index: i,
+                            zone: zoneCompound,
+                          });
+                          e.stopPropagation();
+                        }}
+                        onMouseDown={(e) => {
+                          e.stopPropagation();
+                          setZoneWillDrag(zone);
+                        }}
+                        onMouseOver={(e) => {
+                          e.stopPropagation();
 
-                            if (containsZone) {
-                              setHoveringArea(componentId);
-                            } else {
-                              setHoveringArea(zoneArea);
+                          if (containsZone) {
+                            setHoveringArea(componentId);
+                          } else {
+                            setHoveringArea(zoneArea);
+                          }
+
+                          setHoveringComponent(componentId);
+
+                          setHoveringZone(zoneCompound);
+                        }}
+                        onMouseOut={() => {
+                          setHoveringArea(null);
+                          setHoveringZone(null);
+                          setHoveringComponent(null);
+                        }}
+                        onDelete={(e) => {
+                          dispatch({
+                            type: "remove",
+                            index: i,
+                            zone: zoneCompound,
+                          });
+
+                          setItemSelector(null);
+
+                          e.stopPropagation();
+                        }}
+                        onSave={(e) => {
+                          console.log("Area ID:", item.props.id);
+                          console.log("Data:", data);
+                        
+                          const normalizeAreaId = (id: string) => id.split(":")[0];
+                          const normalizedAreaId = normalizeAreaId(item.props.id!);
+                        
+                          // Step 1: Enhanced component matching with nested structure
+                          const findComponentWithNested = (
+                            content: any[],
+                            targetId: string
+                          ): any | null => {
+                            for (const item of content) {
+                              if (normalizeAreaId(item.props?.id || "") === targetId) {
+                                return item;
+                              }
+                              
+                              if (item.props?.content?.length) {
+                                const nestedMatch = findComponentWithNested(item.props.content, targetId);
+                                if (nestedMatch) return nestedMatch;
+                              }
+                              
+                              if (item.props?.children?.length) {
+                                const childMatch = findComponentWithNested(item.props.children, targetId);
+                                if (childMatch) return childMatch;
+                              }
                             }
-
-                            setHoveringComponent(componentId);
-
-                            setHoveringZone(zoneCompound);
-                          }}
-                          onMouseOut={() => {
-                            setHoveringArea(null);
-                            setHoveringZone(null);
-                            setHoveringComponent(null);
-                          }}
-                          onDelete={(e) => {
-                            dispatch({
-                              type: "remove",
-                              index: i,
-                              zone: zoneCompound,
+                            return null;
+                          };
+                        
+                          const matchedComponent = data.content ? 
+                            findComponentWithNested(data.content, normalizedAreaId) : null;
+                        
+                          if (matchedComponent) {
+                            console.log("Matched Component (including nested):", matchedComponent);
+                          } else {
+                            console.error(`No matched component found for areaId: ${areaId}`);
+                          }
+                        
+                          // Step 2: Enhanced zone matching with nested structure  
+                          const matchedZoneKeys = Object.keys(data.zones || {}).filter((key) =>
+                            key.startsWith(normalizedAreaId)
+                          );
+                        
+                          // Step 3: Process nested zones
+                          const processNestedZones = (parentId: string, depth = 0): any => {
+                            const allZones: { [key: string]: any[] } = {};
+                            const nestedContainers: any[] = [];
+                        
+                            const collectZonesForContainer = (containerId: string): { [key: string]: any[] } => {
+                              const containerZones: { [key: string]: any[] } = {};
+                              
+                              Object.keys(data.zones || {})
+                                .filter(key => key.startsWith(containerId))
+                                .forEach(zoneKey => {
+                                  containerZones[zoneKey] = data.zones![zoneKey].map(item => ({
+                                    ...item,
+                                    _parentId: containerId,
+                                    _depth: depth
+                                  }));
+                                });
+                                
+                              return containerZones;
+                            };
+                        
+                            const parentZones = collectZonesForContainer(parentId);
+                            Object.assign(allZones, parentZones);
+                        
+                            Object.entries(parentZones).forEach(([zoneKey, items]) => {
+                              items.forEach((item) => {
+                                const isContainer = 
+                                  item.type === "Grid" || 
+                                  item.type === "Flex" ||
+                                  (item.props?.type && 
+                                   (item.props.type === "grid" || item.props.type === "flex"));
+                        
+                                if (isContainer) {
+                                  const nestedResult = processNestedZones(item.props.id, depth + 1);
+                                  Object.assign(allZones, nestedResult.zones);
+                                  
+                                  nestedContainers.push({
+                                    type: item.type,
+                                    props: {
+                                      ...item.props,
+                                      sections: item.props.sections || [],
+                                      content: nestedResult.zones,
+                                      nestedContainers: nestedResult.nestedContainers
+                                    }
+                                  });
+                                }
+                              });
                             });
+                        
+                            return {
+                              zones: allZones,
+                              nestedContainers
+                            };
+                          };
+                        
+                          if (
+                            normalizedAreaId.startsWith("Grid") ||
+                            normalizedAreaId.startsWith("Flex")
+                          ) {
+                            const processedStructure = processNestedZones(normalizedAreaId);
+                            
+                            const organizedStructure = {
+                              zones: processedStructure.zones,
+                              nestedContainers: processedStructure.nestedContainers,
+                              metadata: {
+                                containersCount: processedStructure.nestedContainers.length,
+                                zonesCount: Object.keys(processedStructure.zones).length,
+                                maxDepth: Math.max(...processedStructure.nestedContainers
+                                  .map(container => container.props.depth || 0))
+                              }
+                            };
 
-                            setItemSelector(null);
+                            setMatchedContent(matchedComponent)
+                            setMatchedZones(processedStructure.zones)
+                            setShowSaveDialog(true);
+                            
+                            console.log("Processed Structure:", organizedStructure);
+                          }
+                        
+                          setItemSelector(null);
+                          e.stopPropagation();
+                        }}
+                        onDuplicate={(e) => {
+                          dispatch({
+                            type: "duplicate",
+                            sourceIndex: i,
+                            sourceZone: zoneCompound,
+                          });
 
-                            e.stopPropagation();
-                          }}
-                          onDuplicate={(e) => {
-                            dispatch({
-                              type: "duplicate",
-                              sourceIndex: i,
-                              sourceZone: zoneCompound,
-                            });
+                          setItemSelector({
+                            zone: zoneCompound,
+                            index: i + 1,
+                          });
 
-                            setItemSelector({
-                              zone: zoneCompound,
-                              index: i + 1,
-                            });
+                          e.stopPropagation();
+                        }}
+                        style={{
+                          pointerEvents:
+                            userIsDragging && draggingNewComponent
+                              ? "all"
+                              : undefined,
+                        }}
+                      >
+                        <div className={getClassName("renderWrapper")}>
+                          <Render {...defaultedProps} />
+                        </div>
+                      </DraggableComponent>
+                    </DropZoneProvider>
 
-                            e.stopPropagation();
-                          }}
-                          style={{
-                            pointerEvents:
-                              userIsDragging && draggingNewComponent
-                                ? "all"
-                                : undefined,
-                          }}
-                        >
-                          <div className={getClassName("renderWrapper")}>
-                            <Render {...defaultedProps} />
-                          </div>
-                        </DraggableComponent>
-                      </DropZoneProvider>
-                
                     {userIsDragging && (
                       <div
                         className={getClassName("hitbox")}
@@ -406,6 +537,13 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
         }}
       </Droppable>
     </div>
+    <ComponentSaveForm 
+        isOpen={showSaveDialog} 
+        onClose={() => setShowSaveDialog(false)} 
+        matchedContent={matchedContent} 
+        matchedZones={matchedZones} 
+      />
+    </>
   );
 }
 

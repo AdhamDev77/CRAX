@@ -9,7 +9,7 @@ import {
 import { Draggable } from "@measured/dnd";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { Copy, Trash } from "lucide-react";
+import { Copy, Save, Trash } from "lucide-react";
 import { useModifierHeld } from "../../lib/use-modifier-held";
 import { isIos } from "../../lib/is-ios";
 import { useAppContext } from "../Puck/context";
@@ -52,6 +52,7 @@ export const DraggableComponent = ({
   onMouseOut = () => null,
   onDelete = () => null,
   onDuplicate = () => null,
+  onSave = () => null,
   debug,
   label,
   isLocked = false,
@@ -72,6 +73,7 @@ export const DraggableComponent = ({
   onMouseOut?: (e: SyntheticEvent) => void;
   onDelete?: (e: SyntheticEvent) => void;
   onDuplicate?: (e: SyntheticEvent) => void;
+  onSave?: (e: SyntheticEvent) => void;
   debug?: string;
   label?: any;
   isLocked: boolean;
@@ -162,6 +164,11 @@ export const DraggableComponent = ({
                 }}
               >
                 <CustomActionBar label={label}>
+                  {permissions.duplicate && (
+                    <ActionBar.Action onClick={onSave} label="Save">
+                      <Save size={16} />
+                    </ActionBar.Action>
+                  )}
                   {permissions.duplicate && (
                     <ActionBar.Action onClick={onDuplicate} label="Duplicate">
                       <Copy size={16} />

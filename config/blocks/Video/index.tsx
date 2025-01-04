@@ -27,13 +27,15 @@ export const Video: ComponentConfig<VideoProps> = {
       const videoId = videoLink.split("/").pop();
       embedUrl = `https://player.vimeo.com/video/${videoId}`;
     }
+
     return (
-      <div className="aspect-square">
+      <div className="w-full h-full">
         <iframe
           src={embedUrl}
           allow="autoplay; fullscreen; picture-in-picture"
           allowFullScreen
           className="w-full h-full rounded-xl"
+          style={{ height: "100%"}}
         ></iframe>
       </div>
     );

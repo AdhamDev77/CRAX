@@ -13,6 +13,7 @@ export type Announcement1Props = {
 
 export const Announcement1: ComponentConfig<Announcement1Props> = {
   label: "Announcement #1",
+  image: "https://miro.medium.com/v2/resize:fit:1200/1*u2fa0tEmnwftUi9omquHaw.png",
   fields: {
     shown: {
       label: "Logo visibility",

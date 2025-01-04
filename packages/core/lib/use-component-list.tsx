@@ -32,6 +32,7 @@ export const useComponentList = (config: Config, ui: UiState) => {
                   <ComponentList.Item
                     key={componentName}
                     label={(componentConf["label"] ?? componentName) as string}
+                    image={(componentConf["image"] || "https://static.vecteezy.com/system/resources/previews/010/434/242/non_2x/accept-and-decline-buttons-app-icons-set-ui-ux-user-interface-yes-or-no-click-approve-and-delete-hand-pushing-button-web-or-mobile-applications-isolated-illustrations-vector.jpg") as string}
                     name={componentName as string}
                     index={i}
                   />
@@ -65,6 +66,7 @@ export const useComponentList = (config: Config, ui: UiState) => {
                   key={componentName}
                   name={componentName as string}
                   label={(componentConf["label"] ?? componentName) as string}
+                  image={(componentConf["image"] || "https://static.vecteezy.com/system/resources/previews/010/434/242/non_2x/accept-and-decline-buttons-app-icons-set-ui-ux-user-interface-yes-or-no-click-approve-and-delete-hand-pushing-button-web-or-mobile-applications-isolated-illustrations-vector.jpg") as string}
                   index={i}
                 />
               );

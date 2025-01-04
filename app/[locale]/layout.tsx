@@ -8,71 +8,82 @@ import { ThemeProvider } from "./ThemeProvider";
 import ClientProviders from "./ClientProviders";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Suspense } from "react";
-import { Inter, Roboto, Lora, Playfair_Display, Source_Code_Pro, 
-  Montserrat, Open_Sans, Merriweather, Fira_Code, Dancing_Script } from 'next/font/google'
-  import { Analytics } from "@vercel/analytics/react"
+import {
+  Inter,
+  Roboto,
+  Lora,
+  Playfair_Display,
+  Source_Code_Pro,
+  Montserrat,
+  Open_Sans,
+  Merriweather,
+  Fira_Code,
+  Dancing_Script,
+} from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
+import { ParticlesBackground } from "./_components/ParticlesBackground";
 
 export const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-})
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
 export const roboto = Roboto({
-  weight: ['300', '400', '500', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-roboto',
-})
+  weight: ["300", "400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-roboto",
+});
 
 export const lora = Lora({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-lora',
-})
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-lora",
+});
 
 export const playfair = Playfair_Display({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-playfair',
-})
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-playfair",
+});
 
 export const sourceCode = Source_Code_Pro({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-source-code',
-})
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-source-code",
+});
 
 export const montserrat = Montserrat({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-montserrat',
-})
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-montserrat",
+});
 
 export const openSans = Open_Sans({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-open-sans',
-})
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-open-sans",
+});
 
 export const merriweather = Merriweather({
-  weight: ['300', '400', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-merriweather',
-})
+  weight: ["300", "400", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-merriweather",
+});
 
 export const firaCode = Fira_Code({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-fira-code',
-})
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-fira-code",
+});
 
 export const dancingScript = Dancing_Script({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-dancing-script',
-})
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-dancing-script",
+});
 
 export default async function LocaleLayout({
   children,
@@ -84,7 +95,7 @@ export default async function LocaleLayout({
   const locale = params.locale;
   unstable_setRequestLocale(locale);
   const messages = await getMessages();
-  const dir = locale === 'ar' ? 'rtl' : 'ltr';
+  const dir = locale === "ar" ? "rtl" : "ltr";
 
   // Combine all font variables
   const fontVariables = [
@@ -97,24 +108,20 @@ export default async function LocaleLayout({
     openSans.variable,
     merriweather.variable,
     firaCode.variable,
-    dancingScript.variable
-  ].join(' ');
+    dancingScript.variable,
+  ].join(" ");
 
   return (
-    <html 
-      lang={locale} 
-      dir={dir} 
-      suppressHydrationWarning
-    >
-      <body 
+    <html lang={locale} dir={dir} suppressHydrationWarning>
+      <body
         className={`${fontVariables} ${inter.className}`}
         suppressHydrationWarning
       >
         <NextIntlClientProvider messages={messages} locale={locale}>
           <Suspense fallback={null}>
-            <ThemeProvider 
-              attribute="class" 
-              defaultTheme="light" 
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="light"
               enableSystem
               disableTransitionOnChange
               storageKey="app-theme"
@@ -122,7 +129,6 @@ export default async function LocaleLayout({
               <ClientProviders>
                 <TooltipProvider>
                   <main>
-            
                     {children}
                   </main>
                   <Toaster />

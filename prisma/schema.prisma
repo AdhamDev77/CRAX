@@ -60,11 +60,22 @@ model Page {
 }
 
 model Template {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  title    String @unique
-  description    String
-  content Json
-  image String
-  category String
-  features String[]
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String   @unique
+  description String
+  content     Json
+  image       String
+  category    String
+  features    String[]
+}
+
+model Component {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  Image       String
+  name        String
+  description String?
+  content     Json
+  zones       Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

@@ -19,6 +19,7 @@ import {
   Rocket,
 } from "lucide-react";
 import Navbar from "../_components/Navbar";
+import Footer from "../_components/footer";
 
 const BackgroundAnimation = () => (
   <div className="absolute inset-0 overflow-hidden">
@@ -451,6 +452,7 @@ export default function SignUp() {
         </motion.div>
       </div>
     </div>
+    <Footer />
     </>
   );
 }

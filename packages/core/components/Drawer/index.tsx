@@ -49,6 +49,7 @@ const DrawerItem = ({
   children,
   id,
   label,
+  image,
   index,
   isDragDisabled,
 }: {
@@ -56,6 +57,7 @@ const DrawerItem = ({
   children?: (props: { children: ReactNode; name: string }) => ReactElement;
   id?: string;
   label?: any;
+  image?: any;
   index: number;
   isDragDisabled?: boolean;
 }) => {
@@ -80,9 +82,17 @@ const DrawerItem = ({
     >
       <CustomInner name={name}>
         <div className={getClassNameItem("draggableWrapper")}>
-          <div className={getClassNameItem("draggable")}>
-            <div className={getClassNameItem("name")}>{label ?? name}</div>
-            <div className={getClassNameItem("icon")}>
+          <div className="flex flex-col gap-2 p-2 border rounded-md">
+            {/* <img
+              src={
+                image ||
+                "https://static.vecteezy.com/system/resources/previews/010/434/242/non_2x/accept-and-decline-buttons-app-icons-set-ui-ux-user-interface-yes-or-no-click-approve-and-delete-hand-pushing-button-web-or-mobile-applications-isolated-illustrations-vector.jpg"
+              }
+              className="w-full rounded-md"
+            /> */}
+            <div className="flex w-full justify-between">
+              <div className={getClassNameItem("name")}>{label ?? name}</div>
+              <div className={getClassNameItem("icon")}></div>
               <DragIcon isDragDisabled={isDragDisabled} />
             </div>
           </div>
