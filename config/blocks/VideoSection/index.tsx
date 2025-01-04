@@ -86,6 +86,7 @@ export const VideoSecion: ComponentConfig<VideoSecionProps> = {
               </div>
             )}
 
+
           </div>
         </div>
       </div>
