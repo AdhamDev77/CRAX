@@ -1,4 +1,3 @@
-// app/api/component/[componentId]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import prisma from "@/lib/prisma";
@@ -9,9 +8,9 @@ async function getSession(req: NextRequest) {
 }
 
 // PUT handler for updating a component
-export async function PUT(
+export async function PATCH(
   req: NextRequest,
-  { params }: { params: { componentId: string } }
+  context: { params: { componentId: string } }
 ) {
   const session = await getSession(req);
   if (!session) {
@@ -21,7 +20,7 @@ export async function PUT(
   try {
     const body = await req.json();
     const { name, description, image, content, zones } = body;
-    const componentId = params.componentId;
+    const componentId = context.params.componentId;
 
     const existingComponent = await prisma.component.findFirst({
       where: {
@@ -60,7 +59,7 @@ export async function PUT(
 // DELETE handler for removing a component
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { componentId: string } }
+  context: { params: { componentId: string } }
 ) {
   const session = await getSession(req);
   if (!session) {
@@ -68,7 +67,7 @@ export async function DELETE(
   }
 
   try {
-    const componentId = params.componentId;
+    const componentId = context.params.componentId;
     
     const component = await prisma.component.findFirst({
       where: {
