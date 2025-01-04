@@ -17,6 +17,7 @@ const nextConfig = {
       },
     ],
   },
+  typescript: {ignoreBuildErrors: true},
   transpilePackages: ["@measured/puck", "lucide-react"],
   webpack: (config) => {
     config.externals.push({

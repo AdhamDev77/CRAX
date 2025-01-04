@@ -83,7 +83,9 @@ const LineHeightExtension = Extension.create({
           lineHeight: {
             default: "normal",
             renderHTML: (attributes) => {
-              if (!attributes.lineHeight) return {};
+              if (!attributes.lineHeight || attributes.lineHeight === "normal") {
+                return {};
+              }
               return { style: `line-height: ${attributes.lineHeight}` };
             },
             parseHTML: (element) => element.style.lineHeight || "normal",
@@ -96,7 +98,7 @@ const LineHeightExtension = Extension.create({
     return {
       setLineHeight:
         (lineHeight: string) =>
-        ({ commands }) => {
+        ({ commands }: { commands: any }) => {
           return this.options.types.every((type) =>
             commands.updateAttributes(type, { lineHeight })
           );
