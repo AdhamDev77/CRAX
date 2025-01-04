@@ -1,7 +1,4 @@
-import Navbar from "../_components/Navbar";
-
-
-export default async function LocaleLayout({
+export default function LocaleLayout({
   children,
   params,
 }: {
@@ -9,9 +6,9 @@ export default async function LocaleLayout({
   params: { locale: string };
 }) {
   return (
-                  <main>
-                    {/* <Navbar /> */}
-                    {children}
-                  </main>
+    <main>
+      {/* <Navbar /> */}
+      {children}
+    </main>
   );
 }
