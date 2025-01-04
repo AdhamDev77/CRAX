@@ -7,11 +7,7 @@ async function getSession(req: NextRequest) {
   return await getServerSession({ req, ...options });
 }
 
-// PUT handler for updating a component
-export async function PATCH(
-  req: NextRequest,
-  context: { params: { componentId: string } }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: { componentId: string } }) {
   const session = await getSession(req);
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -20,7 +16,7 @@ export async function PATCH(
   try {
     const body = await req.json();
     const { name, description, image, content, zones } = body;
-    const componentId = context.params.componentId;
+    const { componentId } = params;
 
     const existingComponent = await prisma.component.findFirst({
       where: {
@@ -56,19 +52,15 @@ export async function PATCH(
   }
 }
 
-// DELETE handler for removing a component
-export async function DELETE(
-  req: NextRequest,
-  context: { params: { componentId: string } }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: { componentId: string } }) {
   const session = await getSession(req);
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const componentId = context.params.componentId;
-    
+    const { componentId } = params;
+
     const component = await prisma.component.findFirst({
       where: {
         id: componentId,
