@@ -7,7 +7,7 @@ async function getSession(req: NextRequest) {
   return await getServerSession({ req, ...options });
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: { componentId: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: any }) {
   const session = await getSession(req);
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -52,7 +52,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { componentI
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { componentId: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: any }) {
   const session = await getSession(req);
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
