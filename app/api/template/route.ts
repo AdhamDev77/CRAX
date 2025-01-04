@@ -8,13 +8,16 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { name, prof, content } = await req.json();
+  const { title, description, content, image , category, features } = await req.json();
 
   try {
     const template = await prisma.template.create({
       data: {
-        name,
-        prof,
+        title,
+        description,
+        image,
+        category,
+        features,
         content,
       },
     });
