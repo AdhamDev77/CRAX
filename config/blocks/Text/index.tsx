@@ -90,6 +90,7 @@ export const Text: ComponentConfig<TextProps> = {
       },
     },
     text: {
+      section: "content",
       type: "custom",
       render: ({ name, onChange, value }) => {
         return (

@@ -14,9 +14,9 @@ export type HeroAgencyProps = {
 export const HeroAgency: ComponentConfig<HeroAgencyProps> = {
   label: "Hero (Agency)",
   fields: {
-    name: { type: "text", label: "Brand Name" },
-    slogan: { type: "text", label: "Slogan" },
-    description: { type: "text", label: "Slogan" },
+    name: {section: "content", type: "text", label: "Brand Name" },
+    slogan: {section: "content", type: "text", label: "Slogan" },
+    description: {section: "content", type: "text", label: "Slogan" },
   },
   defaultProps: {
     name: "Preline Agency:",

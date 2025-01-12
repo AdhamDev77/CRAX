@@ -11,7 +11,7 @@ export type MapLocationProps = {
 
 export const MapLocation: ComponentConfig<MapLocationProps> = {
   fields: {
-    locationURL: { type: "text", label: "Location URL" },
+    locationURL: {section: "content", type: "text", label: "Location URL" },
     height: { type: "text", label: "Height (px)" },
     borderRadius: {
       label: "Border radius",

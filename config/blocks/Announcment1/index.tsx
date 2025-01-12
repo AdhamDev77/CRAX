@@ -23,8 +23,8 @@ export const Announcement1: ComponentConfig<Announcement1Props> = {
         { label: "hidden", value: "hidden" },
       ],
     },
-    MainText: { type: "text" },
-    SecondaryText: { type: "text" },
+    MainText: { section: "content", type: "text" },
+    SecondaryText: { section: "content", type: "text" },
   },
   defaultProps: {
     MainText: "Get started today.",

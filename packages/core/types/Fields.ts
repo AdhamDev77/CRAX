@@ -10,6 +10,7 @@ type FieldOptions = Array<FieldOption> | ReadonlyArray<FieldOption>;
 
 export type BaseField = {
   label?: any;
+  section?: any;
 };
 
 export type TextField = BaseField & {
@@ -104,6 +105,7 @@ export type CustomField<Props extends any = {}> = BaseField & {
   render: (props: {
     field: CustomField<Props>;
     name: string;
+    section?: string;
     id: string;
     value: Props;
     onChange: (value: Props) => void;
@@ -135,6 +137,7 @@ export type FieldProps<ValueType = any, F = Field<any>> = {
   field: F;
   value: ValueType;
   id?: string;
+  section?: string;
   onChange: (value: ValueType, uiState?: Partial<UiState>) => void;
   readOnly?: boolean;
 };

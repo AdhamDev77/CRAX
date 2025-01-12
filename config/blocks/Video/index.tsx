@@ -8,7 +8,7 @@ export type VideoProps = {
 export const Video: ComponentConfig<VideoProps> = {
   label: "Video",
   fields: {
-    videoLink: { type: "text", label: "Video URL" },
+    videoLink: {section: "content", type: "text", label: "Video URL" },
   },
   defaultProps: {
     videoLink: "https://youtu.be/X4buj5uynmE",

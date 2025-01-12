@@ -23,9 +23,9 @@ export interface LensProps {
 export const LensCard: ComponentConfig<LensProps> = {
   label: "Lens Card",
   fields: {
-    imageUrl: { type: "text", label: "Image URL" },
-    title: { type: "text", label: "Title" },
-    description: { type: "text", label: "Description" },
+    imageUrl: {section: "content", type: "text", label: "Image URL" },
+    title: {section: "content", type: "text", label: "Title" },
+    description: {section: "content", type: "text", label: "Description" },
     bgColorMain: {
       type: "custom",
       render: ({ name, onChange, value }) => {

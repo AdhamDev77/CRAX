@@ -28,6 +28,7 @@ export const Testimonials: ComponentConfig<TestimonialsProps> = {
   label: "Testimonials",
   fields: {
     testimonials: {
+      section: "content",
       type: "array",
       getItemSummary: (item) => item.title || "Testimonial",
       arrayFields: {

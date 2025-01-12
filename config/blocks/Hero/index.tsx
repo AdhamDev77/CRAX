@@ -31,6 +31,7 @@ export type HeroProps = {
 export const Hero: ComponentConfig<HeroProps> = {
   fields: {
     quote: {
+      section: "content",
       type: "external",
       placeholder: "Select a quote",
       showSearch: true,
@@ -84,9 +85,10 @@ export const Hero: ComponentConfig<HeroProps> = {
       },
       getItemSummary: (item) => item.label,
     },
-    title: { type: "text" },
-    description: { type: "textarea" },
+    title: {section: "content", type: "text" },
+    description: {section: "content", type: "textarea" },
     buttons: {
+      section: "content",
       type: "array",
       min: 1,
       max: 4,
@@ -115,6 +117,7 @@ export const Hero: ComponentConfig<HeroProps> = {
       ],
     },
     image: {
+      section: "content",
       type: "object",
       objectFields: {
         url: {

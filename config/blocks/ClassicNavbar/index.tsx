@@ -47,8 +47,10 @@ type NavbarLinkField = {
 
 export const Navbar: ComponentConfig<NavbarProps> = {
   label: "Navbar",
+  image: "/components/navbar.png",
   fields: {
     logo: {
+      section: "content",
       label: "Logo",
       type: "custom",
       render: ({ name, onChange, value }) => {
@@ -82,6 +84,7 @@ export const Navbar: ComponentConfig<NavbarProps> = {
       },
     },
     links: {
+      section: "content",
       type: "array",
       getItemSummary: (item) => item.name || "Link",
       label: "Navbar Links",
@@ -97,6 +100,7 @@ export const Navbar: ComponentConfig<NavbarProps> = {
           ],
         },
         submenu: {
+          section: "content",
           type: "array",
           getItemSummary: (item: { name: any }) => item.name || "Link",
           label: "Submenu Links",

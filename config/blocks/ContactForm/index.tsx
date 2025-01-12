@@ -31,11 +31,12 @@ export type ContactFormProps = {
 
 export const ContactForm: ComponentConfig<ContactFormProps> = {
   // label: <div className="flex w-full justify-between items-center">Form <CoolSpan text="Lead Generation" /></div>,
-  label: 'Leads Form',
+  label: "Leads Form",
   fields: {
-    FormspreeID: { type: "text" },
-    formTitle: { type: "text" },
+    FormspreeID: { section: "content", type: "text" },
+    formTitle: { section: "content", type: "text" },
     inputFields: {
+      section: "content",
       type: "array",
       label: "Input Fields",
       getItemSummary: (item) => `${item.name} (${item.type})`,
@@ -50,43 +51,60 @@ export const ContactForm: ComponentConfig<ContactFormProps> = {
             { label: "Email", value: "email" },
             { label: "Text Area", value: "textarea" },
             { label: "checkbox", value: "checkbox" },
-            { label: "Date", value: "date" }
-          ]
+            { label: "Date", value: "date" },
+          ],
         },
-        required: { type: "select", options: [{label: "Required", value: true},{label: "Optional", value: false}], label: "Required Field" }
+        required: {
+          type: "select",
+          options: [
+            { label: "Required", value: true },
+            { label: "Optional", value: false },
+          ],
+          label: "Required Field",
+        },
       },
     },
-    formBtnTitle: { type: "text" },
-    formNote: { type: "text" },
-    formSuccessMessage: { type: "text" },
+    formBtnTitle: {section: "content", type: "text" },
+    formNote: {section: "content", type: "text" },
+    formSuccessMessage: {section: "content", type: "text" },
     bgColor: {
       type: "custom",
       render: ({ name, onChange, value }) => {
-        return <ColorPickerComponent name={name} onChange={onChange} value={value} />;
+        return (
+          <ColorPickerComponent name={name} onChange={onChange} value={value} />
+        );
       },
     },
     bgFormColor: {
       type: "custom",
       render: ({ name, onChange, value }) => {
-        return <ColorPickerComponent name={name} onChange={onChange} value={value} />;
+        return (
+          <ColorPickerComponent name={name} onChange={onChange} value={value} />
+        );
       },
     },
     fontColor: {
       type: "custom",
       render: ({ name, onChange, value }) => {
-        return <ColorPickerComponent name={name} onChange={onChange} value={value} />;
+        return (
+          <ColorPickerComponent name={name} onChange={onChange} value={value} />
+        );
       },
     },
     bgBtnColor: {
       type: "custom",
       render: ({ name, onChange, value }) => {
-        return <ColorPickerComponent name={name} onChange={onChange} value={value} />;
+        return (
+          <ColorPickerComponent name={name} onChange={onChange} value={value} />
+        );
       },
     },
     btnColor: {
       type: "custom",
       render: ({ name, onChange, value }) => {
-        return <ColorPickerComponent name={name} onChange={onChange} value={value} />;
+        return (
+          <ColorPickerComponent name={name} onChange={onChange} value={value} />
+        );
       },
     },
   },
@@ -94,7 +112,8 @@ export const ContactForm: ComponentConfig<ContactFormProps> = {
     formTitle: "Contact us",
     formBtnTitle: "Send Message",
     formNote: "We'll get back to you in 1-2 business days.",
-    formSuccessMessage: "Message sent successfully! We'll get back to you soon.",
+    formSuccessMessage:
+      "Message sent successfully! We'll get back to you soon.",
     bgColor: "#ffffff",
     bgFormColor: "#ffffff",
     fontColor: "#000000",
@@ -148,29 +167,29 @@ export const ContactForm: ComponentConfig<ContactFormProps> = {
       try {
         const form = e.currentTarget;
         const formData = new FormData(form);
-        
+
         // Create an object for the leads API
         const leadsData: Record<string, any> = {};
-        
+
         // Process each input field
-        inputFields.forEach(field => {
+        inputFields.forEach((field) => {
           const fieldId = toCamelCase(field.name);
           if (!fieldId) return;
 
-          if (field.type === 'checkbox') {
+          if (field.type === "checkbox") {
             // For checkbox, we need to check if it's checked
-            const isChecked = formData.get(fieldId) === 'on';
+            const isChecked = formData.get(fieldId) === "on";
             leadsData[fieldId] = isChecked;
             // Update formData for Formspree to handle checkbox properly
             if (isChecked) {
-              formData.set(fieldId, 'yes');
+              formData.set(fieldId, "yes");
             } else {
-              formData.set(fieldId, 'no');
+              formData.set(fieldId, "no");
             }
           } else {
             // For all other field types
             const value = formData.get(fieldId);
-            leadsData[fieldId] = value || ''; // Ensure we always have a value
+            leadsData[fieldId] = value || ""; // Ensure we always have a value
           }
         });
 
@@ -184,7 +203,7 @@ export const ContactForm: ComponentConfig<ContactFormProps> = {
               Accept: "application/json",
             },
           }),
-          
+
           axios.post(`/api/site/${params.sitePath}/leads`, leadsData),
         ]);
 
@@ -193,7 +212,10 @@ export const ContactForm: ComponentConfig<ContactFormProps> = {
           form.reset();
         } else {
           setSubmitStatus("error");
-          console.error("Form submission failed", { formspreeResponse, apiResponse });
+          console.error("Form submission failed", {
+            formspreeResponse,
+            apiResponse,
+          });
         }
       } catch (error) {
         console.error("Submission error:", error);
@@ -209,17 +231,13 @@ export const ContactForm: ComponentConfig<ContactFormProps> = {
         id: fieldId,
         name: fieldId,
         required: field.required,
-        className: "py-3 px-4 block w-full border border-gray-600/15 rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none",
+        className:
+          "py-3 px-4 block w-full border border-gray-600/15 rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none",
       };
 
       switch (field.type) {
         case "textarea":
-          return (
-            <textarea
-              {...commonProps}
-              rows={4}
-            />
-          );
+          return <textarea {...commonProps} rows={4} />;
         case "checkbox":
           return (
             <input
@@ -229,19 +247,9 @@ export const ContactForm: ComponentConfig<ContactFormProps> = {
             />
           );
         case "date":
-          return (
-            <input
-              type="date"
-              {...commonProps}
-            />
-          );
+          return <input type="date" {...commonProps} />;
         default:
-          return (
-            <input
-              type={field.type}
-              {...commonProps}
-            />
-          );
+          return <input type={field.type} {...commonProps} />;
       }
     };
 
@@ -265,14 +273,23 @@ export const ContactForm: ComponentConfig<ContactFormProps> = {
             <form onSubmit={handleSubmit}>
               <div className="grid gap-4 lg:gap-6">
                 {inputFields.map((field, index) => (
-                  <div key={index} className={field.type === "checkbox" ? "flex items-center gap-2" : ""}>
+                  <div
+                    key={index}
+                    className={
+                      field.type === "checkbox" ? "flex items-center gap-2" : ""
+                    }
+                  >
                     <label
                       htmlFor={toCamelCase(field.name)}
-                      className={`${field.type === "checkbox" ? "order-2" : "block mb-2"} text-sm font-medium`}
+                      className={`${
+                        field.type === "checkbox" ? "order-2" : "block mb-2"
+                      } text-sm font-medium`}
                       style={{ color: fontColor }}
                     >
                       {field.name}
-                      {field.required && <span className="text-red-500 ml-1">*</span>}
+                      {field.required && (
+                        <span className="text-red-500 ml-1">*</span>
+                      )}
                     </label>
                     {renderFormField(field)}
                   </div>

@@ -34,8 +34,15 @@ export type FlexProps = {
 
 export const Flex: ComponentConfig<FlexProps> = {
   label: "Flex",
+  icon: (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" color="#3182ce" fill="none">
+    <path d="M3.89124 3.89124C5.28249 2.5 7.52166 2.5 12 2.5C16.4783 2.5 18.7175 2.5 20.1088 3.89124C21.5 5.28249 21.5 7.52166 21.5 12C21.5 16.4783 21.5 18.7175 20.1088 20.1088C18.7175 21.5 16.4783 21.5 12 21.5C7.52166 21.5 5.28249 21.5 3.89124 20.1088C2.5 18.7175 2.5 16.4783 2.5 12C2.5 7.52166 2.5 5.28249 3.89124 3.89124Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M12 2.5V21.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+</svg>
+  ),
   fields: {
     sections: {
+      section: "content",
       label: "Sections",
       type: "array",
       arrayFields: {
@@ -174,12 +181,15 @@ export const Flex: ComponentConfig<FlexProps> = {
     bgColor: "#ffffff",
     gap: "16px",
     backgroundStyle: "normal",
-    boxShadow: '0px 0px 0px rgba(0, 0, 0, 0)',
+    boxShadow: "0px 0px 0px rgba(0, 0, 0, 0)",
     animationStyle: "fade",
     spacing: { padding: "20px 0px 20px 0px", margin: "0px 0px 0px 0px" },
     widthType: "full",
-    imageUrl: 'https://png.pngtree.com/background/20230616/original/pngtree-faceted-abstract-background-in-3d-with-shimmering-iridescent-metallic-texture-of-picture-image_3653595.jpg', // Explicitly set to null
-    imageUrls: ['https://png.pngtree.com/background/20230616/original/pngtree-faceted-abstract-background-in-3d-with-shimmering-iridescent-metallic-texture-of-picture-image_3653595.jpg'], // Explicitly set to empty array
+    imageUrl:
+      "https://png.pngtree.com/background/20230616/original/pngtree-faceted-abstract-background-in-3d-with-shimmering-iridescent-metallic-texture-of-picture-image_3653595.jpg", // Explicitly set to null
+    imageUrls: [
+      "https://png.pngtree.com/background/20230616/original/pngtree-faceted-abstract-background-in-3d-with-shimmering-iridescent-metallic-texture-of-picture-image_3653595.jpg",
+    ], // Explicitly set to empty array
   },
   resolveFields: async (data, { fields }) => {
     // Conditionally show/hide fields based on backgroundType
@@ -233,22 +243,24 @@ export const Flex: ComponentConfig<FlexProps> = {
     const backgroundStyles = (() => {
       switch (backgroundType) {
         case "color":
-          return { 
-            background: bgColor || 'transparent' 
+          return {
+            background: bgColor || "transparent",
           };
-        
+
         case "image":
-          return imageUrl ? {
-            background: `url(${imageUrl})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundAttachment: backgroundAttachment,
-          } : {};
-        
+          return imageUrl
+            ? {
+                background: `url(${imageUrl})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                backgroundAttachment: backgroundAttachment,
+              }
+            : {};
+
         case "slider":
           return imageUrls && imageUrls.length > 0 ? {} : {};
-        
+
         default:
           return {};
       }

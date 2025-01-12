@@ -26,6 +26,7 @@ export const ModernButtonGroup: ComponentConfig<ModernButtonGroupProps> = {
   label: "Modern Button Group",
   fields: {
     buttons: {
+      section: "content",
       type: "array",
       getItemSummary: (item) => item.btnText || "Button",
       arrayFields: {

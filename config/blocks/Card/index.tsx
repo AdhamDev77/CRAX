@@ -65,9 +65,10 @@ export const Card: ComponentConfig<CardProps> = {
         return <ColorPickerComponent name={name} onChange={onChange} value={value} />;
       },
     },
-    title: { type: "text" },
-    description: { type: "textarea" },
+    title: { section: "content", type: "text" },
+    description: { section: "content", type: "textarea" },
     icon: {
+      section: "content",
       type: "select",
       options: iconOptions,
     },

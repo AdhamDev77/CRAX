@@ -37,6 +37,7 @@ export const Stats: ComponentConfig<StatsProps> = {
       },
     },
     items: {
+      section: "content",
       type: "array",
       getItemSummary: (item, i) => item.title || `Feature #${i}`,
       defaultItemProps: {

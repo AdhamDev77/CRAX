@@ -45,12 +45,14 @@
   left: 0;
   top: 68px;
   bottom: 0;
-  width: 300px;
+  width: calc(var(--puck-side-bar-width) *1.45);
   border-right: 1px solid #ccc ;
+  border-top: 1px solid #ccc ;
   background: #ffffff;
   box-shadow: 2px 0 -5px rgba(0, 0, 0, 0.1);
   z-index: 60 !important;
   display: flex;
+  overflow: scroll;
   flex-direction: column;
 }
 

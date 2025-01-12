@@ -34,7 +34,7 @@ export const SidebarSection = ({
       className={getClassName({ noBorderTop, noPadding })}
       style={{ background }}
     >
-      <div className={getClassName("title")}>
+      {/* <div className={getClassName("title")}>
         <div className={getClassName("breadcrumbs")}>
           {showBreadcrumbs
             ? breadcrumbs.map((breadcrumb, i) => (
@@ -56,7 +56,7 @@ export const SidebarSection = ({
             </Heading>
           </div>
         </div>
-      </div>
+      </div> */}
       <div className={getClassName("content")}>{children}</div>
       {isLoading && (
         <div className={getClassName("loadingOverlay")}>

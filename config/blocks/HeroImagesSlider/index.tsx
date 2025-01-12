@@ -26,10 +26,12 @@ export const HeroImagesSlider: ComponentConfig<HeroImagesSliderProps> = {
   label: "Hero (Images Slider)",
   fields: {
     title: {
+      section: "content",
       label: "Title",
       type: "text",
     },
     buttons: {
+      section: "content",
       type: "array",
       getItemSummary: (item) => item.btnText || "Button",
       arrayFields: {
@@ -62,6 +64,7 @@ export const HeroImagesSlider: ComponentConfig<HeroImagesSliderProps> = {
     },
 
     images: {
+      section: "content",
       type: "array",
       getItemSummary: (item: { alt: string }) => item.alt || "Image",
       arrayFields: {
@@ -95,7 +98,7 @@ export const HeroImagesSlider: ComponentConfig<HeroImagesSliderProps> = {
             );
           },
         },
-        alt: { type: "text" },
+        alt: {  type: "text" },
       },
     },
   },

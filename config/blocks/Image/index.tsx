@@ -20,6 +20,7 @@ export type ImageProps = {
 export const Image: ComponentConfig<ImageProps> = {
   fields: {
     imageUrl: {
+      section: "content",
       type: "custom",
       render: ({ name, onChange, value }) => {
         const handleImageSelect = (selectedImage: string | null) => {
@@ -49,6 +50,7 @@ export const Image: ComponentConfig<ImageProps> = {
       },
     },
     alt: { 
+      section: "content",
       type: "text", 
       label: "Image alt"
     },
@@ -69,6 +71,7 @@ export const Image: ComponentConfig<ImageProps> = {
       }
     },
     link: {
+      section: "content",
       label: "Link URL",
       type: "text",
     },

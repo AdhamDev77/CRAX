@@ -45,8 +45,10 @@ type NavbarLinkField = {
 
 export const ModernNavbar: ComponentConfig<ModernNavbarProps> = {
   label: "Modern Navbar",
+  image: "/components/navbar.png",
   fields: {
     logo: {
+      section: "content",
       label: "Logo",
       type: "custom",
       render: ({ name, onChange, value }) => {
@@ -142,6 +144,7 @@ export const ModernNavbar: ComponentConfig<ModernNavbarProps> = {
       ],
     },
     links: {
+      section: "content",
       type: "array",
       getItemSummary: (item) => item.name || "Link",
       label: "Navbar Links",

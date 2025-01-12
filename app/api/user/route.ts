@@ -13,6 +13,7 @@ const generateSalt = () => {
   return randomBytes(16).toString("hex"); // Use randomBytes to generate salt
 };
 
+
 export async function POST(req: Request) {
   const { firstName, lastName, email, password } = await req.json();
 
@@ -26,7 +27,7 @@ export async function POST(req: Request) {
         firstName,
         lastName,
         email,
-        password: `${hashedPassword}:${salt}`, // Store both hashed password and salt
+        password: `${hashedPassword}:${salt}`,
       },
     });
 

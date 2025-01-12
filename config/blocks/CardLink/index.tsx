@@ -16,11 +16,12 @@ export type CardLinkProps = {
 export const CardLink: ComponentConfig<CardLinkProps> = {
   label: "Card (Link)",
   fields: {
-    MainText: { type: "text", label: "Main Text" },
-    SecondaryText: { type: "text", label: "Secondary Text" },
-    link: { type: "text", label: "Refered Link" },
+    MainText: { section: "content", type: "text", label: "Main Text" },
+    SecondaryText: { section: "content", type: "text", label: "Secondary Text" },
+    link: { section: "content", type: "text", label: "Refered Link" },
     imageUrl: {
       type: "custom",
+      section: "content",
       render: ({ name, onChange, value }) => {
         const handleImageSelect = (selectedImage: string | null) => {
           // Only call onChange if the image is not null

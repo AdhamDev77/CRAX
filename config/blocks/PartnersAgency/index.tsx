@@ -19,8 +19,9 @@ export type LogoProps = {
 export const PartnersAgency: ComponentConfig<PartnersAgencyProps> = {
   label: "Partners (Agency)",
   fields: {
-    title: { type: "text", label: "Title" },
+    title: {section: "content", type: "text", label: "Title" },
     logos: {
+      section: "content",
       type: "array",
       getItemSummary: (item, i) => item.alt || `Feature #${i}`,
       defaultItemProps: {

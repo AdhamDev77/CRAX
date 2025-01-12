@@ -41,6 +41,7 @@ export const ButtonGroup: ComponentConfig<ButtonGroupProps> = {
       ),
     },
     buttons: {
+      section: "content",
       type: "array",
       getItemSummary: (item) => item.label || "Button",
       arrayFields: {

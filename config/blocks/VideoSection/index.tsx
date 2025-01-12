@@ -11,9 +11,9 @@ export type VideoSecionProps = {
 export const VideoSecion: ComponentConfig<VideoSecionProps> = {
   label: "Video Section",
   fields: {
-    backgroundImage: { type: "text", label: "Background Image URL" },
-    videoUrl: { type: "text", label: "Video URL (YouTube or Vimeo)" },
-    buttonText: { type: "text", label: "Button Text" },
+    backgroundImage: {section: "content", type: "text", label: "Background Image URL" },
+    videoUrl: {section: "content", type: "text", label: "Video URL (YouTube or Vimeo)" },
+    buttonText: {section: "content", type: "text", label: "Button Text" },
   },
   defaultProps: {
     backgroundImage:

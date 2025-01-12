@@ -17,6 +17,7 @@ export type LogosProps = {
 export const Logos: ComponentConfig<LogosProps> = {
   fields: {
     logos: {
+      section: "content",
       type: "array",
       getItemSummary: (item, i) => item.alt || `Feature #${i}`,
       defaultItemProps: {

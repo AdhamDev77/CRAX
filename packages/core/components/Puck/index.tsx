@@ -22,6 +22,7 @@ import type {
   Data,
 } from "../../types";
 import { Button } from "../Button";
+import DragTabs from "../DragTabs";
 
 import { usePlaceholderStyle } from "../../lib/use-placeholder-style";
 
@@ -59,6 +60,7 @@ import { DefaultOverride } from "../DefaultOverride";
 import ColorPicker from "../../../../components/ColorPicker";
 import FontSelector from "../../../../components/FontSelector";
 import getSitePath from "../../../../hooks/getSitePath";
+import EditTabs from "../EditTabs";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -255,17 +257,32 @@ export function Puck<
 
   const { itemSelector, leftSideBarVisible, rightSideBarVisible } = ui;
 
+  const [activeComponent, setActiveComponent] = useState<
+  "elements" | "components" | "sections"
+>("elements");
+const [editSection, setActiveEditSection] = useState<
+  "global" | "content" | "style"
+>("content");
+
   const setItemSelector = useCallback(
     (newItemSelector: ItemSelector | null) => {
       if (newItemSelector === itemSelector) return;
-
+  
       dispatch({
         type: "setUi",
         ui: { itemSelector: newItemSelector },
         recordHistory: true,
       });
+  
+      if (newItemSelector) {
+        if (editSection !== "content" && editSection !== "style") {
+          setActiveEditSection("content");
+        }
+      } else {
+        setActiveEditSection("global");
+      }
     },
-    [itemSelector]
+    [itemSelector, editSection] // Add editSection to the dependency array
   );
 
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
@@ -463,6 +480,12 @@ export function Puck<
     ? selectedComponentConfig?.["label"] ?? selectedItem.type.toString()
     : "";
 
+
+  useEffect(() => {
+    if (!selectedItem) {
+      setActiveEditSection("global");
+    }
+  }, [selectedItem]);
   return (
     <div className={`Puck ${getClassName()}`}>
       <AppProvider
@@ -501,6 +524,9 @@ export function Puck<
                 dispatch({ type: "setUi", ui: { isDragging: true } });
               }}
               onDragEnd={(droppedItem) => {
+                if (editSection !== "content" && editSection !== "style") {
+                  setActiveEditSection("content");
+                }
                 setDraggedItem(undefined);
                 dispatch({ type: "setUi", ui: { isDragging: false } });
 
@@ -689,12 +715,20 @@ export function Puck<
                           </header>
                         </CustomHeader>
                         <div className={getLayoutClassName("leftSideBar")}>
+                          <DragTabs
+                            activeComponent={activeComponent}
+                            setActiveComponent={(value: any) =>
+                              setActiveComponent(
+                                value as "elements" | "components" | "sections"
+                              )
+                            }
+                          />
                           <SidebarSection title="Components" noBorderTop>
-                            <Components />
+                            <Components type={activeComponent} />
                           </SidebarSection>
-                          <SidebarSection title="Outline">
+                          {/* <SidebarSection title="Outline">
                             <Outline />
-                          </SidebarSection>
+                          </SidebarSection> */}
                         </div>
                         <Canvas />
                         <div className={getLayoutClassName("rightSideBar")}>
@@ -706,7 +740,16 @@ export function Puck<
                               selectedItem ? selectedComponentLabel : "Page"
                             }
                           >
-                            {!selectedItem && (
+                            <EditTabs
+                              editSection={editSection}
+                              hasSelectedItem={selectedItem !== null}
+                              setActiveEditSection={(value: any) =>
+                                setActiveEditSection(
+                                  value as "global" | "content" | "style"
+                                )
+                              }
+                            />
+                            {editSection === "global" && (
                               <div className="px-4 py-2 flex flex-col gap-2">
                                 <ColorPicker
                                   value={bgColorInternal}
@@ -726,7 +769,12 @@ export function Puck<
                               </div>
                             )}
 
-                            <Fields />
+                            <Fields type={editSection} />
+                            {editSection === "global" && (
+                              <div className="px-4 py-2">
+                                <Outline />
+                              </div>
+                            )}
                           </SidebarSection>
                         </div>
                       </div>

@@ -20,7 +20,7 @@ import { getChanged } from "../../../../lib/get-changed";
 const getClassName = getClassNameFactory("PuckFields", styles);
 
 const defaultPageFields: Record<string, Field> = {
-  title: { type: "text" },
+  title: { type: "text", section: "global" },
 };
 
 const DefaultFields = ({
@@ -137,8 +137,7 @@ const useResolvedFields = (): [FieldsType, boolean] => {
 
   return [resolvedFields, fieldsLoading];
 };
-
-export const Fields = () => {
+export const Fields = ({ type }: { type: string }) => {
   const {
     selectedItem,
     state,
@@ -166,6 +165,44 @@ export const Fields = () => {
 
   const Wrapper = useMemo(() => overrides.fields || DefaultFields, [overrides]);
 
+  const filteredFields = useMemo(() => {
+    const contentFields: Record<string, Field> = {};
+    const styleFields: Record<string, Field> = {};
+    const globalFields: Record<string, Field> = {};
+
+    Object.keys(fields).forEach((fieldName) => {
+      const field = fields[fieldName];
+
+      if (!field?.type) return;
+
+      if (field.section === "global") {
+        globalFields[fieldName] = field;
+      } else if (field.section === "content") {
+        contentFields[fieldName] = field;
+      } else {
+        styleFields[fieldName] = field;
+      }
+    });
+
+    return { contentFields, styleFields, globalFields };
+  }, [fields]);
+
+  const getFieldsToRender = () => {
+    switch (type) {
+      case "content":
+        return filteredFields.contentFields;
+      case "style":
+        return filteredFields.styleFields;
+      case "global":
+        // Merge defaultPageFields with filteredFields.globalFields
+        return { ...defaultPageFields, ...filteredFields.globalFields };
+      default:
+        return {};
+    }
+  };
+
+  const fieldsToRender = getFieldsToRender();
+
   return (
     <form
       className={getClassName()}
@@ -174,126 +211,9 @@ export const Fields = () => {
       }}
     >
       <Wrapper isLoading={isLoading} itemSelector={itemSelector}>
-        {Object.keys(fields).map((fieldName) => {
-          const field = fields[fieldName];
-
-          if (!field?.type) return null;
-
-          const onChange = (value: any, updatedUi?: Partial<UiState>) => {
-            let currentProps;
-
-            if (selectedItem) {
-              currentProps = selectedItem.props;
-            } else {
-              currentProps = rootProps;
-            }
-
-            const newProps = {
-              ...currentProps,
-              [fieldName]: value,
-            };
-
-            if (itemSelector) {
-              const replaceActionData: ReplaceAction = {
-                type: "replace",
-                destinationIndex: itemSelector.index,
-                destinationZone: itemSelector.zone || rootDroppableId,
-                data: { ...selectedItem, props: newProps },
-              };
-
-              // We use `replace` action, then feed into `set` action so we can also process any UI changes
-              const replacedData = replaceAction(data, replaceActionData);
-
-              const setActionData: SetAction = {
-                type: "set",
-                state: {
-                  data: { ...data, ...replacedData },
-                  ui: { ...ui, ...updatedUi },
-                },
-              };
-
-              // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
-              if (config.components[selectedItem!.type]?.resolveData) {
-                resolveData(setAction(state, setActionData));
-              } else {
-                dispatch({
-                  ...setActionData,
-                  recordHistory: true,
-                });
-              }
-            } else {
-              if (data.root.props) {
-                // If the component has a resolveData method, we let resolveData run and handle the dispatch once it's done
-                if (config.root?.resolveData) {
-                  resolveData({
-                    ui: { ...ui, ...updatedUi },
-                    data: {
-                      ...data,
-                      root: { props: newProps },
-                    },
-                  });
-                } else {
-                  dispatch({
-                    type: "set",
-                    state: {
-                      ui: { ...ui, ...updatedUi },
-                      data: {
-                        ...data,
-                        root: { props: newProps },
-                      },
-                    },
-                    recordHistory: true,
-                  });
-                }
-              } else {
-                // DEPRECATED
-                dispatch({
-                  type: "setData",
-                  data: { root: newProps },
-                });
-              }
-            }
-          };
-
-          if (selectedItem && itemSelector) {
-            const { readOnly = {} } = selectedItem;
-            const { edit } = getPermissions({
-              item: selectedItem,
-            });
-
-            return (
-              <AutoFieldPrivate
-                key={`${selectedItem.props.id}_${fieldName}`}
-                field={field}
-                name={fieldName}
-                id={`${selectedItem.props.id}_${fieldName}`}
-                readOnly={!edit || readOnly[fieldName]}
-                value={selectedItem.props[fieldName]}
-                onChange={onChange}
-              />
-            );
-          } else {
-            const readOnly = (data.root.readOnly || {}) as Record<
-              string,
-              boolean
-            >;
-            const { edit } = getPermissions({
-              root: true,
-            });
-
-            return (
-              <AutoFieldPrivate
-                key={`page_${fieldName}`}
-                field={field}
-                name={fieldName}
-                id={`root_${fieldName}`}
-                readOnly={!edit || readOnly[fieldName]}
-                value={(rootProps as Record<string, any>)[fieldName]}
-                onChange={onChange}
-              />
-            );
-          }
-        })}
+        {Object.keys(fieldsToRender).map((fieldName) => 
+          renderField(fieldsToRender[fieldName], fieldName)
+        )}
       </Wrapper>
       {isLoading && (
         <div className={getClassName("loadingOverlay")}>
@@ -304,4 +224,187 @@ export const Fields = () => {
       )}
     </form>
   );
+
+  function renderField(field: Field, fieldName: string) {
+    const onChange = (value: any, updatedUi?: Partial<UiState>) => {
+      // For global fields, always update rootProps
+      if (type === "global") {
+        if (data.root.props) {
+          if (config.root?.resolveData) {
+            resolveData({
+              ui: { ...ui, ...updatedUi },
+              data: {
+                ...data,
+                root: {
+                  ...data.root,
+                  props: {
+                    ...data.root.props,
+                    [fieldName]: value,
+                  },
+                },
+              },
+            });
+          } else {
+            dispatch({
+              type: "set",
+              state: {
+                ui: { ...ui, ...updatedUi },
+                data: {
+                  ...data,
+                  root: {
+                    ...data.root,
+                    props: {
+                      ...data.root.props,
+                      [fieldName]: value,
+                    },
+                  },
+                },
+              },
+              recordHistory: true,
+            });
+          }
+        } else {
+          // DEPRECATED
+          dispatch({
+            type: "setData",
+            data: {
+              root: {
+                ...rootProps,
+                [fieldName]: value,
+              },
+            },
+          });
+        }
+        return;
+      }
+
+      // For non-global fields, keep existing logic
+      let currentProps;
+      if (selectedItem) {
+        currentProps = selectedItem.props;
+      } else {
+        currentProps = rootProps;
+      }
+
+      const newProps = {
+        ...currentProps,
+        [fieldName]: value,
+      };
+
+      if (itemSelector) {
+        const replaceActionData: ReplaceAction = {
+          type: "replace",
+          destinationIndex: itemSelector.index,
+          destinationZone: itemSelector.zone || rootDroppableId,
+          data: { ...selectedItem, props: newProps },
+        };
+
+        const replacedData = replaceAction(data, replaceActionData);
+
+        const setActionData: SetAction = {
+          type: "set",
+          state: {
+            data: { ...data, ...replacedData },
+            ui: { ...ui, ...updatedUi },
+          },
+        };
+
+        if (config.components[selectedItem!.type]?.resolveData) {
+          resolveData(setAction(state, setActionData));
+        } else {
+          dispatch({
+            ...setActionData,
+            recordHistory: true,
+          });
+        }
+      } else {
+        if (data.root.props) {
+          if (config.root?.resolveData) {
+            resolveData({
+              ui: { ...ui, ...updatedUi },
+              data: {
+                ...data,
+                root: { props: newProps },
+              },
+            });
+          } else {
+            dispatch({
+              type: "set",
+              state: {
+                ui: { ...ui, ...updatedUi },
+                data: {
+                  ...data,
+                  root: { props: newProps },
+                },
+              },
+              recordHistory: true,
+            });
+          }
+        } else {
+          // DEPRECATED
+          dispatch({
+            type: "setData",
+            data: { root: newProps },
+          });
+        }
+      }
+    };
+
+    // For global fields, always use root permissions and props
+    if (type === "global") {
+      const readOnly = (data.root.readOnly || {}) as Record<string, boolean>;
+      const { edit } = getPermissions({
+        root: true,
+      });
+
+      return (
+        <AutoFieldPrivate
+          key={`global_${fieldName}`}
+          field={field}
+          name={fieldName}
+          id={`global_${fieldName}`}
+          readOnly={!edit || readOnly[fieldName]}
+          value={(rootProps as Record<string, any>)[fieldName]}
+          onChange={onChange}
+        />
+      );
+    }
+
+    // For non-global fields, keep existing logic
+    if (selectedItem && itemSelector) {
+      const { readOnly = {} } = selectedItem;
+      const { edit } = getPermissions({
+        item: selectedItem,
+      });
+
+      return (
+        <AutoFieldPrivate
+          key={`${selectedItem.props.id}_${fieldName}`}
+          field={field}
+          name={fieldName}
+          id={`${selectedItem.props.id}_${fieldName}`}
+          readOnly={!edit || readOnly[fieldName]}
+          value={selectedItem.props[fieldName]}
+          onChange={onChange}
+        />
+      );
+    } else {
+      const readOnly = (data.root.readOnly || {}) as Record<string, boolean>;
+      const { edit } = getPermissions({
+        root: true,
+      });
+
+      return (
+        <AutoFieldPrivate
+          key={`page_${fieldName}`}
+          field={field}
+          name={fieldName}
+          id={`root_${fieldName}`}
+          readOnly={!edit || readOnly[fieldName]}
+          value={(rootProps as Record<string, any>)[fieldName]}
+          onChange={onChange}
+        />
+      );
+    }
+  }
 };

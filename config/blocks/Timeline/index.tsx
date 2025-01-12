@@ -33,14 +33,17 @@ export const Timeline: ComponentConfig<TimelineProps> = {
   label: "Resume Section",
   fields: {
     title: {
+      section: "content",
       type: "text",
       label: "Title",
     },
     subtitle: {
+      section: "content",
       type: "text",
       label: "Subtitle",
     },
     colorMode: {
+      section: "content",
       type: "radio",
       label: "Color Mode",
       options: [
@@ -49,6 +52,7 @@ export const Timeline: ComponentConfig<TimelineProps> = {
       ],
     },
     resumeData: {
+      section: "content",
       type: "array",
       label: "Resume Items",
       getItemSummary: (item) => item.title || "Resume Item",

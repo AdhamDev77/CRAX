@@ -61,25 +61,18 @@ export const SimpleCard: ComponentConfig<SimpleCardProps> = {
     fontColor: {
       type: "custom",
       render: ({ name, onChange, value }) => {
-        return (
-          <ColorPanel name={name} onChange={onChange} value={value} />
-        );
+        return <ColorPanel name={name} onChange={onChange} value={value} />;
       },
     },
     iconColor: {
       type: "custom",
       render: ({ name, onChange, value }) => {
-        return (
-          <ColorPanel name={name} onChange={onChange} value={value} />
-        );
+        return <ColorPanel name={name} onChange={onChange} value={value} />;
       },
     },
-    title: { type: "text" },
-    description: { type: "textarea" },
-    icon: {
-      type: "select",
-      options: iconOptions,
-    },
+    title: { section: "content", type: "text" },
+    description: { section: "content", type: "textarea" },
+    icon: { section: "content", type: "select", options: iconOptions },
     mode: {
       type: "radio",
       options: [
@@ -112,13 +105,16 @@ export const SimpleCard: ComponentConfig<SimpleCardProps> = {
         className="w-full h-full border p-3"
         style={{ background: bgColor, borderRadius: borderRadius }}
       >
-        <div className="py-4" style={{color: iconColor}}>
+        <div className="py-4" style={{ color: iconColor }}>
           {icon && icons[icon] && (
             <>{React.cloneElement(icons[icon], { className: "w-10 h-10" })}</> // Adjust the size here
           )}
         </div>
 
-        <div className="text-2xl mb-1 font-semibold" style={{ color: fontColor }}>
+        <div
+          className="text-2xl mb-1 font-semibold"
+          style={{ color: fontColor }}
+        >
           {title}
         </div>
         <div className="text-lg" style={{ color: fontColor, opacity: 0.8 }}>

@@ -122,6 +122,7 @@ export const SocialPreview: ComponentConfig<SocialPreviewProps> = {
   label: "Social Media Preview",
   fields: {
     platform: {
+      section: "content",
       type: "custom",
       render: ({ onChange, value }) => (
         <Select value={value} onValueChange={onChange}>
@@ -138,12 +139,13 @@ export const SocialPreview: ComponentConfig<SocialPreviewProps> = {
         </Select>
       ),
     },
-    userName: { type: "text", label: "User Name" },
-    userHandle: { type: "text", label: "User Handle/Tag" },
-    connectionInfo: { type: "text", label: "Connection Info (LinkedIn)" },
-    MainText: { type: "text", label: "Main Text" },
-    SecondaryText: { type: "text", label: "Secondary Text" },
+    userName: {section: "content", type: "text", label: "User Name" },
+    userHandle: {section: "content", type: "text", label: "User Handle/Tag" },
+    connectionInfo: {section: "content", type: "text", label: "Connection Info (LinkedIn)" },
+    MainText: {section: "content", type: "text", label: "Main Text" },
+    SecondaryText: {section: "content", type: "text", label: "Secondary Text" },
     link: {
+      section: "content",
       type: "custom",
       render: ({ onChange, value }) => {
         const [isLoading, setIsLoading] = useState(false);
@@ -187,10 +189,12 @@ export const SocialPreview: ComponentConfig<SocialPreviewProps> = {
       },
     },
     userImage: {
+      section: "content",
       type: "custom",
       render: ({ onChange, value }) => <MediaUploader initialImage={value} onImageSelect={onChange} />,
     },
     imageUrl: {
+      section: "content",
       type: "custom",
       render: ({ onChange, value }) => <MediaUploader initialImage={value} onImageSelect={onChange} />,
     },

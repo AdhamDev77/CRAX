@@ -2,7 +2,6 @@ import { Config, Data } from "../packages/core";
 import { ButtonGroup, ButtonGroupProps } from "./blocks/ButtonGroup";
 import { ModernButtonGroup, ModernButtonGroupProps } from "./blocks/ModernButtonGroup";
 import { Card, CardProps } from "./blocks/Card";
-import { Columns, ColumnsProps } from "./blocks/Columns";
 import { Hero, HeroProps } from "./blocks/Hero";
 import {
   HeroImagesSlider,
@@ -44,7 +43,6 @@ export type Props = {
   ButtonGroup: ButtonGroupProps;
   ModernButtonGroup: ModernButtonGroupProps;
   Card: CardProps;
-  Columns: ColumnsProps;
   Hero: HeroProps;
   HeroImagesSlider: HeroImagesSliderProps;
   Heading: HeadingProps;
@@ -88,31 +86,43 @@ export const conf: UserConfig = {
   },
   categories: {
     layout: {
-      title: "Layout Components",
-      components: ["Columns", "Flex", "Grid", "VerticalSpace", "Seperator"],
+      title: "Layout",
+      type: "elements",
+      components: ["Flex", "Grid", "VerticalSpace", "Seperator"],
     },
     navigation: {
       title: "Navigation",
+      type: "components",
       components: ["Navbar", "ModernNavbar"],
     },
     announcements: {
       title: "Announcements",
+      type: "components",
       components: ["Announcement1"],
     },
     landing: {
       title: "Landing Sections",
+      type: "sections",
       components: ["Hero", "HeroAgency", "HeroImagesSlider"],
     },
     media: {
       title: "Media",
-      components: ["Image", "Video", "VideoSecion", "MapLocation", "SocialPreview"],
+      type: "elements",
+      components: ["Image", "Video", "MapLocation"],
+    },
+    mediaComponents: {
+      title: "Media",
+      type: "components",
+      components: ["VideoSecion", "SocialPreview"],
     },
     typography: {
       title: "Typography",
+      type: "elements",
       components: ["Heading", "Text"],
     },
     cards: {
-      title: "Card Components",
+      title: "Cards",
+      type: "components",
       components: [
         "Card",
         "CardLink",
@@ -122,23 +132,33 @@ export const conf: UserConfig = {
       ],
     },
     logos: {
-      title: "Logos and Partners",
+      title: "Partners",
+      type: "components",
       components: ["Logos", "PartnersAgency"],
     },
+    logosSections: {
+      title: "Partners",
+      type: "sections",
+      components: ["PartnersAgency"],
+    },
     statistics: {
-      title: "Statistics and Testimonials",
+      title: "Social Proof",
+      type: "sections",
       components: ["Stats", "Testimonials"],
     },
     forms: {
       title: "Forms",
+      type: "components",
       components: ["ContactForm", "FAQ"],
     },
-    interactive: {
-      title: "Interactive Elements",
+    buttons: {
+      title: "Buttons",
+      type: "elements",
       components: ["ButtonGroup", "ModernButtonGroup"],
     },
     timeline: {
       title: "Timelines",
+      type: "sections",
       components: ["Timeline"],
     },
   },
@@ -148,7 +168,6 @@ export const conf: UserConfig = {
     Card,
     CardLink,
     CardLink2,
-    Columns,
     Seperator,
     Hero,
     HeroImagesSlider,

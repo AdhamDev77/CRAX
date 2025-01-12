@@ -51,6 +51,7 @@ export const Heading: ComponentConfig<HeadingProps> = {
       },
     },
     text: {
+      section: "content",
       type: "textarea",
     },
     size: {

@@ -18,10 +18,12 @@ export const FAQ: ComponentConfig<FAQProps> = {
   label: "FAQ Section",
   fields: {
     title: {
+      section: "content",
       type: "text",
       label: "Title",
     },
     subtitle: {
+      section: "content",
       type: "text",
       label: "Subtitle",
     },
@@ -34,6 +36,7 @@ export const FAQ: ComponentConfig<FAQProps> = {
       ],
     },
     faqItems: {
+      section: "content",
       type: "array",
       label: "FAQ Items",
       getItemSummary: (item) => item.question || "Button",

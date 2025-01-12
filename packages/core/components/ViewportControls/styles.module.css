@@ -1,6 +1,5 @@
 .ViewportControls {
   display: flex;
-  background: var(--puck-color-grey-11);
   box-sizing: border-box;
   border-left: 2px solid var(--puck-color-grey-11);
   justify-content: center;

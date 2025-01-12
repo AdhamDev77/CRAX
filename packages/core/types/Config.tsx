@@ -18,6 +18,7 @@ export type ComponentConfig<
   render: PuckComponent<RenderProps>;
   label?: any;
   image?: any;
+  icon?: any;
   defaultProps?: FieldProps;
   fields?: Fields<FieldProps>;
   permissions?: Partial<Permissions>;
@@ -61,6 +62,7 @@ export type ComponentConfig<
 type Category<ComponentName> = {
   components?: ComponentName[];
   title?: string;
+  type?: string;
   visible?: boolean;
   defaultExpanded?: boolean;
 };

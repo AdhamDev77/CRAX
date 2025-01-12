@@ -66,11 +66,12 @@ export const CardLink2: ComponentConfig<CardLink2Props> = {
         return <ColorPickerComponent name={name} onChange={onChange} value={value} />;
       },
     },
-    title: { type: "text" },
-    description: { type: "textarea" },
-    linkText: { type: "textarea" },
-    link: { type: "textarea" },
+    title: {section: "content", type: "text" },
+    description: {section: "content", type: "textarea" },
+    linkText: {section: "content", type: "textarea" },
+    link: {section: "content", type: "textarea" },
     icon: {
+      section: "content",
       type: "select",
       options: iconOptions,
     },
