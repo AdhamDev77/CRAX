@@ -84,8 +84,11 @@ export const ButtonGroup: ComponentConfig<ButtonGroupProps> = {
   },
   render: ({ align, buttons, bgColor, fontColor, borderRadius, puck }) => {
     return (
-      <Section style={{ justifyContent: align }}>
-        <div className={getClassName("actions")}>
+      <Section
+        className="flex" // Always center on mobile
+        style={{ justifyContent: align }} // Respect align prop on larger screens
+      >
+        <div className="flex gap-4 flex-wrap max-md:justify-center">
           {buttons.map((button, i) => (
             <a
               key={i}
@@ -93,12 +96,22 @@ export const ButtonGroup: ComponentConfig<ButtonGroupProps> = {
               style={{
                 background: button.variant === "primary" ? bgColor : fontColor,
                 borderRadius,
-                border: button.variant === "secondary" ? `1px solid ${bgColor.split(',')[1]?.trim() || bgColor}` : "none"
+                border:
+                  button.variant === "secondary"
+                    ? `1px solid ${bgColor.split(",")[1]?.trim() || bgColor}`
+                    : "none",
               }}
               href={button.href}
               tabIndex={puck.isEditing ? -1 : undefined}
             >
-              <span style={{ color: button.variant === "primary" ? fontColor : bgColor.split(',')[1]?.trim() || bgColor }}>
+              <span
+                style={{
+                  color:
+                    button.variant === "primary"
+                      ? fontColor
+                      : bgColor.split(",")[1]?.trim() || bgColor,
+                }}
+              >
                 {button.label}
               </span>
             </a>

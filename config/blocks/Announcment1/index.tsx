@@ -75,7 +75,7 @@ export const Announcement1: ComponentConfig<Announcement1Props> = {
               </div>
             </div>
 
-            <div className="text-center sm:text-start flex sm:justify-end sm:items-center gap-x-3 md:gap-x-4">
+            <div className="text-center sm:text-start flex sm:justify-end max-md:justify-center sm:items-center gap-x-3 md:gap-x-4">
               <a
                 className="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-full border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
                 href="#"

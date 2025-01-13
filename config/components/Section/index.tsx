@@ -24,8 +24,6 @@ export const Section = ({
       className={`${getClassName()}${className ? ` ${className}` : ""}`}
       style={{
         ...style,
-        paddingTop: padding,
-        paddingBottom: padding,
       }}
     >
       <div className={getClassName("inner")} style={{ maxWidth }}>

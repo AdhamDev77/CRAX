@@ -6,6 +6,7 @@ import ColorPickerComponent from "@/components/ColorPicker";
 import { AiTextEditor } from "@/components/AiTextEditor";
 import { spacingOptions } from "@/config/options";
 import MotionAdjustor from '@/components/MotionAdjustor';
+import { getResponsiveSpacingStyles, getResponsiveTypographyStyles } from '@/lib/responsiveSpacing';
 
 interface AnimationConfig {
   type: string;
@@ -78,6 +79,32 @@ const animationTypes = {
   }
 };
 
+// Function to process HTML and add fluid typography styles
+const processHtmlWithFluidStyles = (html: string): string => {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, 'text/html');
+
+  // Process all elements with font-size
+  doc.querySelectorAll('[style*="font-size"]').forEach(el => {
+    const style = el.getAttribute('style') || '';
+    const fontSizeMatch = style.match(/font-size:\s*(\d+)px/);
+    if (fontSizeMatch) {
+      const fontSize = parseInt(fontSizeMatch[1], 10);
+      const lineHeight = fontSize * 1.2; // Default line height ratio
+      const fluidStyles = getResponsiveTypographyStyles(fontSize, lineHeight, 0.75);
+      
+      // Update the style attribute with fluid values
+      const newStyle = style.replace(
+        /font-size:\s*\d+px/,
+        `font-size: ${fluidStyles.fontSize}`
+      );
+      el.setAttribute('style', newStyle);
+    }
+  });
+
+  return doc.body.innerHTML;
+};
+
 export const Text: ComponentConfig<TextProps> = {
   label: 'Text',
   fields: {
@@ -123,13 +150,13 @@ export const Text: ComponentConfig<TextProps> = {
     paddingY: "0px",
     animation: defaultAnimation,
   },
+  
   render: ({ text, bgColor, paddingX, paddingY, animation = defaultAnimation }: TextProps) => {
-    const safeStyles = {
-      paddingLeft: paddingX || "0",
-      paddingRight: paddingX || "0",
-      paddingTop: paddingY || "0",
-      paddingBottom: paddingY || "0",
-    };
+    // Generate fluid spacing styles
+    const fluidStyles = getResponsiveSpacingStyles(
+      `${paddingY} ${paddingX} ${paddingY} ${paddingX}`,
+      '0px 0px 0px 0px'
+    );
 
     const sanitizeHtml = (html: string): string => {
       return html.replace(
@@ -164,18 +191,23 @@ export const Text: ComponentConfig<TextProps> = {
 
     const variants = animationTypes[currentAnimation.type || 'fade'];
 
+    // Process the HTML content with fluid typography
+    const processedHtml = processHtmlWithFluidStyles(sanitizeHtml(text));
+
     return (
       <AnimatePresence mode="wait">
         <motion.div
           initial={variants.initial}
           animate={variants.animate}
           transition={getTransition()}
-          style={safeStyles}
-          className="text-component"
+          style={{
+            ...fluidStyles,
+          }}
+          className="text-component max-md:text-center"
         >
           <div
             dangerouslySetInnerHTML={{
-              __html: sanitizeHtml(text),
+              __html: processedHtml
             }}
             className="text-content"
           />

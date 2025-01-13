@@ -12,6 +12,12 @@ import { X } from "lucide-react";
 import { spacingOptions } from "@/config/options";
 import ColorPanel from "@/components/ColorPanel";
 import BoxShadowAdjustor from "@/components/BoxShadowAdjustor";
+import {
+  getResponsiveSpacing,
+  getResponsiveGap,
+  getResponsiveSpacingStyles,
+  getFluidStyles
+} from "@/lib/responsiveSpacing";
 
 const getClassName = getClassNameFactory("Flex", styles);
 
@@ -29,7 +35,7 @@ export type FlexProps = {
   animationStyle?: string;
   gap?: string;
   boxShadow?: string;
-  widthType: "full" | "auto"; // New property for width control
+  widthType: "full" | "auto";
 };
 
 export const Flex: ComponentConfig<FlexProps> = {
@@ -236,8 +242,7 @@ export const Flex: ComponentConfig<FlexProps> = {
     widthType,
     boxShadow,
   }) => {
-    const backgroundAttachment =
-      backgroundStyle === "parallax" ? "fixed" : "scroll";
+    const backgroundAttachment = backgroundStyle === "parallax" ? "fixed" : "scroll";
 
     // Determine the background style based on background type and available images
     const backgroundStyles = (() => {
@@ -246,7 +251,6 @@ export const Flex: ComponentConfig<FlexProps> = {
           return {
             background: bgColor || "transparent",
           };
-
         case "image":
           return imageUrl
             ? {
@@ -257,14 +261,24 @@ export const Flex: ComponentConfig<FlexProps> = {
                 backgroundAttachment: backgroundAttachment,
               }
             : {};
-
         case "slider":
           return imageUrls && imageUrls.length > 0 ? {} : {};
-
         default:
           return {};
       }
     })();
+
+    // Calculate responsive spacing values
+    const responsiveSpacingStyles = getResponsiveSpacingStyles(
+      spacing.padding,
+      spacing.margin
+    );
+
+    // Calculate responsive gap
+    const responsiveGap = gap ? getResponsiveGap(gap) : undefined;
+
+    // Calculate container width based on widthType
+    const containerWidth = widthType === "auto" ? "fit-content" : "100%";
 
     return (
       <Section
@@ -275,7 +289,7 @@ export const Flex: ComponentConfig<FlexProps> = {
           margin: widthType === "auto" ? "0 auto" : undefined,
           zIndex: 40,
           boxShadow,
-          position: "relative", // Ensure proper positioning for slider
+          position: "relative",
         }}
       >
         {backgroundType === "slider" && imageUrls && imageUrls.length > 0 && (
@@ -287,7 +301,7 @@ export const Flex: ComponentConfig<FlexProps> = {
               width: "100%",
               height: "100%",
               zIndex: -1,
-              overflow: "hidden", // Prevent potential overflow
+              overflow: "hidden",
             }}
           >
             <Slider images={imageUrls} />
@@ -295,24 +309,32 @@ export const Flex: ComponentConfig<FlexProps> = {
         )}
         <div
           style={{
-            padding: spacing.padding,
-            margin: spacing.margin,
-            gap,
-            width: widthType === "auto" ? "fit-content" : "100%",
+            ...responsiveSpacingStyles,
+            gap: responsiveGap,
+            width: containerWidth,
           }}
-          className="flex"
+          className="flex md:space-y-0 md:flex-row flex-col space-y-4"
         >
-          {sections.map((section, idx) => (
-            <div
-              key={idx}
-              className={getClassName("item")}
-              style={{
-                width: widthType === "auto" ? "auto" : "100%",
-              }}
-            >
-              <DropZone zone={`item-${idx}`} />
-            </div>
-          ))}
+          {sections.map((section, idx) => {
+            // Calculate responsive minimum width for sections if specified
+            const minWidth = section.minItemWidth
+              ? getResponsiveSpacing(`${section.minItemWidth}px`)
+              : undefined;
+
+            return (
+              <div
+                key={idx}
+                className={getClassName("item")}
+                style={{
+                  width: widthType === "auto" ? "auto" : "100%",
+                  minWidth,
+                  flex: widthType === "auto" ? "0 1 auto" : "1 1 0",
+                }}
+              >
+                <DropZone zone={`item-${idx}`} />
+              </div>
+            );
+          })}
         </div>
       </Section>
     );

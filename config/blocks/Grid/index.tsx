@@ -13,6 +13,7 @@ import { spacingOptions } from "@/config/options";
 import ColorPanel from "@/components/ColorPanel";
 import BoxShadowAdjustor from "@/components/BoxShadowAdjustor";
 import GridCustomizer from "@/components/GridAdjustor";
+import { getResponsiveGap, getResponsiveSpacingStyles } from "@/lib/responsiveSpacing";
 
 const getClassName = getClassNameFactory("Flex", styles);
 
@@ -234,28 +235,33 @@ export const Grid: ComponentConfig<GridProps> = {
     imageUrls,
     backgroundStyle,
     boxShadow,
-    gridConfig
+    gridConfig,
   }) => {
     const backgroundAttachment =
       backgroundStyle === "parallax" ? "fixed" : "scroll";
 
-    // Compute grid style based on grid configuration with new properties
-    const gridStyle = gridConfig ? {
-      display: 'grid',
-      gridTemplateColumns: gridConfig.columnWidth === 'auto' 
-        ? `repeat(${gridConfig.columns}, 1fr)` 
-        : `repeat(${gridConfig.columns}, ${gridConfig.columnWidth})`,
-      gridTemplateRows: gridConfig.rowHeight === 'auto'
-        ? `repeat(${gridConfig.rows}, 1fr)`
-        : `repeat(${gridConfig.rows}, ${gridConfig.rowHeight})`,
-      gap: `${gridConfig.gap}px`,
-      
-      // New grid layout properties
-      overflow: gridConfig.overflow || 'auto',
-      justifyContent: gridConfig.justifyContent || 'start',
-      alignItems: gridConfig.alignItems || 'stretch',
-      maxHeight: gridConfig.overflow !== 'hidden' ? undefined : '100%',
-    } : {};
+    // Generate responsive spacing styles
+    const spacingStyles = getResponsiveSpacingStyles(spacing.padding, spacing.margin);
+
+    // Generate responsive gap
+    const responsiveGap = gridConfig?.gap ? getResponsiveGap(`${gridConfig.gap}px`) : null;
+
+    // Compute grid style based on grid configuration
+    const gridStyle = gridConfig
+      ? {
+          display: "grid",
+          gridTemplateColumns: `repeat(${gridConfig.columns}, 1fr)`, // Default columns
+          gridTemplateRows:
+            gridConfig.rowHeight === "auto"
+              ? `repeat(${gridConfig.rows}, 1fr)`
+              : `repeat(${gridConfig.rows}, ${gridConfig.rowHeight})`,
+          gap: responsiveGap, // Apply responsive gap
+          overflow: gridConfig.overflow || "auto",
+          justifyContent: gridConfig.justifyContent || "start",
+          alignItems: gridConfig.alignItems || "stretch",
+          maxHeight: gridConfig.overflow !== "hidden" ? undefined : "100%",
+        }
+      : {};
 
     return (
       <Section
@@ -274,6 +280,7 @@ export const Grid: ComponentConfig<GridProps> = {
             backgroundType === "image" ? backgroundAttachment : undefined,
           zIndex: 40,
           boxShadow,
+          ...spacingStyles, // Apply responsive padding and margin
         }}
       >
         {backgroundType === "slider" && imageUrls && imageUrls.length > 0 && (
@@ -291,26 +298,36 @@ export const Grid: ComponentConfig<GridProps> = {
             <Slider images={imageUrls} />
           </div>
         )}
+
+        {/* Add CSS media queries for responsive grid columns */}
+        <style>
+          {`
+            @media (max-width: 767px) {
+              .responsive-grid {
+                grid-template-columns: repeat(1, 1fr) !important;
+              }
+            }
+            @media (min-width: 768px) and (max-width: 1023px) {
+              .responsive-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+              }
+            }
+          `}
+        </style>
+
         <div
-          style={{
-            ...gridStyle,
-            padding: spacing.padding,
-            margin: spacing.margin,
-          }}
-          className={`flex ${gridConfig ? 'grid' : ''}`}
+          style={gridStyle}
+          className="responsive-grid" // Apply responsive grid class
         >
-          {gridConfig 
-            && [...Array(gridConfig.columns * gridConfig.rows)].map((_, idx) => (
-                <div
-                  key={idx}
-                  className={`
-                    flex w-full h-full
-                  `}
-                >
-                  <DropZone zone={`grid-item-${idx}`} />
-                </div>
-              ))
-          }
+          {gridConfig &&
+            [...Array(gridConfig.columns * gridConfig.rows)].map((_, idx) => (
+              <div
+                key={idx}
+                className="flex w-full h-full"
+              >
+                <DropZone zone={`grid-item-${idx}`} />
+              </div>
+            ))}
         </div>
       </Section>
     );
