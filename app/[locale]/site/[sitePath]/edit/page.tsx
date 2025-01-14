@@ -2,29 +2,34 @@ import ClientWrapper from "../ClientWrapper";
 import { Metadata } from "next";
 import { PrismaClient } from '@prisma/client';
 
+// Singleton Prisma client instance
 const prisma = new PrismaClient();
 
-export async function generateMetadata({
-  params,
-}: {
-  params: any;
-}){
-  const { sitePath } = params;
+interface PageParams {
+  sitePath: string;
+}
 
+// Fetch site data
+async function fetchSiteData(sitePath: string) {
   try {
-
-    const site = await prisma.site.findUnique({
+    return await prisma.site.findUnique({
       where: { path: sitePath },
       select: { path: true }
     });
-
-    if (site) {
-      return {
-        title: sitePath.includes('edit') ? `Editing: ${site.path}` : site.path,
-      };
-    }
   } catch (error) {
-    console.error('Error fetching site metadata:', error);
+    console.error('Error fetching site data:', error);
+    return null;
+  }
+}
+
+export async function generateMetadata({ params }: { params: PageParams }): Promise<Metadata> {
+  const { sitePath } = params;
+  const site = await fetchSiteData(sitePath);
+
+  if (site) {
+    return {
+      title: sitePath.includes('edit') ? `Editing: ${site.path}` : site.path,
+    };
   }
 
   return {
@@ -32,32 +37,13 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page({
-  params,
-}: {
-  params: any;
-}) {
+export default async function Page({ params }: { params: PageParams }) {
   const { sitePath } = params;
+  const site = await fetchSiteData(sitePath);
 
-  try {
-
-    const site = await prisma.site.findUnique({
-      where: {
-        path: sitePath // Use the cleaned path
-      },
-      select: {
-        path: true
-      }
-    });
-
-    if (!site) {
-      console.log(sitePath);
-      return <div>Page not found</div>;
-    }
-
-    return <ClientWrapper isEdit={true} path={site.path} />;
-  } catch (error) {
-    console.error('Error fetching site:', error);
-    return <div>Error loading page</div>;
+  if (!site) {
+    return <div>Page not found</div>;
   }
+
+  return <ClientWrapper isEdit={true} path={site.path} />;
 }

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { Button, Puck, Render } from "../../../../packages/core";
+import { useState, useEffect, useMemo } from 'react';
+import { Puck, Render } from "../../../../packages/core";
 import headingAnalyzer from "../../../../packages/plugin-heading-analyzer/src/HeadingAnalyzer";
 import config from "../../../../config";
 import { useParams } from 'next/navigation';
@@ -10,98 +10,107 @@ import { Link } from '@/i18n/routing';
 import { Eye } from 'lucide-react';
 import BuilderLoader from '@/components/BuilderLoader';
 
-// Define a type for your site content
-
+interface SiteData {
+  content: Data;
+  metaTitle: string;
+  metaDescription: string;
+  metaIcon: string;
+}
 
 export function Client({ isEdit }: { isEdit: boolean }) {
   const [loading, setLoading] = useState<boolean>(true);
-  const [data, setData] = useState<any>(null);
-  const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [icon, setIcon] = useState<string>("");
-  const [resolvedData, setResolvedData] = useState<any>(null);
+  const [siteData, setSiteData] = useState<SiteData | null>(null);
   const { sitePath } = useParams();
   const resolvedSitePath = Array.isArray(sitePath) ? sitePath.join("/") : sitePath || "";
 
+  // Fetch site data
   useEffect(() => {
     async function fetchSiteData() {
-      if (resolvedSitePath) {
-        try {
-          console.log(resolvedSitePath);
-          const response = await fetch(`/api/site/${resolvedSitePath}`);
-          if (!response.ok) {
-            throw new Error('Failed to fetch site data');
-          }
-          const siteData = await response.json();
-          setData(siteData.content);
-          setTitle(siteData.metaTitle);
-          setDescription(siteData.metaDescription);
-          setIcon(siteData.metaIcon);
-          setResolvedData(siteData.content);
-          setLoading(false)
-        } catch (error) {
-          console.error('Error fetching site data:', error);
-          setLoading(false)
-        }
+      if (!resolvedSitePath) return;
+
+      try {
+        const response = await fetch(`/api/site/${resolvedSitePath}`);
+        if (!response.ok) throw new Error('Failed to fetch site data');
+        const data = await response.json();
+        setSiteData(data);
+      } catch (error) {
+        console.error('Error fetching site data:', error);
+      } finally {
+        setLoading(false);
       }
     }
 
     fetchSiteData();
   }, [resolvedSitePath]);
 
-  // Set metadata based on resolvedData
+  // Update metadata
   useEffect(() => {
-      if (title) {
-        document.title = title;
-      }
-      if (description) {
-        const metaDescription = document.querySelector("meta[name='description']");
-        if (metaDescription) {
-          metaDescription.setAttribute("content", description);
-        } else {
-          const meta = document.createElement("meta");
-          meta.name = "description";
-          meta.content = description;
-          document.head.appendChild(meta);
-        }
-      }
-      if (icon) {
-        const linkIcon = document.querySelector("link[rel='icon']");
-        if (linkIcon) {
-          linkIcon.setAttribute("href", icon);
-        } else {
-          const link = document.createElement("link");
-          link.rel = "icon";
-          link.href = icon;
-          document.head.appendChild(link);
-        }
-      }
-  }, [description, icon, resolvedData, title]);
+    if (!siteData) return;
 
-  if (isEdit && data) {
+    const { metaTitle, metaDescription, metaIcon } = siteData;
+
+    if (metaTitle) document.title = metaTitle;
+
+    const updateMetaTag = (name: string, content: string) => {
+      let metaTag = document.querySelector(`meta[name='${name}']`);
+      if (!metaTag) {
+        metaTag = document.createElement('meta');
+        metaTag.setAttribute('name', name);
+        document.head.appendChild(metaTag);
+      }
+      metaTag.setAttribute('content', content);
+    };
+
+    if (metaDescription) updateMetaTag('description', metaDescription);
+
+    const updateIcon = (href: string) => {
+      let linkIcon = document.querySelector("link[rel='icon']");
+      if (!linkIcon) {
+        linkIcon = document.createElement('link');
+        linkIcon.setAttribute('rel', 'icon');
+        document.head.appendChild(linkIcon);
+      }
+      linkIcon.setAttribute('href', href);
+    };
+
+    if (metaIcon) updateIcon(metaIcon);
+  }, [siteData]);
+
+  // Handle publishing data
+  const handlePublish = useMemo(() => async (publishData: Data) => {
+    try {
+      const response = await fetch(`/api/site/${resolvedSitePath}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: publishData }),
+      });
+      if (!response.ok) throw new Error('Failed to update site data');
+      setSiteData((prev) => prev ? { ...prev, content: publishData } : null);
+    } catch (error) {
+      console.error('Error updating site data:', error);
+    }
+  }, [resolvedSitePath]);
+
+  if (loading) return <BuilderLoader />;
+
+  if (!siteData) {
+    return (
+      <div style={{ display: "flex", height: "100vh", textAlign: "center", justifyContent: "center", alignItems: "center" }}>
+        <div>
+          <h1>404</h1>
+          <p>Page not found</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isEdit) {
     return (
       <div>
         <Puck
           config={config}
-          data={data}
-          onPublish={async (publishData) => {
-            try {
-              const response = await fetch(`/api/site/${resolvedSitePath}`, {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ content: publishData }),
-              });
-              if (!response.ok) {
-                throw new Error('Failed to update site data');
-              }
-              setData(publishData);
-              setResolvedData(publishData);
-            } catch (error) {
-              console.error('Error updating site data:', error);
-            }
-          }}
+          data={siteData.content}
+          onPublish={handlePublish}
           plugins={[headingAnalyzer]}
           headerPath={resolvedSitePath}
           overrides={{
@@ -121,29 +130,7 @@ export function Client({ isEdit }: { isEdit: boolean }) {
     );
   }
 
-  if (loading) {
-    return <BuilderLoader />;
-  }
-  if (resolvedData) {
-    return <Render config={config} data={resolvedData} />;
-  }
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        height: "100vh",
-        textAlign: "center",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <div>
-        <h1>404</h1>
-        <p>Page not found</p>
-      </div>
-    </div>
-  );
+  return <Render config={config} data={siteData.content} />;
 }
 
 export default Client;

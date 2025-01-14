@@ -1,6 +1,11 @@
 const withNextIntl = require('next-intl/plugin')();
 
 const nextConfig = {
+  experimental: {
+    turbo: {
+      // Add TurboPack-specific configurations here (if needed)
+    },
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -17,7 +22,9 @@ const nextConfig = {
       },
     ],
   },
-  typescript: {ignoreBuildErrors: true},
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   transpilePackages: ["@measured/puck", "lucide-react"],
   webpack: (config) => {
     config.externals.push({

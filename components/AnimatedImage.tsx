@@ -54,6 +54,7 @@ const AnimatedImage: React.FC<AnimatedImageProps> = ({ src, alt, width, height, 
           width={width}
           height={height}
           className={className}
+          placeholder="blur"
           style={{ boxShadow: "0 4px 200px rgba(190, 24, 93, 0.5)" }}
           priority 
         />

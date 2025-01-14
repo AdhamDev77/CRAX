@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { Button, Puck, Render } from "../../../../../../packages/core";
+import { useState, useEffect, useCallback } from 'react';
+import { Puck, Render } from "../../../../../../packages/core";
 import headingAnalyzer from "../../../../../../packages/plugin-heading-analyzer/src/HeadingAnalyzer";
 import config from "../../../../../../config";
 import { useParams } from 'next/navigation';
@@ -25,25 +25,41 @@ export function Client({ isEdit }: { isEdit: boolean }) {
   const resolvedPagePath = Array.isArray(pagePath) ? pagePath.join("/") : pagePath || "";
   const resolvedPath = `${resolvedSitePath}/${resolvedPagePath}`.replace(/\/+$/, ""); // Remove any trailing slashes
 
-  useEffect(() => {
-    async function fetchSiteData() {
-      if (resolvedPath) {
-        try {
-          const response = await axios.get(`/api/site/${resolvedSitePath}/page/${resolvedPagePath}`);
-          const siteData = response.data.content;
-          console.log(siteData);
-          setData(siteData);
-          setResolvedData(siteData);
-          setLoading(false)
-        } catch (error) {
-          console.error('Error fetching site data:', error);
-          setLoading(false)
-        }
+  // Memoize the fetchSiteData function to avoid re-creating it on every render
+  const fetchSiteData = useCallback(async () => {
+    if (resolvedPath) {
+      try {
+        const response = await axios.get(`/api/site/${resolvedSitePath}/page/${resolvedPagePath}`);
+        const siteData = response.data.content;
+        setData(siteData);
+        setResolvedData(siteData);
+      } catch (error) {
+        console.error('Error fetching site data:', error);
+      } finally {
+        setLoading(false);
       }
     }
-
-    fetchSiteData();
   }, [resolvedSitePath, resolvedPagePath, resolvedPath]);
+
+  useEffect(() => {
+    fetchSiteData();
+  }, [fetchSiteData]);
+
+  // Memoize the onPublish handler to avoid re-creating it on every render
+  const handlePublish = useCallback(
+    async (publishData: SiteContent) => {
+      try {
+        const response = await axios.patch(`/api/site/${resolvedSitePath}/page/${resolvedPagePath}`, {
+          content: publishData,
+        });
+        setData(response.data.content);
+        setResolvedData(response.data.content);
+      } catch (error) {
+        console.error('Error updating site data:', error);
+      }
+    },
+    [resolvedSitePath, resolvedPagePath]
+  );
 
   if (isEdit && data) {
     return (
@@ -51,27 +67,18 @@ export function Client({ isEdit }: { isEdit: boolean }) {
         <Puck
           config={config}
           data={data}
-          onPublish={async (publishData) => {
-            try {
-              const response = await axios.patch(`/api/site/${resolvedSitePath}/page/${resolvedPagePath}`, {
-                content: publishData,
-              });
-
-
-              console.log(response)
-              setData(response.data.content);
-              setResolvedData(response.data.content);
-            } catch (error) {
-              console.error('Error updating site data:', error);
-            }
-          }}
+          onPublish={handlePublish}
           plugins={[headingAnalyzer]}
           headerPath={resolvedPagePath}
           overrides={{
             headerActions: ({ children }) => (
               <>
                 <div>
-                <Link href={`/site/${resolvedSitePath}/${resolvedPagePath}`} target='_blank' className='flex gap-2 font-semibold justify-centr items-center bg-white border text-black rounded-md h-[36px] px-4 text-[14px]'>
+                  <Link
+                    href={`/site/${resolvedSitePath}/${resolvedPagePath}`}
+                    target='_blank'
+                    className='flex gap-2 font-semibold justify-center items-center bg-white border text-black rounded-md h-[36px] px-4 text-[14px]'
+                  >
                     <Eye className='w-5 h-5' /> View
                   </Link>
                 </div>
@@ -87,6 +94,7 @@ export function Client({ isEdit }: { isEdit: boolean }) {
   if (loading) {
     return <BuilderLoader />;
   }
+
   if (resolvedData) {
     return <Render config={config} data={resolvedData} />;
   }

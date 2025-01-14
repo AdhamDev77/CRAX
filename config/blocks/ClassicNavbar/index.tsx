@@ -71,6 +71,7 @@ export const Navbar: ComponentConfig<NavbarProps> = {
                   src={value}
                   alt="Selected"
                   className="h-12 object-cover rounded"
+                  
                 />
               </div>
             )}

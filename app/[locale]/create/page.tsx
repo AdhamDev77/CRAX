@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useConfettiStore } from "@/hooks/use-confetti-store";
 import axios from "axios";
 import { z } from "zod";
@@ -10,13 +10,13 @@ import BuilderLoader from "@/components/BuilderLoader";
 
 // Define TypeScript interfaces
 interface Template {
-    id: string;
-    title: string;
-    description: string;
-    image: string;
-    category: string;
-    features: string[];
-  }
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  category: string;
+  features: string[];
+}
 
 interface User {
   id: string;
@@ -40,41 +40,35 @@ export default function NewProjectPage() {
   const [templates, setTemplates] = useState<Template[]>([]);
   const [user, setUser] = useState<User | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [userData, templatesData] = await Promise.all([
-          axios.get("/api/user"),
-          axios.get("/api/template/all"),
-        ]);
-        console.log(templatesData)
-        setUser(userData.data);
-        setTemplates(templatesData.data);
-      } catch (err) {
-        setErrors((prev) => ({
-          ...prev,
-          response: "Failed to load data. Please refresh the page.",
-        }));
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Memoize the fetchData function to avoid recreating it on every render
+  const fetchData = useCallback(async () => {
+    try {
+      const [userData, templatesData] = await Promise.all([
+        axios.get("/api/user"),
+        axios.get("/api/template/all"),
+      ]);
 
-    fetchData();
+      setUser(userData.data);
+      setTemplates(templatesData.data);
+    } catch (err) {
+      setErrors((prev) => ({
+        ...prev,
+        response: "Failed to load data. Please refresh the page.",
+      }));
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
-
+  if (loading) {
+    return <BuilderLoader />;
+  }
 
   return (
-    <>
-      {loading ? (
-        <BuilderLoader />
-      ) : (
-        <ProjectForm
-          templates={templates}
-        />
-      )}
-    </>
+    <ProjectForm templates={templates} />
   );
 }

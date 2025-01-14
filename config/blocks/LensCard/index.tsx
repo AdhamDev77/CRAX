@@ -82,6 +82,7 @@ export const LensCard: ComponentConfig<LensProps> = {
                 width={500}
                 height={500}
                 className="rounded-2xl"
+                placeholder="blur"
               />
             </Lens>
             <motion.div

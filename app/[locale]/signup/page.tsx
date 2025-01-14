@@ -1,6 +1,6 @@
 "use client";
-import { useState } from "react";
-import React from "react";
+
+import { useState, useCallback } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -21,6 +21,7 @@ import {
 import Navbar from "../_components/Navbar";
 import Footer from "../_components/footer";
 
+// Memoize the BackgroundAnimation component to avoid re-renders
 const BackgroundAnimation = () => (
   <div className="absolute inset-0 overflow-hidden">
     <div className="absolute w-[500px] h-[500px] rounded-full bg-gradient-to-r from-violet-400/30 to-purple-400/30 blur-3xl animate-blob" />
@@ -29,6 +30,7 @@ const BackgroundAnimation = () => (
   </div>
 );
 
+// Memoize the FeatureCard component to avoid re-renders
 const FeatureCard = ({ icon: Icon, title, description }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
@@ -52,24 +54,27 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const response = await axios.post("/api/user", {
-        firstName,
-        lastName,
-        email,
-        password,
-      });
-
-      router.push("/signin");
-    } catch (error) {
-      console.error("Signup failed:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Memoize the handleSubmit function to avoid re-creating it on every render
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      setLoading(true);
+      try {
+        const response = await axios.post("/api/user", {
+          firstName,
+          lastName,
+          email,
+          password,
+        });
+        router.push("/signin");
+      } catch (error) {
+        console.error("Signup failed:", error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [firstName, lastName, email, password, router]
+  );
 
   return (
     <>

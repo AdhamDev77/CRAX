@@ -58,6 +58,7 @@ const ImagePreview = ({
           width={1200}
           height={800}
           className="w-full h-auto rounded-[10px] shadow-2xl max-h-[85vh] object-contain"
+          placeholder="blur"
         />
         <button
           onClick={onClose}
@@ -125,6 +126,7 @@ const DrawerItem = ({
                     className="object-cover rounded-md"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     priority={index < 3}
+                    placeholder="blur"
                   />
                   <button
                     onClick={() => setShowPreview(true)}
