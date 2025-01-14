@@ -45,7 +45,6 @@ export const useResolvedPermissions = <
   unsetComponentLoading?: (id: string) => void
 ) => {
   const [cache, setCache] = useState<Cache>({});
-
   const [resolvedPermissions, setResolvedPermissions] = useState<
     Record<string, Partial<Permissions>>
   >({});
@@ -55,7 +54,12 @@ export const useResolvedPermissions = <
       const componentConfig =
         item.type === "root" ? config.root : config.components[item.type];
 
+      // Log the configuration data for debugging
+      console.log("Resolving permissions for item:", item);
+      console.log("Component Config:", componentConfig);
+
       if (!componentConfig) {
+        console.error("Missing component config for item:", item);
         return;
       }
 
@@ -63,6 +67,9 @@ export const useResolvedPermissions = <
         ...globalPermissions,
         ...componentConfig.permissions,
       };
+
+      // Log initial permissions
+      console.log("Initial Permissions:", initialPermissions);
 
       if (componentConfig.resolvePermissions) {
         const changed = getChanged(item, cache[item.props.id]?.lastData);
@@ -80,6 +87,9 @@ export const useResolvedPermissions = <
               lastData: cache[item.props.id]?.lastData || null,
             }
           );
+
+          // Log resolved permissions
+          console.log("Resolved Permissions:", resolvedPermissions);
 
           setCache((_cache) => ({
             ..._cache,
@@ -114,6 +124,8 @@ export const useResolvedPermissions = <
 
   const resolvePermissions = useCallback<ResolvePermissions<UserConfig>>(
     async ({ item, type, root } = {}, force = false) => {
+      console.log("Resolving permissions for:", { item, type, root });
+      
       if (item) {
         // Resolve specific item
         await resolveDataForItem(item, force);
@@ -146,6 +158,8 @@ export const useResolvedPermissions = <
   );
 
   useEffect(() => {
+    console.log("AppState Data on Effect:", appState.data);
+
     resolvePermissions();
 
     // We only trigger this effect on appState.data to avoid triggering on all UI changes
@@ -155,11 +169,14 @@ export const useResolvedPermissions = <
     ({ item, type, root } = {}) => {
       if (item) {
         const componentConfig = config.components[item.type];
-
         const initialPermissions = {
           ...globalPermissions,
           ...componentConfig.permissions,
         };
+
+        // Log resolved permissions for item
+        console.log("Fetching Permissions for Item:", item.props.id);
+        console.log("Initial Permissions:", initialPermissions);
 
         const resolvedForItem = resolvedPermissions[item.props.id];
 
@@ -168,19 +185,19 @@ export const useResolvedPermissions = <
           : initialPermissions;
       } else if (type) {
         const componentConfig = config.components[type];
-
+        console.log("Fetching Permissions for Type:", type);
         return {
           ...globalPermissions,
           ...componentConfig.permissions,
         };
       } else if (root) {
         const rootConfig = config.root;
-
         const initialPermissions = {
           ...globalPermissions,
           ...rootConfig?.permissions,
         };
 
+        console.log("Fetching Permissions for Root");
         const resolvedForItem = resolvedPermissions["puck-root"];
 
         return resolvedForItem
