@@ -30,16 +30,16 @@ export const VerticalSpace: ComponentConfig<VerticalSpaceProps> = {
         y="3"
         rx="1"
         stroke="currentColor"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="m2 9 3 3-3 3"
         stroke="currentColor"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <rect
         width="13"
@@ -48,9 +48,9 @@ export const VerticalSpace: ComponentConfig<VerticalSpaceProps> = {
         y="14"
         rx="1"
         stroke="currentColor"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   ),

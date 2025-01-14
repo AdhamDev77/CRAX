@@ -25,9 +25,10 @@ export function Client({ isEdit }: { isEdit: boolean }) {
   const fetchSiteData = useCallback(async () => {
     if (resolvedSitePath) {
       try {
-        const response = await axios.get(`/api/site/${resolvedSitePath}`);
+        const response = await axios.get(`/api/site/${resolvedSitePath}/edit`);
         setData(response.data.content);
         setResolvedData(response.data.content);
+        console.log(response.data.content)
       } catch (error) {
         console.error('Error fetching site data:', error);
       } finally {

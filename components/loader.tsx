@@ -25,7 +25,7 @@ const LoaderComponent = (props: Props) => {
             repeatCount="indefinite"
           ></animate>
           <animate
-            attributeName="stroke-width"
+            attributeName="strokeWidth"
             calcMode="spline"
             dur="2"
             values="0;25"

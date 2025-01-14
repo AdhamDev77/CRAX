@@ -11,11 +11,6 @@ export async function GET(
   req: NextRequest,
   { params }: { params: any }
 ) {
-  const session = await getSession(req);
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   const { sitePath } = params;
 
   try {

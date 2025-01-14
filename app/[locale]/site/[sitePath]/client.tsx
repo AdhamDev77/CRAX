@@ -33,6 +33,7 @@ export function Client({ isEdit }: { isEdit: boolean }) {
         if (!response.ok) throw new Error('Failed to fetch site data');
         const data = await response.json();
         setSiteData(data);
+        console.log(data)
       } catch (error) {
         console.error('Error fetching site data:', error);
       } finally {

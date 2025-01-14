@@ -128,8 +128,8 @@ export const CardLink2: ComponentConfig<CardLink2Props> = {
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
               <path d="m9 18 6-6-6-6" />
             </svg>
