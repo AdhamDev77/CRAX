@@ -142,5 +142,18 @@ export const getColorClassName = (
   return chartColors[color]?.[type] ?? fallbackColor[type]
 }
 
+export const validateSignupInput = (email: string, password: string) => {
+  if (!email || !password) {
+    return "Email and password are required";
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return "Invalid email format";
+  }
+  if (password.length < 8) {
+    return "Password must be at least 8 characters long";
+  }
+  return null;
+};
+
 export const UploadButton = generateUploadButton<OurFileRouter>();
 export const UploadDropzone = generateUploadDropzone<OurFileRouter>();

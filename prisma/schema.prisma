@@ -8,16 +8,47 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  firstName     String
-  lastName      String
-  email         String    @unique
-  emailVerified DateTime?
-  password      String
-  image         String?
-  sites         Site[]    @relation("UserSites")
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id                      String       @id @default(auto()) @map("_id") @db.ObjectId
+  email                   String       @unique
+  emailVerified           DateTime?
+  password                String
+  name                    String?
+  image                   String?
+  accountType             String // "individual" or "team"
+  userType                String? // "designer", "frontend", etc.
+  experienceLevel         String? // "beginner", "intermediate", "advanced"
+  referralSource          String? // "social-media", "search-engine", etc.
+  sites                   Site[]       @relation("UserSites")
+  teams                   TeamMember[]
+  createdAt               DateTime     @default(now())
+  updatedAt               DateTime     @updatedAt
+  Team                    Team[]
+  verificationToken       String?      @unique // Add this field
+  verificationTokenExpiry DateTime? // Add this field
+}
+
+model Team {
+  id        String       @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  focus     String?
+  teamSize  String? // "1-5", "6-10", "11+"
+  adminId   String       @db.ObjectId
+  admin     User         @relation(fields: [adminId], references: [id])
+  members   TeamMember[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model TeamMember {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String?  @db.ObjectId
+  user      User?    @relation(fields: [userId], references: [id])
+  teamId    String   @db.ObjectId
+  team      Team     @relation(fields: [teamId], references: [id])
+  email     String?
+  role      String // "admin", "editor", "viewer"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Site {
