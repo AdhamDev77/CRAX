@@ -12,19 +12,6 @@ export interface Site {
   createdAt?: string | number | Date;
   }
   
-  export interface User {
-    id: string;
-    name: string;
-    email: string;
-    emailVerified?: Date | null;
-    prof?: string | null;
-    framework?: string | null;
-    password: string;
-    image?: string | null;
-    sites: Site[]; // This will be an array of Site objects
-    createdAt: Date;
-    updatedAt: Date;
-  }
 
   export interface UnsplashPhoto {
     id: string;

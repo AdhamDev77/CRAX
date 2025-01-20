@@ -1,77 +1,87 @@
 import { NextResponse } from "next/server";
-import  prisma  from "@/lib/prisma";
-import { hashPassword, generateVerificationToken } from "@/lib/auth";
-import { sendVerificationEmail } from "@/lib/email";
-import { validateSignupInput } from "@/lib/utils";
+import prisma from "@/lib/prisma";
 
 export async function POST(request: Request) {
   try {
-    const { email, password, accountType, teamName, teamFocus, teamSize } = await request.json();
+    // Parse the request body
+    const {
+      email,
+      accountType,
+      userType,
+      goals,
+      designPreferences,
+      experienceLevel,
+      referralSource,
+      teamName,
+      teamFocus,
+      teamSize,
+    } = await request.json();
 
-    // Validate input
-    const validationError = validateSignupInput(email, password);
-    if (validationError) {
-      return NextResponse.json({ error: validationError }, { status: 400 });
-    }
-
-    // Check if the email is already registered
-    const existingUser = await prisma.user.findUnique({ where: { email } });
-    if (existingUser) {
+    // Validate the request body
+    if (!email || !accountType) {
       return NextResponse.json(
-        { error: "Email is already registered" },
+        { error: "Email and account type are required" },
         { status: 400 }
       );
     }
 
-    // Hash the password
-    const hashedPassword = hashPassword(password);
+    // Check if the user already exists
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (!existingUser) {
+      return NextResponse.json(
+        { error: "User not found. Please sign up first." },
+        { status: 404 }
+      );
+    }
 
-    // Generate a verification token
-    const verificationToken = generateVerificationToken();
-
-    // Create the user
-    const user = await prisma.user.create({
+    // Update the user with all onboarding data
+    const updatedUser = await prisma.user.update({
+      where: { email },
       data: {
-        email,
-        password: hashedPassword,
         accountType,
-        verificationToken,
-        verificationTokenExpiry: new Date(Date.now() + 24 * 60 * 60 * 1000), // Expires in 24 hours
+        userType,
+        goals: goals || [],
+        designPreferences: designPreferences || [],
+        experienceLevel,
+        referralSource,
       },
     });
 
+    let team = null;
+
     // If the user is creating a team
     if (accountType === "team" && teamName) {
-      const team = await prisma.team.create({
+      team = await prisma.team.create({
         data: {
           name: teamName,
           focus: teamFocus,
           teamSize,
-          adminId: user.id,
+          adminId: updatedUser.id,
         },
       });
 
       // Add the user as an admin of the team
       await prisma.teamMember.create({
         data: {
-          userId: user.id,
+          userId: updatedUser.id,
           teamId: team.id,
           role: "admin",
         },
       });
     }
 
-    // Send verification email
-    await sendVerificationEmail(email, verificationToken);
-
     return NextResponse.json(
-      { message: "Signup successful. Please check your email to verify your account." },
-      { status: 201 }
+      {
+        message: "Account updated successfully.",
+        user: updatedUser,
+        team: team ? team : null, // Return team ID if team was created
+      },
+      { status: 200 }
     );
   } catch (error) {
-    console.error("Signup error:", error);
+    console.error("Update error:", error);
     return NextResponse.json(
-      { error: "An error occurred during signup" },
+      { error: "An error occurred while updating the account" },
       { status: 500 }
     );
   }

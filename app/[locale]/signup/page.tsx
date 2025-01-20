@@ -47,6 +47,7 @@ import Navbar from "../_components/Navbar";
 import Footer from "../_components/footer";
 import { useRouter } from "@/i18n/routing";
 import { signIn } from "next-auth/react";
+import axios from "axios";
 
 // Background Animation Component
 const BackgroundAnimation = () => (
@@ -162,10 +163,9 @@ interface FormData {
   experienceLevel: "beginner" | "intermediate" | "advanced" | "";
   referralSource: string;
   email: string;
-  password: string;
 }
 
-export default function EnhancedSignup() {
+export default function EnhancedSignup({ email }: {email:string}) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
@@ -181,8 +181,7 @@ export default function EnhancedSignup() {
     inviteMembers: [],
     experienceLevel: "",
     referralSource: "",
-    email: "",
-    password: "",
+    email: email || "",
   });
 
   const updateFormData = (field: keyof FormData, value: any) => {
@@ -231,15 +230,7 @@ export default function EnhancedSignup() {
           newErrors.inviteMembers = "Please invite at least one member";
         }
         break;
-      case 6:
-        if (!formData.email) {
-          newErrors.email = "Please enter your email";
-        }
-        if (!formData.password) {
-          newErrors.password = "Please enter a password";
-        } else if (formData.password.length < 8) {
-          newErrors.password = "Password must be at least 8 characters";
-        }
+      
         break;
     }
 
@@ -261,58 +252,51 @@ export default function EnhancedSignup() {
     if (validateStep()) {
       setLoading(true);
       try {
-        // Step 1: Register the user
-        const signupResponse = await fetch("/api/auth/signup", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password,
-            accountType: formData.accountType,
-            teamName:
-              formData.accountType === "team"
-                ? formData.companyName
-                : undefined,
-            teamFocus:
-              formData.accountType === "team"
-                ? formData.companyFocus
-                : undefined,
-            teamSize:
-              formData.accountType === "team" ? formData.teamSize : undefined,
+        // Prepare the data to send to the API
+        const payload = {
+          email: formData.email,
+          accountType: formData.accountType,
+          userType: formData.userType,
+          goals: formData.goals,
+          designPreferences: formData.designPreferences,
+          experienceLevel: formData.experienceLevel,
+          referralSource: formData.referralSource,
+          ...(formData.accountType === "team" && {
+            teamName: formData.companyName,
+            teamFocus: formData.companyFocus,
+            teamSize: formData.teamSize,
           }),
-        });
-
-        const signupData = await signupResponse.json();
-        if (!signupResponse.ok)
-          throw new Error(signupData.error || "Signup failed");
-
-        // Step 2: If it's a team account, invite team members
+        };
+  
+        // Send the data to the API
+        const response = await axios.post("/api/auth/signup", payload);
+  
+        if (response.status !== 200) {
+          throw new Error(response.data.error || "Failed to update user");
+        }
+  
+        // If it's a team account, invite team members
         if (
           formData.accountType === "team" &&
           formData.inviteMembers.length > 0
         ) {
           for (const member of formData.inviteMembers) {
-            const inviteResponse = await fetch("/api/teams/invite", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                email: member.email,
-                role: member.role,
-              }),
+            console.log(member)
+            await axios.post("/api/teams/invite", {
+              email: member.email,
+              role: member.role,
+              teamId: response.data.team.id,
             });
-
-            const inviteData = await inviteResponse.json();
-            if (!inviteResponse.ok)
-              throw new Error(inviteData.error || "Invitation failed");
           }
         }
-
-        // Step 3: Redirect to the verification page
-        router.push("/verify-email");
+  
+        // Redirect to the dashboard
+        router.push("/dashboard");
       } catch (error) {
         console.error("Submission failed:", error);
         setErrors({
-          submit: error instanceof Error ? error.message : "Submission failed",
+          submit:
+            error instanceof Error ? error.message : "Submission failed",
         });
       } finally {
         setLoading(false);
@@ -643,33 +627,7 @@ export default function EnhancedSignup() {
             description="Enter your email and password to complete setup."
           >
             <div className="space-y-6">
-              <div className="space-y-4">
-                <Label>Email</Label>
-                <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  value={formData.email}
-                  onChange={(e) => updateFormData("email", e.target.value)}
-                />
-                {errors.email && (
-                  <span className="text-sm text-red-500">{errors.email}</span>
-                )}
-              </div>
 
-              <div className="space-y-4">
-                <Label>Password</Label>
-                <Input
-                  type="password"
-                  placeholder="Create a secure password"
-                  value={formData.password}
-                  onChange={(e) => updateFormData("password", e.target.value)}
-                />
-                {errors.password && (
-                  <span className="text-sm text-red-500">
-                    {errors.password}
-                  </span>
-                )}
-              </div>
 
               <div className="space-y-4">
                 <Label>How experienced are you with website builders?</Label>

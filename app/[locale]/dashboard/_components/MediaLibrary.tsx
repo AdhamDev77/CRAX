@@ -72,7 +72,6 @@ export default function MediaLibrary({ selectedSite }: { selectedSite: Site }) {
             alt="Form add tutorial"
             width={750}
             height={750}
-            placeholder="blur"
             className="h-auto max-w-6xl mx-auto rounded-2xl shadow-lg"
             priority // Preload this image since it's critical
           />

@@ -43,10 +43,26 @@ export async function POST(
 
   const { sitePath } = params;
 
+
+
   try {
-    const body = await req.json();
+    let body;
+
+    // Safely parse the JSON body
+    try {
+      body = await req.json();
+    } catch (parseError) {
+      console.error("Error parsing request body:", parseError);
+      return NextResponse.json(
+        { error: "Invalid or missing request body" },
+        { status: 400 }
+      );
+    }
+
     const { name, templateId, path, metaTitle, metaDescription, metaIcon } =
-      body;
+      body || {};
+
+      console.log("ID:",session.user.id)
 
     // Validate site data
     if (!name) {
@@ -98,6 +114,7 @@ export async function POST(
     );
   }
 }
+
 
 export async function PUT(
   req: NextRequest,

@@ -342,7 +342,11 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ templates }) => {
 
     setLoading(true);
     try {
-      await axios.post(`/api/site/${formData.path}`, formData);
+      await axios.post(`/api/site/${formData.path}`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       router.push("/dashboard");
     } catch (err) {
       setErrors((prev) => ({

@@ -165,7 +165,6 @@ export const PartnersAgency: ComponentConfig<PartnersAgencyProps> = {
                   width={120}
                   height={60}
                   className="mx-auto w-24 sm:w-28 h-auto object-contain"
-                  placeholder="blur"
                 />
               ))}
             </div>
