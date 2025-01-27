@@ -341,8 +341,8 @@
     \************************************************************************************************************************************************************************************************************************************************************************************************/
   .styles_Input__wuLqi {
     color: var(--puck-color-grey-04);
-    padding: 16px;
-    padding-bottom: 12px;
+    /* padding: 16px;
+    padding-bottom: 12px; */
     display: block;
   }
   
@@ -355,13 +355,13 @@
   }
   
   .styles_Input__wuLqi + .styles_Input__wuLqi {
-    border-top: 1px solid var(--puck-color-grey-09);
-    margin-top: 8px;
+    /* border-top: 1px solid var(--puck-color-grey-09); */
+    /* margin-top: 8px; */
   }
   
   .styles_Input__wuLqi .styles_Input__wuLqi + .styles_Input__wuLqi {
     border-top: 0px;
-    margin-top: 12px;
+    /* margin-top: 12px; */
   }
   
   .styles_Input-label__lHLWK {

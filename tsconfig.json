@@ -12,7 +12,7 @@
 //       "@/plugin-heading-analyzer/*": [
 //         "../../packages/plugin-heading-analyzer/*"
 //       ],
-//       "@/": ["./"], // Alias for the root directory
+//       "@/": ["./"], // Alias for the root direcnptory
 //       "@/*": ["./*"] // Alias for all files in the root directory
 //     }
 //   },

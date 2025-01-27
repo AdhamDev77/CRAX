@@ -1,14 +1,26 @@
 import React from "react";
 import { ComponentConfig } from "../../../packages/core";
-// import styles from "./styles.module.css";
-import { getClassNameFactory } from "../../../packages/core/lib";
-
-// const getClassName = getClassNameFactory("Hero", styles);
+import BorderRadiusAdjuster from "@/components/BorderRadiusAdjustor";
+import BoxShadowAdjustor from "@/components/BoxShadowAdjustor";
+import ColorPanel from "@/components/ColorPanel";
+import MediaUploader from "@/components/MediaUploader";
+import SpacingAdjustor from "@/components/SpacingAdjustor";
 
 export type Announcement1Props = {
   MainText?: string;
   SecondaryText?: string;
   shown?: string;
+  bgColor?: string;
+  textColor?: string;
+  borderRadius?: string;
+  spacing?: {
+    padding: string;
+    margin: string;
+  };
+  boxShadow?: string;
+  fontSize?: string;
+  fontWeight?: string;
+  imageUrl?: string;
 };
 
 export const Announcement1: ComponentConfig<Announcement1Props> = {
@@ -16,6 +28,7 @@ export const Announcement1: ComponentConfig<Announcement1Props> = {
   image: "https://miro.medium.com/v2/resize:fit:1200/1*u2fa0tEmnwftUi9omquHaw.png",
   fields: {
     shown: {
+      section: "content",
       label: "Logo visibility",
       type: "radio",
       options: [
@@ -23,55 +36,156 @@ export const Announcement1: ComponentConfig<Announcement1Props> = {
         { label: "hidden", value: "hidden" },
       ],
     },
-    MainText: { section: "content", type: "text" },
-    SecondaryText: { section: "content", type: "text" },
+    MainText: {
+      section: "content",
+      type: "text",
+      label: "Main Text",
+    },
+    SecondaryText: {
+      section: "content",
+      type: "text",
+      label: "Secondary Text",
+    },
+    imageUrl: {
+      section: "content",
+      label: "Logo Image",
+      type: "custom",
+      render: ({ name, onChange, value }) => (
+        <MediaUploader
+          initialImage={value}
+          onImageSelect={onChange}
+          withMediaLibrary={true}
+          withUnsplash={true}
+        />
+      ),
+    },
+    bgColor: {
+      section: "style",
+      styleType: "Background & Borders",
+      styleTypeToggle: true,
+      label: "Background Color",
+      type: "custom",
+      render: ({ name, onChange, value }) => (
+        <ColorPanel name={name} value={value} onChange={onChange} />
+      ),
+    },
+    textColor: {
+      section: "style",
+      styleType: "Typography",
+      styleTypeToggle: true,
+      label: "Text Color",
+      type: "custom",
+      render: ({ name, onChange, value }) => (
+        <ColorPanel name={name} value={value} onChange={onChange} />
+      ),
+    },
+    borderRadius: {
+      section: "style",
+      styleType: "Background & Borders",
+      styleTypeToggle: true,
+      label: "Border Radius",
+      type: "custom",
+      render: ({ onChange, value }) => (
+        <BorderRadiusAdjuster value={value} onChange={onChange} />
+      ),
+    },
+    spacing: {
+      section: "style",
+      styleType: "Sizing & Spacing",
+      styleTypeToggle: true,
+      label: "Spacing",
+      type: "custom",
+      render: ({ name, onChange, value }) => (
+        <SpacingAdjustor value={value} onChange={onChange} unit="px" />
+      ),
+    },
+    boxShadow: {
+      section: "style",
+      styleType: "Effects & Shadows",
+      styleTypeToggle: true,
+      label: "Box Shadow",
+      type: "custom",
+      render: ({ name, onChange, value }) => (
+        <BoxShadowAdjustor value={value} onChange={onChange} />
+      ),
+    },
+    fontSize: {
+      section: "style",
+      styleType: "Typography",
+      styleTypeToggle: true,
+      label: "Font Size",
+      type: "radio",
+      options: [
+        { label: "Small", value: "text-sm" },
+        { label: "Medium", value: "text-base" },
+        { label: "Large", value: "text-lg" },
+      ],
+    },
+    fontWeight: {
+      section: "style",
+      styleType: "Typography",
+      styleTypeToggle: true,
+      label: "Font Weight",
+      type: "select",
+      options: [
+        { label: "Normal", value: "font-normal" },
+        { label: "Medium", value: "font-medium" },
+        { label: "Semibold", value: "font-semibold" },
+        { label: "Bold", value: "font-bold" },
+      ],
+    },
   },
   defaultProps: {
     MainText: "Get started today.",
     SecondaryText: "Sign up to get unlimited updates.",
     shown: "flex",
+    bgColor: "#ffffff",
+    textColor: "#1f2937",
+    borderRadius: "0px",
+    spacing: { padding: "20px", margin: "0px" },
+    boxShadow: "0px 0px 0px rgba(0, 0, 0, 0)",
+    fontSize: "text-base",
+    fontWeight: "font-medium",
+    imageUrl: "",
   },
-  render: ({ MainText, SecondaryText, shown }: Announcement1Props) => {
+  render: ({
+    MainText,
+    SecondaryText,
+    shown,
+    bgColor,
+    textColor,
+    borderRadius,
+    spacing,
+    boxShadow,
+    fontSize,
+    fontWeight,
+    imageUrl,
+  }: Announcement1Props) => {
     return (
-      <div className="bg-white/60 backdrop-blur-lg dark:bg-neutral-900/60">
+      <div
+        style={{
+          backgroundColor: bgColor,
+          color: textColor,
+          borderRadius,
+          padding: spacing?.padding,
+          margin: spacing?.margin,
+          boxShadow,
+        }}
+        className="backdrop-blur-lg"
+      >
         <div className="max-w-[85rem] px-4 py-4 sm:px-6 lg:px-8 mx-auto">
           <div className="grid justify-center sm:grid-cols-2 sm:items-center gap-4">
             <div className={`flex items-center gap-x-3 md:gap-x-5`}>
-              <svg
-                className={`shrink-0 size-10 md:size-14 ${shown}`}
-                width="40"
-                height="40"
-                viewBox="0 0 40 40"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect
-                  width="40"
-                  height="40"
-                  rx="6"
-                  fill="currentColor"
-                  className="fill-blue-600"
+              {imageUrl && (
+                <img
+                  src={imageUrl}
+                  alt="Logo"
+                  className={`shrink-0 size-10 md:size-14 ${shown}`}
                 />
-                <path
-                  d="M8 32.5V19.5C8 12.8726 13.3726 7.5 20 7.5C26.6274 7.5 32 12.8726 32 19.5C32 26.1274 26.6274 31.5 20 31.5H19"
-                  stroke="white"
-                  strokeWidth="2"
-                />
-                <path
-                  d="M12 32.5V19.66C12 15.1534 15.5817 11.5 20 11.5C24.4183 11.5 28 15.1534 28 19.66C28 24.1666 24.4183 27.82 20 27.82H19"
-                  stroke="white"
-                  strokeWidth="2"
-                />
-                <circle cx="20" cy="19.5214" r="5" fill="white" />
-              </svg>
-
+              )}
               <div className="grow">
-                <p className="md:text-xl text-gray-800 font-semibold dark:text-neutral-200">
-                  {MainText}
-                </p>
-                <p className="text-sm md:text-base text-gray-800 dark:text-neutral-200">
-                  {SecondaryText}
-                </p>
+                <p className={`${fontSize} ${fontWeight}`}>{MainText}</p>
+                <p className="text-sm md:text-base">{SecondaryText}</p>
               </div>
             </div>
 

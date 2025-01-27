@@ -64,6 +64,8 @@ export const Flex: ComponentConfig<FlexProps> = {
       // New field for width control
       label: "Width Type",
       type: "radio",
+      styleType: "Layout & Positioning",
+      styleTypeToggle: false,
       options: [
         { label: "Full Width", value: "full" },
         { label: "Auto Width", value: "auto" },
@@ -72,6 +74,8 @@ export const Flex: ComponentConfig<FlexProps> = {
     backgroundType: {
       label: "Background Type",
       type: "radio",
+      styleType: "Background & Borders",
+      styleTypeToggle: true,
       options: [
         { label: "None", value: "none" },
         { label: "Color", value: "color" },
@@ -81,6 +85,7 @@ export const Flex: ComponentConfig<FlexProps> = {
     },
     bgColor: {
       label: "Background Color",
+      styleType: "Background & Borders",
       type: "custom",
       render: ({ name, onChange, value }) => (
         <ColorPanel name={name} value={value} onChange={onChange} />
@@ -88,6 +93,7 @@ export const Flex: ComponentConfig<FlexProps> = {
     },
     imageUrl: {
       label: "Background Image",
+      styleType: "Background & Borders",
       type: "custom",
       render: ({ name, onChange, value }) => {
         return (
@@ -113,6 +119,7 @@ export const Flex: ComponentConfig<FlexProps> = {
     },
     imageUrls: {
       label: "Slider Images",
+      styleType: "Background & Borders",
       type: "custom",
       render: ({ name, onChange, value }) => {
         const handleImageSelect = (selectedImage: string | null) => {
@@ -156,6 +163,7 @@ export const Flex: ComponentConfig<FlexProps> = {
     },
     backgroundStyle: {
       label: "Background Style",
+      styleType: "Background & Borders",
       type: "radio",
       options: [
         { label: "Normal", value: "normal" },
@@ -164,17 +172,20 @@ export const Flex: ComponentConfig<FlexProps> = {
     },
     gap: {
       label: "Gap",
+      styleType: "Sizing & Spacing",
       type: "select",
       options: spacingOptions,
     },
     boxShadow: {
       type: "custom",
+      styleType: "Effects & Shadows",
       render: ({ name, onChange, value }) => (
         <BoxShadowAdjustor value={value} onChange={onChange} />
       ),
     },
     spacing: {
       label: "Spacing",
+      styleType: "Sizing & Spacing",
       type: "custom",
       render: ({ name, onChange, value }) => (
         <SpacingAdjustor value={value} onChange={onChange} unit="px" />

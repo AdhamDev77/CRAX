@@ -97,7 +97,7 @@ const ColorPickerComponent: React.FC<ColorPickerProps> = ({
     return (
       <div className="flex flex-col gap-2 items-center justify-start relative min-h-[40px]">
         <div className="flex items-center justify-between w-full">
-          <h2>{displayName}</h2>
+          <h2 className="text-gray-600">{displayName}</h2>
           <div className="w-6 h-6 rounded-full border bg-gray-200" />
         </div>
       </div>

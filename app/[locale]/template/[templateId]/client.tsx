@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
-import { Puck, Render } from "../../../../../../packages/core";
-import headingAnalyzer from "../../../../../../packages/plugin-heading-analyzer/src/HeadingAnalyzer";
-import config from "../../../../../../config";
+import { Puck, Render } from "../../../../packages/core";
+import headingAnalyzer from "../../../../packages/plugin-heading-analyzer/src/HeadingAnalyzer";
+import config from "../../../../config";
 import { useParams } from 'next/navigation';
 import { Data } from '@measured/puck'; // Import the Data type from Puck
 import axios from 'axios';
@@ -18,38 +18,32 @@ export function Client({ isEdit }: { isEdit: boolean }) {
   const [loading, setLoading] = useState<boolean>(true);
   const [data, setData] = useState<SiteContent | null>(null);
   const [resolvedData, setResolvedData] = useState<SiteContent | null>(null);
-  const { sitePath, pagePath } = useParams();
-
-  // Resolve sitePath and pagePath into a single path string
-  const resolvedSitePath = Array.isArray(sitePath) ? sitePath.join("/") : sitePath || "";
-  const resolvedPagePath = Array.isArray(pagePath) ? pagePath.join("/") : pagePath || "";
-  const resolvedPath = `${resolvedSitePath}/${resolvedPagePath}`.replace(/\/+$/, ""); // Remove any trailing slashes
-
-  // Memoize the fetchSiteData function to avoid re-creating it on every render
-  const fetchSiteData = useCallback(async () => {
-    if (resolvedPath) {
+  const { templateId } = useParams();
+  // Memoize the fetchTemplateData function to avoid re-creating it on every render
+  const fetchTemplateData = useCallback(async () => {
+    if (templateId) {
       try {
-        const response = await axios.get(`/api/site/${resolvedSitePath}/page/${resolvedPagePath}`);
-        const siteData = response.data.content;
-        setData(siteData);
-        setResolvedData(siteData);
+        const response = await axios.get(`/api/template/${templateId}`);
+        const templateData = response.data.content;
+        setData(templateData);
+        setResolvedData(templateData);
       } catch (error) {
         console.error('Error fetching site data:', error);
       } finally {
         setLoading(false);
       }
     }
-  }, [resolvedSitePath, resolvedPagePath, resolvedPath]);
+  }, [templateId]);
 
   useEffect(() => {
-    fetchSiteData();
-  }, [fetchSiteData]); // Only re-run when `resolvedPath` changes
+    fetchTemplateData();
+  }, [fetchTemplateData]);
 
   // Memoize the onPublish handler to avoid re-creating it on every render
   const handlePublish = useCallback(
     async (publishData: SiteContent) => {
       try {
-        const response = await axios.patch(`/api/site/${resolvedSitePath}/page/${resolvedPagePath}`, {
+        const response = await axios.put(`/api/template/${templateId}`, {
           content: publishData,
         });
         setData(response.data.content);
@@ -58,7 +52,7 @@ export function Client({ isEdit }: { isEdit: boolean }) {
         console.error('Error updating site data:', error);
       }
     },
-    [resolvedSitePath, resolvedPagePath]
+    [templateId]
   );
 
   if (isEdit && data) {
@@ -69,13 +63,13 @@ export function Client({ isEdit }: { isEdit: boolean }) {
           data={data}
           onPublish={handlePublish}
           plugins={[headingAnalyzer]}
-          headerPath={resolvedPagePath}
+          headerPath={templateId}
           overrides={{
             headerActions: ({ children }) => (
               <>
                 <div>
                   <Link
-                    href={`/site/${resolvedSitePath}/${resolvedPagePath}`}
+                    href={`/template/${templateId}}`}
                     target='_blank'
                     className='flex gap-2 font-semibold justify-center items-center bg-white border text-black rounded-md h-[36px] px-4 text-[14px]'
                   >

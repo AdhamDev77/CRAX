@@ -33,6 +33,7 @@ import { ContactForm, ContactFormProps } from "./blocks/ContactForm";
 import { SocialPreview, SocialPreviewProps } from "./blocks/SocialmediaPost";
 import { Timeline, TimelineProps } from "./blocks/Timeline";
 import { SimpleCard, SimpleCardProps } from "./blocks/SimpleCard";
+import { MasterComponent, MasterComponentProps } from "./blocks/MasterComponents";
 
 import Root, { RootProps } from "./root";
 
@@ -71,6 +72,7 @@ export type Props = {
   SocialPreview: SocialPreviewProps;
   Timeline: TimelineProps;
   SimpleCard: SimpleCardProps;
+  MasterComponent: MasterComponentProps;
 };
 
 export type UserConfig = any;
@@ -159,7 +161,7 @@ export const conf: UserConfig = {
     timeline: {
       title: "Timelines",
       type: "sections",
-      components: ["Timeline"],
+      components: ["Timeline", "MasterComponent"],
     },
   },
   components: {
@@ -194,6 +196,7 @@ export const conf: UserConfig = {
     SocialPreview,
     Timeline,
     SimpleCard,
+    MasterComponent
   },
 };
 

@@ -184,12 +184,9 @@ export default function Navbar({isFixed}:{isFixed?: boolean}) {
             </DropdownMenu>
           ) : (
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" onClick={() => router.push("/signin")}>
-                {t("signIn")}
-              </Button>
               <Button
                 className="bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white"
-                onClick={() => router.push("/signup")}
+                onClick={() => router.push("/signin")}
               >
                 {t("startBuilding")}
               </Button>
@@ -261,19 +258,9 @@ export default function Navbar({isFixed}:{isFixed?: boolean}) {
                 ) : (
                   <div className="space-y-2">
                     <Button
-                      variant="ghost"
-                      className="w-full"
-                      onClick={() => {
-                        router.push("/signin");
-                        setIsMobileMenuOpen(false);
-                      }}
-                    >
-                      {t("signIn")}
-                    </Button>
-                    <Button
                       className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white"
                       onClick={() => {
-                        router.push("/signup");
+                        router.push("/signin");
                         setIsMobileMenuOpen(false);
                       }}
                     >

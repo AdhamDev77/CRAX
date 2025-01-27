@@ -119,6 +119,9 @@ export default function Page() {
   //   router.push("/signin"); // Fixed redirection
   // }
   React.useEffect(() => {
+    // Only fetch data if the user is authenticated
+    if (status !== "authenticated") return;
+  
     const fetchUserData = async () => {
       setLoading(true);
       try {
@@ -126,28 +129,29 @@ export default function Page() {
           axios.get("/api/user"),
           axios.get("/api/template/all"),
         ]);
-
-        console.log(userData);
-
+  
         setUser(userData.data);
         setTemplates(templatesData.data);
-
+  
         // Set active site if user has any sites
         if (userData.data.sites && userData.data.sites.length > 0) {
           setActiveSite(userData.data.sites[0]);
         }
-        setLoading(false);
       } catch (err) {
         console.error(err);
         setError("Failed to load user data");
+      } finally {
         setLoading(false);
       }
     };
-
-    if (status === "authenticated") {
-      fetchUserData();
-    }
-  }, [session, status]);
+  
+    fetchUserData();
+  
+    // Cleanup function (optional, for canceling requests if needed)
+    return () => {
+      // Cancel any pending requests here if using a library like Axios
+    };
+  }, [status]); // Only re-run when `status` changes
 
   // Ensure that firstName and lastName are properly handled
   const userName = user

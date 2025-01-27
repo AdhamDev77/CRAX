@@ -8,23 +8,23 @@ datasource db {
 }
 
 model User {
-  id                      String       @id @default(auto()) @map("_id") @db.ObjectId
-  email                   String       @unique
-  emailVerified           DateTime?
-  password                String?
-  name                    String?
-  image                   String?
-  accountType             String // "individual" or "team"
-  userType                String? // "designer", "frontend", etc.
-   goals                   String[]     @default([]) // Array of goals
-  designPreferences       String[]     @default([]) // Array of design preferences
-  experienceLevel         String? // "beginner", "intermediate", "advanced"
-  referralSource          String? // "social-media", "search-engine", etc.
-  sites                   Site[]       @relation("UserSites")
-  teams                   TeamMember[]
-  createdAt               DateTime     @default(now())
-  updatedAt               DateTime     @updatedAt
-  Team                    Team[]
+  id                String       @id @default(auto()) @map("_id") @db.ObjectId
+  email             String       @unique
+  emailVerified     DateTime?
+  password          String?
+  name              String?
+  image             String?
+  accountType       String // "individual" or "team"
+  userType          String? // "designer", "frontend", etc.
+  goals             String[]     @default([]) // Array of goals
+  designPreferences String[]     @default([]) // Array of design preferences
+  experienceLevel   String? // "beginner", "intermediate", "advanced"
+  referralSource    String? // "social-media", "search-engine", etc.
+  sites             Site[]       @relation("UserSites")
+  teams             TeamMember[]
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  Team              Team[]
 }
 
 model Team {

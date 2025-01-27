@@ -1,164 +1,243 @@
-import type { NextAuthOptions } from "next-auth";
+import type { NextAuthOptions, Session, User as NextAuthUser } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
+import GitHubProvider from "next-auth/providers/github";
+import { JWT } from "next-auth/jwt";
 import prisma from "../../../../lib/prisma";
-import { pbkdf2Sync, randomBytes } from "crypto";
-import { User as NextAuthUser } from "next-auth";
-import { parse } from "cookie"; // To parse cookies
+import { pbkdf2Sync, randomBytes, randomInt } from "crypto";
+import { parse } from "cookie";
+import { z } from "zod";
 
-// TypeScript interface for your User object returned from Prisma
+// Strong typing for user-related interfaces
 interface UserPrisma {
   id: string;
   email: string;
-  password: string | null; // Password is optional
+  name?: string | null;
+  password?: string | null;
   accountType: string;
-  userType: string | null;
-  experienceLevel: string | null;
-  referralSource: string | null;
-  emailVerified: Date | null;
+  userType?: string | null;
+  experienceLevel?: string | null;
+  referralSource?: string | null;
+  emailVerified?: Date | null;
+  goals: string[];
   createdAt: Date;
   updatedAt: Date;
 }
 
-// Convert Prisma user to NextAuth user
-const toNextAuthUser = (user: UserPrisma): NextAuthUser => ({
-  id: user.id,
-  email: user.email,
-  name: user.email, // Use email as the default name
-});
+interface ExtendedSession extends Session {
+  user: {
+    id: string;
+    email: string;
+    accountType: string;
+    name?: string;
+  };
+}
 
-// Hash password with a dynamically generated salt
+interface ExtendedToken extends JWT {
+  uid: string;
+  email: string;
+  accountType: string;
+}
+
+// Password utilities
 const hashPassword = (password: string): string => {
-  const salt = randomBytes(16).toString("hex"); // Generate a random salt
-  const hashedPassword = pbkdf2Sync(password, salt, 1000, 64, "sha512").toString("hex");
-  return `${hashedPassword}:${salt}`; // Store hashed password and salt together
+  const salt = randomBytes(16).toString("hex");
+  const hashedPassword = pbkdf2Sync(password, salt, 10000, 64, "sha512").toString("hex");
+  return `${hashedPassword}:${salt}`;
 };
 
-// Verify password against the stored hash
 const verifyPassword = (password: string, storedHash: string): boolean => {
   const [hashedPassword, salt] = storedHash.split(":");
-  const hashedInputPassword = pbkdf2Sync(password, salt, 1000, 64, "sha512").toString("hex");
+  const hashedInputPassword = pbkdf2Sync(password, salt, 10000, 64, "sha512").toString("hex");
   return hashedInputPassword === hashedPassword;
 };
 
-const authorizeUser = async (credentials: { email: string; password: string }): Promise<NextAuthUser | null> => {
-  if (!credentials.email || !credentials.password) {
-    throw new Error("Email and password are required.");
+// OTP utilities
+const otpStore: Record<string, { otp: string; expiresAt: number }> = {};
+
+export const generateOTP = (email: string): string => {
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  const expiresAt = Date.now() + 5 * 60 * 1000; // OTP expires in 5 minutes
+
+  otpStore[email] = { otp, expiresAt };
+  return otp;
+};
+
+const verifyOTP = (email: string, otp: string): boolean => {
+  const storedOTP = otpStore[email];
+
+  if (!storedOTP || storedOTP.expiresAt < Date.now()) {
+    return false; // OTP expired or doesn't exist
   }
 
-  // Find the user in the database
-  const user = await prisma.user.findUnique({ where: { email: credentials.email } });
-  if (!user || !user.password) {
-    throw new Error("User not found or password is missing.");
-  }
+  return storedOTP.otp === otp;
+};
 
-  // Verify the password
-  if (!verifyPassword(credentials.password, user.password)) {
-    throw new Error("Invalid password.");
-  }
+// Move email sending to a separate API route
+export const sendOTPEmail = async (email: string, otp: string): Promise<void> => {
+  try {
+    const response = await fetch('/api/send-otp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        to: email,
+        subject: "Your One-Time Password (OTP)",
+        html: `
+          <p>Your OTP is: <strong>${otp}</strong></p>
+          <p>This OTP will expire in 5 minutes.</p>
+        `,
+      }),
+    });
 
-  // Check if the user's email is verified
-  if (!user.emailVerified) {
-    throw new Error("Email not verified. Please check your email for a verification link.");
+    if (!response.ok) {
+      throw new Error('Failed to send email');
+    }
+  } catch (error) {
+    console.error("Failed to send OTP email:", error);
+    throw new Error("Failed to send OTP email");
   }
+};
 
-  return toNextAuthUser(user);
+// Helper function to get locale from request
+const getLocaleFromRequest = (req: any): string => {
+  const cookies = parse(req?.headers?.cookie || "");
+  return cookies.NEXT_LOCALE || "en";
 };
 
 export const options: NextAuthOptions = {
   providers: [
-    // Google OAuth Provider
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!, // Ensure this is set in your .env file
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!, // Ensure this is set in your .env file
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          prompt: "select_account",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
     }),
-    // Credentials Provider (for email/password login)
+    GitHubProvider({
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+    }),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "text", placeholder: "your email" },
-        password: { label: "Password", type: "password", placeholder: "your password" },
+        email: { label: "Email", type: "text", placeholder: "email@gmail.com" },
+        otp: { label: "OTP", type: "text" },
       },
       async authorize(credentials, req) {
-        if (!credentials) return null;
+        if (!credentials?.email) return null;
 
-        // Parse cookies from the request
-        const cookies = parse(req.headers?.cookie || "");
-        const locale = cookies.NEXT_LOCALE || "en"; // Default to 'en' if locale is not found
+        if (!credentials.email.endsWith("@gmail.com")) {
+          throw new Error("Please use a Gmail address.");
+        }
 
         try {
-          const user = await authorizeUser(credentials);
-          if (user) {
-            // Attach the locale to the user object
-            (user as any).locale = locale;
+          const user = await prisma.user.findUnique({
+            where: { email: credentials.email.toLowerCase() },
+          });
+
+          if (!user) {
+            throw new Error("User not found");
           }
-          return user;
+
+          if (credentials.otp && !verifyOTP(credentials.email, credentials.otp)) {
+            throw new Error("Invalid or expired OTP");
+          }
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name ?? user.email,
+          };
         } catch (error) {
-          console.error("User login error:", error);
-          throw new Error(error instanceof Error ? error.message : "An error occurred during login");
+          console.error("Authentication error:", error);
+          throw error instanceof Error ? error : new Error("Authentication failed");
         }
       },
     }),
   ],
-  pages: {
-    signIn: "/[locale]/dashboard", // Dynamic sign-in page based on locale
-    error: "/[locale]/dashboard", // Dynamic error page based on locale
-  },
   callbacks: {
     async signIn({ user, account, profile }) {
-      if (account?.provider === "google") {
-        const existingUser = await prisma.user.findUnique({
-          where: { email: user.email! },
-        });
-  
-        if (!existingUser) {
-          // Create a new user if none exists
-          const newUser = await prisma.user.create({
-            data: {
-              email: user.email!,
-              name: user.name || user.email,
-              accountType: "individual",
-              emailVerified: new Date(),
-            },
+      try {
+        if (account?.provider === "google" || account?.provider === "github") {
+          const existingUser = await prisma.user.findUnique({
+            where: { email: user.email!.toLowerCase() },
           });
-          user.id = newUser.id; // Link the MongoDB `id`
-        } else {
-          user.id = existingUser.id; // Use the existing MongoDB `id`
+
+          if (!existingUser) {
+            const newUser = await prisma.user.create({
+              data: {
+                email: user.email!.toLowerCase(),
+                name: profile?.name || user.name || user.email,
+                accountType: "individual",
+                emailVerified: new Date(),
+                goals: [],
+              },
+            });
+            user.id = newUser.id;
+          } else {
+            user.id = existingUser.id;
+          }
         }
-      }
-  
-      return true;
-    },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.uid as string; // Use MongoDB `id` from token
-        session.user.email = token.email as string;
-        session.user.accountType = token.accountType as string || null;
-      }
-      return session;
-    },
-    async jwt({ token, user, account }) {
-      if (user) {
-        const existingUser = await prisma.user.findUnique({
-          where: { email: user.email! },
+
+        const dbUser = await prisma.user.findUnique({
+          where: { email: user.email!.toLowerCase() },
         });
-  
-        if (existingUser) {
-          token.uid = existingUser.id; // MongoDB `id`
-          token.email = existingUser.email;
-          token.accountType = existingUser.accountType;
+
+        if (!dbUser?.goals?.length) {
+          const locale = getLocaleFromRequest({ headers: {} });
+          const encodedEmail = encodeURIComponent(user.email!);
+          return `/${locale}/onboarding?email=${encodedEmail}`;
+        }
+
+        return true;
+      } catch (error) {
+        console.error("Sign-in error:", error);
+        return false;
+      }
+    },
+    async session({ session, token }): Promise<ExtendedSession> {
+      return {
+        ...session,
+        user: {
+          id: token.uid,
+          email: token.email,
+          accountType: token.accountType,
+          name: session.user.name,
+        },
+      };
+    },
+    async jwt({ token, user, account }): Promise<ExtendedToken> {
+      if (user) {
+        const dbUser = await prisma.user.findUnique({
+          where: { email: user.email!.toLowerCase() },
+        });
+
+        if (dbUser) {
+          return {
+            ...token,
+            uid: dbUser.id,
+            email: dbUser.email,
+            accountType: dbUser.accountType,
+          };
         }
       }
-  
-      return token;
+      return token as ExtendedToken;
     },
   },
-  
+  pages: {
+    signIn: "/[locale]/signin",
+    error: "/[locale]/signin",
+  },
   session: {
     strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV === "development",
 };
-
-export default options;

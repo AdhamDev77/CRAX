@@ -3,36 +3,25 @@
     "title": "Create Stunning Websites Without Code",
     "subtitle": "CRAX: Way to success",
     "start": "Get your website",
-    "features": {
-      "visualEditor": {
-        "title": "Visual Editor",
-        "description": "Drag-and-drop interface for intuitive website design. No coding required."
-      },
-      "customCode": {
-        "title": "Custom Code",
-        "description": "Add custom HTML, CSS, and JavaScript when you need more control."
-      },
-      "responsiveDesign": {
-        "title": "Responsive Design",
-        "description": "Your site looks perfect on every device, automatically."
-      },
-      "lightningFast": {
-        "title": "Lightning Fast",
-        "description": "Optimized performance with static site generation and CDN delivery."
-      },
-      "formBuilder": {
-        "title": "Form Builder",
-        "description": "Capture leads and user data with customizable forms."
-      },
-      "secureHosting": {
-        "title": "Secure Hosting",
-        "description": "Enterprise-grade security and reliable hosting included."
-      }
-    },
+
     "cta": {
       "title": "Ready to Build Your Dream Website?",
       "description": "Join thousands of businesses already creating stunning websites with CRAX.",
       "cta": "Get Started"
+    }
+  },
+  "features": {
+    "loadedWithFeatures": {
+      "title": "Loaded with Powerful Features for Professionals",
+      "description": "From customizable templates to fast deployment, CRAX makes building a professional website effortless. Designed to help you reach clients and grow your business."
+    },
+    "createProfessionalWebsites": {
+      "title": "Create Professional Websites Easily",
+      "description": "Build stunning websites for agencies, professionals, and businesses without coding, using our intuitive interface."
+    },
+    "customizableTemplates": {
+      "title": "Customizable Templates for Every Industry",
+      "description": "Choose from industry-specific templates designed for doctors, lawyers, consultants, and more to start quickly."
     }
   },
   "Navigation": {

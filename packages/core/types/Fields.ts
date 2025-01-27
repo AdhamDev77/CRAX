@@ -11,6 +11,14 @@ type FieldOptions = Array<FieldOption> | ReadonlyArray<FieldOption>;
 export type BaseField = {
   label?: any;
   section?: any;
+  styleType?: 'Layout & Positioning'
+  | 'Sizing & Spacing'
+  | 'Typography'
+  | 'Background & Borders'
+  | 'Effects & Shadows'
+  | 'Interactions'
+  | 'Advanced Styling';
+  styleTypeToggle?: boolean;
 };
 
 export type TextField = BaseField & {
@@ -106,6 +114,14 @@ export type CustomField<Props extends any = {}> = BaseField & {
     field: CustomField<Props>;
     name: string;
     section?: string;
+    styleType?: 'Layout & Positioning'
+  | 'Sizing & Spacing'
+  | 'Typography'
+  | 'Background & Borders'
+  | 'Effects & Shadows'
+  | 'Interactions'
+  | 'Advanced Styling';
+    styleTypeToggle?: boolean;
     id: string;
     value: Props;
     onChange: (value: Props) => void;

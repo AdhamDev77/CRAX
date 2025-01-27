@@ -6,61 +6,51 @@ import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { IconBrandYoutubeFilled } from "@tabler/icons-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl"; // Import the useTranslations hook
 
 export function FeaturesSectionDemo() {
-    const features = [
-        {
-          title: "Create Professional Websites Easily",
-          description:
-            "Build stunning websites for agencies, professionals, and businesses without coding, using our intuitive interface.",
-          skeleton: <img src="https://colorlib.com/wp/wp-content/uploads/sites/2/14_awesome-websites.jpg" className="rounded-lg"></img>,
-          className:
-            "col-span-1 lg:col-span-4 border-b lg:border-r dark:border-neutral-800",
-        },
-        {
-          title: "Customizable Templates for Every Industry",
-          description:
-            "Choose from industry-specific templates designed for doctors, lawyers, consultants, and more to start quickly.",
-          skeleton: <SkeletonTwo />,
-          className: "border-b col-span-1 lg:col-span-2 dark:border-neutral-800",
-        },
-        {
-          title: "Manage Content with Ease",
-          description:
-            "Use our editor to add and customize text, images, and backgrounds effortlessly, designed for flexibility.",
-          skeleton: <SkeletonThree />,
-          className:
-            "col-span-1 lg:col-span-3 lg:border-r  dark:border-neutral-800",
-        },
-        {
-          title: "Deploy Instantly with High-Speed Hosting",
-          description:
-            "Deploy your site with ease on our reliable, fast cloud servers, optimized for speed and performance.",
-          skeleton: <SkeletonFour />,
-          className: "col-span-1 lg:col-span-3 border-b lg:border-none",
-        },
-    ];
-    
+  const t = useTranslations("features"); // Use the translations for the "features" namespace
+
+  const features = [
+    {
+      title: t("createProfessionalWebsites.title"), // Translated title
+      description: t("createProfessionalWebsites.description"), // Translated description
+      skeleton: (
+        <img
+          src="https://colorlib.com/wp/wp-content/uploads/sites/2/14_awesome-websites.jpg"
+          className="rounded-lg"
+        />
+      ),
+      className:
+        "col-span-1 lg:col-span-4 border-b lg:border-r dark:border-neutral-800",
+    },
+    {
+      title: t("customizableTemplates.title"), // Translated title
+      description: t("customizableTemplates.description"), // Translated description
+      skeleton: <SkeletonTwo />,
+      className: "border-b col-span-1 lg:col-span-2 dark:border-neutral-800",
+    },
+  ];
+
   return (
     <div className="relative z-20 py-4 lg:py-10 max-w-7xl mx-auto">
-<div className="px-8">
-  <h4 className="text-3xl lg:text-5xl lg:leading-tight max-w-5xl mx-auto text-center tracking-tight font-medium text-black dark:text-white">
-    Loaded with Powerful Features for Professionals
-  </h4>
+      <div className="px-8">
+        <h4 className="text-3xl lg:text-5xl lg:leading-tight max-w-5xl mx-auto text-center tracking-tight font-medium text-black dark:text-white">
+          {t("loadedWithFeatures.title")} {/* Translated title */}
+        </h4>
 
-  <p className="text-sm lg:text-base max-w-2xl my-4 mx-auto text-neutral-500 text-center font-normal dark:text-neutral-300">
-    From customizable templates to fast deployment, CRAX makes building a professional website effortless. Designed to help you reach clients and grow your business.
-  </p>
-</div>
+        <p className="text-sm lg:text-base max-w-2xl my-4 mx-auto text-neutral-500 text-center font-normal dark:text-neutral-300">
+          {t("loadedWithFeatures.description")} {/* Translated description */}
+        </p>
+      </div>
 
-
-      <div className="relative ">
+      <div className="relative">
         <div className="grid grid-cols-1 lg:grid-cols-6 mt-12 xl:border rounded-md dark:border-neutral-800">
           {features.map((feature) => (
             <FeatureCard key={feature.title} className={feature.className}>
               <FeatureTitle>{feature.title}</FeatureTitle>
               <FeatureDescription>{feature.description}</FeatureDescription>
-              <div className=" h-full w-full !mt-5">{feature.skeleton}</div>
+              <div className="h-full w-full !mt-5">{feature.skeleton}</div>
             </FeatureCard>
           ))}
         </div>
