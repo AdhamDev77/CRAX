@@ -33,7 +33,7 @@ export const defaultAppState: AppState = {
   data: { content: [], root: {} },
   ui: {
     leftSideBarVisible: true,
-    rightSideBarVisible: true,
+    rightSideBarVisible: false,
     arrayState: {},
     itemSelector: null,
     componentList: {},

@@ -266,8 +266,8 @@ function DropZoneEdit({ zone, allow, disallow, style }: DropZoneProps) {
                 const componentConfig: ComponentConfig | undefined =
                   config.components[item.type];
 
-                const label =
-                  componentConfig?.["label"] ?? item.type.toString();
+                const label = componentConfig?.label ?? item?.type.toString() ?? item.props?.name ?? "Component";
+
 
                 const canDrag = appContext.getPermissions({
                   item: getItem(

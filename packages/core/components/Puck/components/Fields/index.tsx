@@ -74,6 +74,7 @@ const useResolvedFields = (): [FieldsType, boolean] => {
     Partial<ComponentOrRootData>
   >({});
   const [resolvedFields, setResolvedFields] = useState(defaultFields || {});
+
   const [fieldsLoading, setFieldsLoading] = useState(false);
 
   const defaultResolveFields = (
@@ -169,6 +170,7 @@ export const Fields = ({ type }: { type: string }) => {
   const { itemSelector } = ui;
 
   const [fields, fieldsResolving] = useResolvedFields();
+  const safeFields = fields || {};
 
   const { getPermissions } = useAppContext();
 
@@ -187,22 +189,17 @@ export const Fields = ({ type }: { type: string }) => {
     const styleFields: Record<string, Field> = {};
     const globalFields: Record<string, Field> = {};
 
-    Object.keys(fields).forEach((fieldName) => {
-      const field = fields[fieldName];
-
+    Object.keys(safeFields).forEach((fieldName) => {
+      const field = safeFields[fieldName];
       if (!field?.type) return;
 
-      if (field.section === "global") {
-        globalFields[fieldName] = field;
-      } else if (field.section === "content") {
-        contentFields[fieldName] = field;
-      } else {
-        styleFields[fieldName] = field;
-      }
+      if (field.section === "global") globalFields[fieldName] = field;
+      else if (field.section === "content") contentFields[fieldName] = field;
+      else styleFields[fieldName] = field;
     });
 
     return { contentFields, styleFields, globalFields };
-  }, [fields]);
+  }, [safeFields]);
 
   const getFieldsToRender = () => {
     switch (type) {
@@ -441,10 +438,10 @@ export const Fields = ({ type }: { type: string }) => {
   const styleTypeIcons = {
     "Layout & Positioning": <Move className="w-4 h-4 text-blue-950" />,
     "Sizing & Spacing": <LayoutGrid className="w-4 h-4 text-blue-950" />,
-    "Typography": <Type className="w-4 h-4 text-blue-950" />,
+    Typography: <Type className="w-4 h-4 text-blue-950" />,
     "Background & Borders": <PaintBucket className="w-4 h-4 text-blue-950" />,
     "Effects & Shadows": <Box className="w-4 h-4 text-blue-950" />,
-    "Interactions": <MousePointerClick className="w-4 h-4 text-blue-950" />,
+    Interactions: <MousePointerClick className="w-4 h-4 text-blue-950" />,
     "Advanced Styling": <Settings className="w-4 h-4 text-blue-950" />,
   };
 

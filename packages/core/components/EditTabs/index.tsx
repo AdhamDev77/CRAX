@@ -29,7 +29,7 @@ const EditTabs = ({ editSection, setActiveEditSection, hasSelectedItem }: any) =
   return (
     <div>
       {/* Global Tab */}
-      <div className="flex bg-white hover:bg-indigo-300 transition p-2 w-full border-b !rounded-[16px]">
+      {/* <div className="flex bg-white hover:bg-indigo-300 transition p-2 w-full border-b !rounded-[16px]">
         <nav className="flex gap-x-1 w-full" aria-label="Tabs" role="tablist" aria-orientation="horizontal">
           <button
             key={globalTab.id}
@@ -60,7 +60,7 @@ const EditTabs = ({ editSection, setActiveEditSection, hasSelectedItem }: any) =
             {globalTab.label}
           </button>
         </nav>
-      </div>
+      </div> */}
 
       {/* Content and Style Tabs */}
       {hasSelectedItem && (<div className="flex bg-white hover:bg-indigo-300 transition p-2 w-full border-b !rounded-[16px]">

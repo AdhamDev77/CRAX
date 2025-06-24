@@ -2261,18 +2261,15 @@
     display: flex;
     grid-area: editor;
     flex-direction: column;
-    padding: var(--puck-space-px);
     overflow: auto;
   }
   
   @media (min-width: 1198px) {
     .styles_PuckCanvas__s_cq9 {
-      padding: calc(var(--puck-space-px) * 1.5);
-      padding-top: var(--puck-space-px);
+      
     }
   
     .styles_PuckCanvas__s_cq9:not(.styles_PuckCanvas__s_cq9:has(.styles_PuckCanvas-controls__yOz7l)) {
-      padding-top: calc(var(--puck-space-px) * 1.5);
     }
   }
   
@@ -2845,7 +2842,7 @@
     display: flex;
     margin-left: auto;
     margin-right: auto;
-    max-width: 1280px;
+    max-width: 1440px;
     padding: 24px 16px;
   }
   

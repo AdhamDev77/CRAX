@@ -1,12 +1,22 @@
 import { AppState, Data, UiState } from "../types";
 
-export type InsertAction = {
+export interface InsertAction {
   type: "insert";
   componentType: string;
   destinationIndex: number;
   destinationZone: string;
   id?: string;
-};
+  props?: Record<string, any>; // <- add this
+}
+
+export interface LoadLayoutAction {
+  type: "loadLayout";
+  data: {
+    content: any;
+    zones?: any;
+  };
+}
+
 
 export type DuplicateAction = {
   type: "duplicate";
@@ -69,6 +79,13 @@ export type UnregisterZoneAction = {
   zone: string;
 };
 
+export type UpdateAction = {
+  type: "update";
+  id: string;
+  props: Record<string, any>;
+};
+
+
 export type PuckAction = { recordHistory?: boolean } & (
   | ReorderAction
   | InsertAction
@@ -81,4 +98,6 @@ export type PuckAction = { recordHistory?: boolean } & (
   | SetUiAction
   | RegisterZoneAction
   | UnregisterZoneAction
+  | UpdateAction
+  | LoadLayoutAction
 );

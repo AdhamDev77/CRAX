@@ -33,6 +33,7 @@ import {
   Globe,
   PanelLeft,
   PanelRight,
+  PlusCircle,
 } from "lucide-react";
 import { Heading } from "../Heading";
 import { IconButton } from "../IconButton/IconButton";
@@ -41,7 +42,12 @@ import { ItemSelector, getItem } from "../../lib/get-item";
 import { PuckAction, StateReducer, createReducer } from "../../reducer";
 import { flushZones } from "../../lib/flush-zones";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { appContext, AppProvider, defaultAppState } from "./context";
+import {
+  appContext,
+  AppProvider,
+  defaultAppState,
+  useAppContext,
+} from "./context";
 import { MenuBar } from "../MenuBar";
 import styles from "./styles.module.css";
 import { Fields } from "./components/Fields";
@@ -61,6 +67,7 @@ import ColorPicker from "../../../../components/ColorPicker";
 import FontSelector from "../../../../components/FontSelector";
 import getSitePath from "../../../../hooks/getSitePath";
 import EditTabs from "../EditTabs";
+import { ViewportControls } from "../ViewportControls";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -258,22 +265,22 @@ export function Puck<
   const { itemSelector, leftSideBarVisible, rightSideBarVisible } = ui;
 
   const [activeComponent, setActiveComponent] = useState<
-  "elements" | "components" | "sections"
->("elements");
-const [editSection, setActiveEditSection] = useState<
-  "global" | "content" | "style"
->("content");
+    "elements" | "components" | "sections"
+  >("elements");
+  const [editSection, setActiveEditSection] = useState<
+    "global" | "content" | "style"
+  >("content");
 
   const setItemSelector = useCallback(
     (newItemSelector: ItemSelector | null) => {
       if (newItemSelector === itemSelector) return;
-  
+
       dispatch({
         type: "setUi",
         ui: { itemSelector: newItemSelector },
         recordHistory: true,
       });
-  
+
       if (newItemSelector) {
         if (editSection !== "content" && editSection !== "style") {
           setActiveEditSection("content");
@@ -282,7 +289,7 @@ const [editSection, setActiveEditSection] = useState<
         setActiveEditSection("global");
       }
     },
-    [itemSelector, editSection] // Add editSection to the dependency array
+    [itemSelector, editSection]
   );
 
   const selectedItem = itemSelector ? getItem(itemSelector, data) : null;
@@ -426,8 +433,8 @@ const [editSection, setActiveEditSection] = useState<
 
         const data = await response.json();
         console.log(data);
-        setBgColorInternal(data.bgColor || "#fff"); // Set initial bgColor
-        setFontInternal(data.font || ""); // Set initial font
+        setBgColorInternal(data.bgColor || "#fff");
+        setFontInternal(data.font || "");
       } catch (error) {
         console.error("Error fetching initial data:", error);
       }
@@ -461,8 +468,8 @@ const [editSection, setActiveEditSection] = useState<
 
       const data = await response.json();
       console.log(data);
-      setBgColorInternal(data.bgColor || "#fff"); // Set initial bgColor
-      setFontInternal(data.font || ""); // Set initial font
+      setBgColorInternal(data.bgColor || "#fff");
+      setFontInternal(data.font || "");
     } catch (error) {
       console.error("Request failed:", error);
     }
@@ -477,15 +484,24 @@ const [editSection, setActiveEditSection] = useState<
   const selectedComponentConfig =
     selectedItem && config.components[selectedItem.type];
   const selectedComponentLabel = selectedItem
-    ? selectedComponentConfig?.["label"] ?? selectedItem.type.toString()
+    ? selectedComponentConfig?.["label"] ??
+      selectedItem.props?.name ??
+      selectedItem.type.toString()
     : "";
-
-
   useEffect(() => {
     if (!selectedItem) {
       setActiveEditSection("global");
     }
   }, [selectedItem]);
+
+  const { setUi, zoomConfig, setZoomConfig } = useAppContext
+    ? useAppContext()
+    : {
+        setUi: (newUi: any) => dispatch({ type: "setUi", ui: newUi }),
+        zoomConfig: { zoom: 1, autoZoom: 1, rootHeight: 0 },
+        setZoomConfig: () => {},
+      };
+
   return (
     <div className={`Puck ${getClassName()}`}>
       <AppProvider
@@ -508,6 +524,16 @@ const [editSection, setActiveEditSection] = useState<
           },
           getPermissions: () => ({}),
           refreshPermissions: () => null,
+          // Add these new props:
+          bgColorInternal,
+          setBgColorInternal,
+          fontInternal,
+          setFontInternal,
+          handleSubmit,
+          selectedItem,
+          selectedComponentLabel,
+          editSection,
+          setActiveEditSection,
         }}
       >
         <appContext.Consumer>
@@ -576,6 +602,18 @@ const [editSection, setActiveEditSection] = useState<
                     zone: destination.droppableId,
                   });
                 }
+
+                if (droppedItem.destination) {
+                  setItemSelector({
+                    index: droppedItem.destination.index,
+                    zone: droppedItem.destination.droppableId,
+                  });
+
+                  // Auto-switch to content tab when component is selected
+                  if (editSection !== "content" && editSection !== "style") {
+                    setActiveEditSection("content");
+                  }
+                }
               }}
             >
               <DropZoneProvider
@@ -629,16 +667,42 @@ const [editSection, setActiveEditSection] = useState<
                                     "leftSideBarToggle"
                                   )}
                                 >
-                                  <IconButton
-                                    onClick={() => {
-                                      toggleSidebars("left");
-                                    }}
-                                    title="Toggle left sidebar"
-                                  >
-                                    <PanelLeft focusable="false" />
-                                  </IconButton>
+                                  <div className="relative">
+                                    {/* Add Components Button */}
+                                   <div className="flex gap-2">
+  <button
+    onClick={() => {
+      toggleSidebars("left");
+    }}
+    className={`
+      flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm
+      transition-all duration-200 
+      ${leftSideBarVisible 
+        ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300' 
+        : 'bg-blue-600 text-white hover:bg-blue-700'
+      }
+    `}
+  >
+    {leftSideBarVisible ? (
+      <>
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        Hide Components
+      </>
+    ) : (
+      <>
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        </svg>
+        Add Components
+      </>
+    )}
+  </button>
+</div>
+                                  </div>
                                 </div>
-                                <div
+                                {/* <div
                                   className={getLayoutClassName(
                                     "rightSideBarToggle"
                                   )}
@@ -651,23 +715,18 @@ const [editSection, setActiveEditSection] = useState<
                                   >
                                     <PanelRight focusable="false" />
                                   </IconButton>
-                                </div>
+                                </div> */}
                               </div>
                               <div
                                 className={getLayoutClassName("headerTitle")}
                               >
                                 <Heading rank="2" size="xs">
-                                  {headerTitle || rootProps.title || "Page"}
                                   {headerPath && (
                                     <>
                                       {" "}
-                                      <code
-                                        className={getLayoutClassName(
-                                          "headerPath"
-                                        )}
-                                      >
+                                      <h6 className="text-lg font-semibold">
                                         {headerPath}
-                                      </code>
+                                      </h6>
                                     </>
                                   )}
                                 </Heading>
@@ -691,6 +750,41 @@ const [editSection, setActiveEditSection] = useState<
                                     )}
                                   </IconButton>
                                 </div>
+                                {ui.viewports?.controlsVisible &&
+                                  iframe.enabled && (
+                                    <ViewportControls
+                                      autoZoom={zoomConfig.autoZoom}
+                                      zoom={zoomConfig.zoom}
+                                      viewports={Object.values(viewports)}
+                                      currentViewportWidth={
+                                        ui.viewports.current.width
+                                      }
+                                      onViewportChange={(viewport) => {
+                                        const uiViewport = {
+                                          ...viewport,
+                                          height: viewport.height || "auto",
+                                          zoom: zoomConfig.zoom,
+                                        };
+
+                                        const newUi = {
+                                          ...ui,
+                                          viewports: {
+                                            ...ui.viewports,
+                                            current: uiViewport,
+                                          },
+                                        };
+
+                                        dispatch({
+                                          type: "setUi",
+                                          ui: newUi,
+                                          recordHistory: true,
+                                        });
+                                      }}
+                                      onZoom={(zoom) => {
+                                        setZoomConfig({ ...zoomConfig, zoom });
+                                      }}
+                                    />
+                                  )}
                                 <MenuBar<G["UserData"]>
                                   appState={appState}
                                   dispatch={dispatch}

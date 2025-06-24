@@ -57,7 +57,8 @@ export const IconButton = ({
       title={title}
     >
       <span className={getClassName("title")}>{title}</span>
-      {children}
+      <div className="flex gap-2">{children}</div>
+
       {loading && (
         <>
           &nbsp;&nbsp;

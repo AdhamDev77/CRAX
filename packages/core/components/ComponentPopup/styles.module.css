@@ -1,13 +1,13 @@
 .DraggableComponent {
   pointer-events: auto;
 
-  --overlay-background: transparent;
-}
-/* --overlay-background: color-mix(
+  --overlay-background: color-mix(
     in srgb,
     var(--puck-color-azure-08) 30%,
     transparent
-  ); */
+  );
+}
+
 .DraggableComponent--isDragging {
   background: color-mix(in srgb, var(--puck-color-azure-08) 10%, transparent);
   overflow: hidden;

@@ -151,47 +151,52 @@ export const useResolvedPermissions = <
     // We only trigger this effect on appState.data to avoid triggering on all UI changes
   }, [config, appState.data]);
 
-  const getPermissions: GetPermissions = useCallback(
-    ({ item, type, root } = {}) => {
-      if (item) {
-        const componentConfig = config.components[item.type];
-
-        const initialPermissions = {
-          ...globalPermissions,
-          ...componentConfig.permissions,
-        };
-
-        const resolvedForItem = resolvedPermissions[item.props.id];
-
-        return resolvedForItem
-          ? { ...globalPermissions, ...resolvedForItem }
-          : initialPermissions;
-      } else if (type) {
-        const componentConfig = config.components[type];
-
-        return {
-          ...globalPermissions,
-          ...componentConfig.permissions,
-        };
-      } else if (root) {
-        const rootConfig = config.root;
-
-        const initialPermissions = {
-          ...globalPermissions,
-          ...rootConfig?.permissions,
-        };
-
-        const resolvedForItem = resolvedPermissions["puck-root"];
-
-        return resolvedForItem
-          ? { ...globalPermissions, ...resolvedForItem }
-          : initialPermissions;
+const getPermissions: GetPermissions = useCallback(
+  ({ item, type, root } = {}) => {
+    if (item) {
+      // ✅ Check props and id before using
+      if (!item.props?.id) {
+        return globalPermissions;
       }
 
-      return globalPermissions;
-    },
-    [config, resolvedPermissions]
-  );
+      const componentConfig = config.components[item.type];
+      const initialPermissions = {
+        ...globalPermissions,
+        ...(componentConfig?.permissions || {}),
+      };
+      const resolvedForItem = resolvedPermissions[item.props.id];
+
+      return resolvedForItem
+        ? { ...globalPermissions, ...resolvedForItem }
+        : initialPermissions;
+    }
+
+    if (type) {
+      const componentConfig = config.components[type];
+      return {
+        ...globalPermissions,
+        ...(componentConfig?.permissions || {}),
+      };
+    }
+
+    if (root) {
+      const rootConfig = config.root;
+      const initialPermissions = {
+        ...globalPermissions,
+        ...(rootConfig?.permissions || {}),
+      };
+      const resolvedForRoot = resolvedPermissions["puck-root"];
+      return resolvedForRoot
+        ? { ...globalPermissions, ...resolvedForRoot }
+        : initialPermissions;
+    }
+
+    return globalPermissions;
+  },
+  [config, globalPermissions, resolvedPermissions]
+);
+
+
 
   return {
     getPermissions,

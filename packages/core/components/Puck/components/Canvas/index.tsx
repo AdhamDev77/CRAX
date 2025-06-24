@@ -8,7 +8,6 @@ import {
   useState,
 } from "react";
 import { useAppContext } from "../../context";
-import { ViewportControls } from "../../../ViewportControls";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
 import { Preview } from "../Preview";
@@ -131,39 +130,7 @@ export const Canvas = () => {
         })
       }
     >
-      {ui.viewports.controlsVisible && iframe.enabled && (
-        <div className={getClassName("controls")}>
-          <ViewportControls
-            autoZoom={zoomConfig.autoZoom}
-            zoom={zoomConfig.zoom}
-            onViewportChange={(viewport) => {
-              setShowTransition(true);
-
-              const uiViewport = {
-                ...viewport,
-                height: viewport.height || "auto",
-                zoom: zoomConfig.zoom,
-              };
-
-              const newUi = {
-                ...ui,
-                viewports: { ...ui.viewports, current: uiViewport },
-              };
-
-              setUi(newUi);
-
-              if (ZOOM_ON_CHANGE) {
-                resetAutoZoom(newUi);
-              }
-            }}
-            onZoom={(zoom) => {
-              setShowTransition(true);
-
-              setZoomConfig({ ...zoomConfig, zoom });
-            }}
-          />
-        </div>
-      )}
+     
       <div className={getClassName("inner")} ref={frameRef}>
         <div
           className={getClassName("root")}

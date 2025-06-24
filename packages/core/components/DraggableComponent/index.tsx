@@ -5,38 +5,21 @@ import {
   useEffect,
   useMemo,
   useState,
+  useRef,
+  useCallback,
 } from "react";
 import { Draggable } from "@measured/dnd";
 import styles from "./styles.module.css";
 import getClassNameFactory from "../../lib/get-class-name-factory";
-import { Copy, Save, Trash } from "lucide-react";
+import { Settings } from "lucide-react";
 import { useModifierHeld } from "../../lib/use-modifier-held";
 import { isIos } from "../../lib/is-ios";
 import { useAppContext } from "../Puck/context";
 import { DefaultDraggable } from "../Draggable";
 import { Loader } from "../Loader";
-import { ActionBar } from "../ActionBar";
-import { DefaultOverride } from "../DefaultOverride";
+import { ComponentPopup } from "../ComponentPopup";
 
 const getClassName = getClassNameFactory("DraggableComponent", styles);
-
-// Magic numbers are used to position actions overlay 8px from top of component, bottom of component (when sticky scrolling) and side of preview
-const space = 8;
-const actionsOverlayTop = space * 6.5;
-const actionsTop = -(actionsOverlayTop - 8);
-const actionsRight = space;
-
-const DefaultActionBar = ({
-  label,
-  children,
-}: {
-  label: string | undefined;
-  children: ReactNode;
-}) => (
-  <ActionBar label={label}>
-    <ActionBar.Group>{children}</ActionBar.Group>
-  </ActionBar>
-);
 
 export const DraggableComponent = ({
   children,
@@ -60,6 +43,17 @@ export const DraggableComponent = ({
   forceHover = false,
   indicativeHover = false,
   style,
+  // Enhanced popup props
+  selectedItem,
+  selectedComponentLabel,
+  editSection,
+  setActiveEditSection,
+  // Global styling props
+  bgColorInternal,
+  setBgColorInternal,
+  fontInternal,
+  setFontInternal,
+  handleSubmit,
 }: {
   children: ReactNode;
   id: string;
@@ -82,14 +76,44 @@ export const DraggableComponent = ({
   forceHover?: boolean;
   indicativeHover?: boolean;
   style?: CSSProperties;
+  // Enhanced props
+  selectedItem?: any;
+  selectedComponentLabel?: string;
+  editSection?: "global" | "content" | "style";
+  setActiveEditSection?: (section: "global" | "content" | "style") => void;
+  // Global styling props
+  bgColorInternal?: string;
+  setBgColorInternal?: (color: string) => void;
+  fontInternal?: string;
+  setFontInternal?: (font: string) => void;
+  handleSubmit?: (data: { bgColor?: string; font?: string }) => Promise<void>;
 }) => {
-  const { zoomConfig, status, overrides, selectedItem, getPermissions } =
-    useAppContext();
+  const { zoomConfig, status, overrides, getPermissions } = useAppContext();
   const isModifierHeld = useModifierHeld("Alt");
+  const componentRef = useRef<HTMLDivElement>(null);
+  const [showPopup, setShowPopup] = useState(false);
+  
+  // FIXED: Use local state for editSection if not provided from parent
+  const [localEditSection, setLocalEditSection] = useState<"global" | "content" | "style">("content");
+  
+  // Use either the provided editSection or local state
+  const currentEditSection = editSection || localEditSection;
+  const currentSetActiveEditSection = setActiveEditSection || setLocalEditSection;
 
   const El = status !== "LOADING" ? Draggable : DefaultDraggable;
 
   useEffect(onMount, []);
+
+  // Control popup visibility based on selection
+  useEffect(() => {
+    if (isSelected) {
+      setShowPopup(true);
+    } else {
+      // Add a small delay before hiding to prevent flickering
+      const timer = setTimeout(() => setShowPopup(false), 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isSelected]);
 
   const [disableSecondaryAnimation, setDisableSecondaryAnimation] =
     useState(false);
@@ -101,93 +125,174 @@ export const DraggableComponent = ({
     }
   }, []);
 
-  const CustomActionBar = useMemo(
-    () => overrides.actionBar || DefaultActionBar,
-    [overrides.actionBar]
-  );
+  const permissions = useMemo(() => {
+    return getPermissions({
+      item: selectedItem || { type: "component", id },
+    });
+  }, [getPermissions, selectedItem, id]);
 
-  const permissions = getPermissions({
-    item: selectedItem,
-  });
+  // Handle popup close with proper state management
+  const handlePopupClose = useCallback(() => {
+    setShowPopup(false);
+    // Don't automatically deselect - let parent component handle this
+    // The popup closing doesn't necessarily mean the component should be deselected
+  }, []);
+
+  // Handle component click with proper event handling
+  const handleComponentClick = useCallback((e: SyntheticEvent) => {
+    e.stopPropagation();
+    onClick(e);
+  }, [onClick]);
+
+  // Handle action buttons
+  const handleSave = useCallback((e: SyntheticEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onSave(e);
+  }, [onSave]);
+
+  const handleDuplicate = useCallback((e: SyntheticEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onDuplicate(e);
+  }, [onDuplicate]);
+
+  const handleDelete = useCallback((e: SyntheticEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onDelete(e);
+    // Close popup after delete
+    setShowPopup(false);
+  }, [onDelete]);
+
+  // FIXED: Handle tab change properly
+  const handleTabChange = useCallback((section: "global" | "content" | "style") => {
+    console.log("DraggableComponent tab change:", section); // Debug log
+    currentSetActiveEditSection(section);
+  }, [currentSetActiveEditSection]);
 
   return (
-    <El
-      key={id}
-      draggableId={id}
-      index={index}
-      isDragDisabled={isDragDisabled}
-      disableSecondaryAnimation={disableSecondaryAnimation}
-    >
-      {(provided, snapshot) => (
-        <div
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          className={getClassName({
-            isSelected,
-            isModifierHeld,
-            isDragging: snapshot.isDragging,
-            isLocked,
-            forceHover,
-            indicativeHover,
-          })}
-          style={{
-            ...style,
-            ...provided.draggableProps.style,
-            cursor: isModifierHeld || isDragDisabled ? "pointer" : "grab",
-          }}
-          onMouseOver={onMouseOver}
-          onMouseOut={onMouseOut}
-          onMouseDown={onMouseDown}
-          onMouseUp={onMouseUp}
-          onClick={onClick}
-        >
-          {debug}
-          {isLoading && (
-            <div className={getClassName("loadingOverlay")}>
-              <Loader />
-            </div>
-          )}
-          {isSelected && (
-            <div
-              className={getClassName("actionsOverlay")}
-              style={{
-                top: actionsOverlayTop / zoomConfig.zoom,
-              }}
-            >
-              <div
-                className={getClassName("actions")}
-                style={{
-                  transform: `scale(${1 / zoomConfig.zoom}`,
-                  top: actionsTop / zoomConfig.zoom,
-                  right: actionsRight / zoomConfig.zoom,
-                }}
-              >
-                <CustomActionBar label={label}>
-                  {permissions.duplicate && (
-                    <ActionBar.Action onClick={onSave} label="Save">
-                      <Save size={16} />
-                    </ActionBar.Action>
-                  )}
-                  {permissions.duplicate && (
-                    <ActionBar.Action onClick={onDuplicate} label="Duplicate">
-                      <Copy size={16} />
-                    </ActionBar.Action>
-                  )}
-                  {permissions.delete && (
-                    <ActionBar.Action onClick={onDelete} label="Delete">
-                      <Trash size={16} />
-                    </ActionBar.Action>
-                  )}
-                </CustomActionBar>
+    <>
+      <El
+        key={id}
+        draggableId={id}
+        index={index}
+        isDragDisabled={isDragDisabled}
+        disableSecondaryAnimation={disableSecondaryAnimation}
+      >
+        {(provided, snapshot) => (
+          <div
+            ref={(el) => {
+              provided.innerRef(el);
+              componentRef.current = el;
+            }}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            className={getClassName({
+              isSelected,
+              isModifierHeld,
+              isDragging: snapshot.isDragging,
+              isLocked,
+              forceHover,
+              indicativeHover,
+            })}
+            style={{
+              ...style,
+              ...provided.draggableProps.style,
+              cursor: isModifierHeld || isDragDisabled ? "pointer" : "grab",
+              // Enhanced visual feedback for selected state
+              outline: isSelected ? "2px solid #3b82f6" : "none",
+              outlineOffset: isSelected ? "2px" : "0",
+              position: "relative",
+              transition: "outline 0.2s ease-in-out",
+            }}
+            onMouseOver={onMouseOver}
+            onMouseOut={onMouseOut}
+            onMouseDown={onMouseDown}
+            onMouseUp={onMouseUp}
+            onClick={handleComponentClick}
+          >
+            {debug}
+            {isLoading && (
+              <div className={getClassName("loadingOverlay")}>
+                <Loader />
               </div>
-            </div>
-          )}
+            )}
+            
+            {/* Enhanced selection indicator */}
+            {isSelected && (
+  <div
+    className={getClassName("selectedIndicator")}
+    style={{
+      position: "absolute",
+      top: -8,  // These offsets should match the calculations in the popup
+      right: -8, // These offsets should match the calculations in the popup
+      width: "24px",  // Explicit width (12px icon + 4px padding * 2)
+      height: "24px", // Explicit height
+      backgroundColor: "#3b82f6",
+      color: "white",
+      padding: "4px",
+      borderRadius: "50%",
+      fontSize: "12px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      pointerEvents: "none",
+      zIndex: 10,
+      transform: `scale(${1 / zoomConfig.zoom})`,
+      transformOrigin: "center",
+      boxShadow: "0 2px 8px rgba(59, 130, 246, 0.3)",
+      animation: "pulse 2s infinite",
+    }}
+  >
+    <Settings size={12} />
+  </div>
+)}
 
-          <div className={getClassName("overlay")} />
-          <div className={getClassName("contents")}>{children}</div>
-        </div>
+            <div className={getClassName("overlay")} />
+            <div className={getClassName("contents")}>{children}</div>
+          </div>
+        )}
+      </El>
+
+      {/* Enhanced Component Popup with proper state management */}
+      {showPopup && isSelected && (
+        <ComponentPopup
+          isOpen={showPopup}
+          onClose={handlePopupClose}
+          componentElement={componentRef.current}
+          selectedItem={selectedItem}
+          selectedComponentLabel={selectedComponentLabel || label || "Component"}
+          editSection={currentEditSection}
+          setActiveEditSection={handleTabChange}
+          onSave={handleSave}
+          onDuplicate={handleDuplicate}
+          onDelete={handleDelete}
+          permissions={{
+            save: permissions.duplicate, // Using duplicate permission for save
+            duplicate: permissions.duplicate,
+            delete: permissions.delete,
+          }}
+          // Pass global styling props
+          bgColorInternal={bgColorInternal}
+          setBgColorInternal={setBgColorInternal}
+          fontInternal={fontInternal}
+          setFontInternal={setFontInternal}
+          handleSubmit={handleSubmit}
+        />
       )}
-    </El>
+
+      {/* CSS for pulse animation */}
+      <style jsx>{`
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.7;
+          }
+        }
+      `}</style>
+    </>
   );
 };

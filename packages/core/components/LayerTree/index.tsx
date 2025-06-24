@@ -73,7 +73,8 @@ export const LayerTree = ({
 
           const componentConfig: ComponentConfig | undefined =
             config.components[item.type];
-          const label = componentConfig?.["label"] ?? item.type.toString();
+          const label = componentConfig?.["label"] ?? item.props?.name ?? item.type ?? "Unnamed component";
+
 
           return (
             <li

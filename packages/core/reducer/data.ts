@@ -46,6 +46,7 @@ export const replaceAction = <UserData extends Data>(
   };
 };
 
+// reducer.ts (insertAction helper)
 export function insertAction<UserData extends Data>(
   data: UserData,
   action: InsertAction,
@@ -54,24 +55,20 @@ export function insertAction<UserData extends Data>(
   const emptyComponentData = {
     type: action.componentType,
     props: {
-      ...(config.components[action.componentType].defaultProps || {}),
+      ...(config.components[action.componentType]?.defaultProps || {}),
       id: action.id || generateId(action.componentType),
+      ...(action.props || {}), // merge passed props
     },
   };
 
   if (action.destinationZone === rootDroppableId) {
     return {
       ...data,
-      content: insert(
-        data.content,
-        action.destinationIndex,
-        emptyComponentData
-      ),
+      content: insert(data.content, action.destinationIndex, emptyComponentData),
     };
   }
 
   const newData = setupZone(data, action.destinationZone);
-
   return {
     ...data,
     zones: {
@@ -85,6 +82,7 @@ export function insertAction<UserData extends Data>(
   };
 }
 
+
 export function reduceData<UserData extends Data>(
   data: UserData,
   action: PuckAction,
@@ -92,6 +90,16 @@ export function reduceData<UserData extends Data>(
 ): UserData {
   if (action.type === "insert") {
     return insertAction(data, action, config);
+  }
+
+    if (action.type === "loadLayout") {
+    const { content, zones } = action.data;
+
+    return {
+      ...data,
+      content: content || [],
+      zones: zones || {},
+    };
   }
 
   if (action.type === "duplicate") {

@@ -7,6 +7,8 @@ import { Label } from "../../../../components/ui/label";
 import { Textarea } from "../../../../components/ui/textarea";
 import { useToast } from "../../../../hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import { UploadDropzone } from "@uploadthing/react";
+import { OurFileRouter } from "../../../../app/api/uploadthing/core";
 
 interface FormData {
   name: string;
@@ -167,24 +169,38 @@ const ComponentSaveForm: React.FC<ComponentSaveFormProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="image" className="text-sm font-medium">
-              Image
-            </Label>
-            <Input
-              id="image"
-              name="image"
-              type="file"
-              accept="image/jpeg,image/png,image/gif"
-              onChange={handleImageUpload}
-              required
-              className="w-full cursor-pointer file:mr-4 file:py-2 file:px-4
-                         file:rounded-md file:border-0 file:text-sm file:font-semibold
-                         file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              Maximum file size: 5MB. Supported formats: JPEG, PNG, GIF
-            </p>
-          </div>
+  <Label htmlFor="image" className="text-sm font-medium">
+    Image
+  </Label>
+
+  {/* Show preview if image already selected */}
+  {formData.image && (
+    <div className="relative w-full h-48 rounded-lg overflow-hidden mb-2">
+      <img
+        src={formData.image}
+        alt="Selected preview"
+        className="w-full h-full object-cover"
+      />
+    </div>
+  )}
+
+  <UploadDropzone<OurFileRouter, "imageUploader">
+    endpoint="imageUploader"
+    onClientUploadComplete={(res) => {
+      if (res && res.length > 0) {
+        setFormData((prev) => ({ ...prev, image: res[0].url }));
+        toast({ title: "Uploaded successfully", variant: "default" });
+      }
+    }}
+    onUploadError={(error: Error) => {
+      toast({ title: "Error uploading image", description: error.message, variant: "destructive" });
+    }}
+  />
+
+  <p className="text-xs text-gray-500 mt-1">
+    Maximum file size: 5MB. Supported formats: JPEG, PNG, GIF
+  </p>
+</div>
 
           <DialogFooter className="gap-2 sm:gap-0">
             <Button 

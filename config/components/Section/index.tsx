@@ -16,7 +16,7 @@ export const Section = ({
   children,
   className,
   padding = "0px",
-  maxWidth = "1280px",
+  maxWidth = "1440px",
   style = {},
 }: SectionProps) => {
   return (

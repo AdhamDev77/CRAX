@@ -1,4 +1,4 @@
-import { Config, Data } from "../packages/core";
+import { ComponentConfig, Config, Data, DropZone } from "../packages/core";
 import { ButtonGroup, ButtonGroupProps } from "./blocks/ButtonGroup";
 import { ModernButtonGroup, ModernButtonGroupProps } from "./blocks/ModernButtonGroup";
 import { Card, CardProps } from "./blocks/Card";
@@ -34,6 +34,8 @@ import { SocialPreview, SocialPreviewProps } from "./blocks/SocialmediaPost";
 import { Timeline, TimelineProps } from "./blocks/Timeline";
 import { SimpleCard, SimpleCardProps } from "./blocks/SimpleCard";
 import { MasterComponent, MasterComponentProps } from "./blocks/MasterComponents";
+import { Map, MapProps } from "./blocks/Map";
+import { NestedContainer } from "./blocks/NestedComponent";
 
 import Root, { RootProps } from "./root";
 
@@ -73,6 +75,13 @@ export type Props = {
   Timeline: TimelineProps;
   SimpleCard: SimpleCardProps;
   MasterComponent: MasterComponentProps;
+  Map: MapProps;
+  AdvancedProps: {
+  name: string;
+  content: any[];
+  zones: Record<string, any[]>;
+};
+
 };
 
 export type UserConfig = any;
@@ -110,7 +119,7 @@ export const conf: UserConfig = {
     media: {
       title: "Media",
       type: "elements",
-      components: ["Image", "Video", "MapLocation"],
+      components: ["Image", "Video", "MapLocation", "Map"],
     },
     mediaComponents: {
       title: "Media",
@@ -196,7 +205,9 @@ export const conf: UserConfig = {
     SocialPreview,
     Timeline,
     SimpleCard,
-    MasterComponent
+    MasterComponent,
+    Map,
+    NestedContainer
   },
 };
 

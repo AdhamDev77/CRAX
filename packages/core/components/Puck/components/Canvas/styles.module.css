@@ -3,18 +3,16 @@
   display: flex;
   grid-area: editor;
   flex-direction: column;
-  padding: var(--puck-space-px);
   overflow: auto;
 }
 
 @media (min-width: 1198px) {
   .PuckCanvas {
-    padding: calc(var(--puck-space-px) * 1.5);
-    padding-top: var(--puck-space-px);
+
   }
 
   .PuckCanvas:not(.PuckCanvas:has(.PuckCanvas-controls)) {
-    padding-top: calc(var(--puck-space-px) * 1.5);
+    
   }
 }
 
