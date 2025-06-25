@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TextEditor } from "@/components/TextEditor";
-import { ComponentConfig } from "../../../packages/core";
+import { ComponentConfig } from "../../../../packages/core";
 import ColorPickerComponent from "@/components/ColorPicker";
 import { AiTextEditor } from "@/components/AiTextEditor";
 import { spacingOptions } from "@/config/options";
@@ -22,7 +22,7 @@ interface AnimationConfig {
   useSpring: boolean;
 }
 
-export type TextProps = {
+export type Heading2Props = {
   text: string;
   paddingX: string;
   paddingY: string;
@@ -105,8 +105,8 @@ const processHtmlWithFluidStyles = (html: string): string => {
   return doc.body.innerHTML;
 };
 
-export const Text: ComponentConfig<TextProps> = {
-  label: 'Text',
+export const Heading2: ComponentConfig<Heading2Props> = {
+  label: 'Heading 2',
   fields: {
     bgColor: {
       type: "custom",
@@ -144,14 +144,14 @@ export const Text: ComponentConfig<TextProps> = {
     paddingY: { type: "select", options: spacingOptions },
   },
   defaultProps: {
-    text: "Text",
+    text: `<span style="font-size: max(30px, min(3.3333333333333335vw, 28px))">Heading 2</span>`,
     bgColor: "#ffffff",
     paddingX: "0px",
     paddingY: "0px",
     animation: defaultAnimation,
   },
   
-  render: ({ text, bgColor, paddingX, paddingY, animation = defaultAnimation }: TextProps) => {
+  render: ({ text, bgColor, paddingX, paddingY, animation = defaultAnimation }: Heading2Props) => {
     // Generate fluid spacing styles
     const fluidStyles = getResponsiveSpacingStyles(
       `${paddingY} ${paddingX} ${paddingY} ${paddingX}`,
@@ -217,9 +217,9 @@ export const Text: ComponentConfig<TextProps> = {
   },
 };
 
-export const useTextComponent = (props: Partial<TextProps>) => {
+export const useTextComponent = (props: Partial<Heading2Props>) => {
   const mergedProps = {
-    ...Text.defaultProps,
+    ...Heading2.defaultProps,
     ...props,
   };
 

@@ -13,7 +13,8 @@ import { Grid, GridProps } from "./blocks/Grid";
 import { Image, ImageProps } from "./blocks/Image";
 import { Logos, LogosProps } from "./blocks/Logos";
 import { Stats, StatsProps } from "./blocks/Stats";
-import { Text, TextProps } from "./blocks/Text";
+import { Heading1, Heading1Props } from "./blocks/Text/Heading1";
+import { Heading2, Heading2Props } from "./blocks/Text/Heading2";
 import { VerticalSpace, VerticalSpaceProps } from "./blocks/VerticalSpace";
 import { Seperator, SeperatorProps } from "./blocks/Seperator";
 import { Announcement1, Announcement1Props } from "./blocks/Announcment1";
@@ -54,7 +55,8 @@ export type Props = {
   Logos: LogosProps;
   LensCard: LensProps;
   Stats: StatsProps;
-  Text: TextProps;
+  Heading1: Heading1Props;
+  Heading2: Heading2Props;
   VerticalSpace: VerticalSpaceProps;
   Seperator: SeperatorProps;
   Announcement1: Announcement1Props;
@@ -129,7 +131,7 @@ export const conf: UserConfig = {
     typography: {
       title: "Typography",
       type: "elements",
-      components: ["Heading", "Text"],
+      components: ["Heading", "Heading1", "Heading2"],
     },
     cards: {
       title: "Cards",
@@ -180,6 +182,8 @@ export const conf: UserConfig = {
     CardLink,
     CardLink2,
     Seperator,
+    Heading1,
+    Heading2,
     Hero,
     HeroImagesSlider,
     HeroAgency,
@@ -194,7 +198,6 @@ export const conf: UserConfig = {
     Grid,
     Logos,
     Stats,
-    Text,
     VerticalSpace,
     Announcement1,
     Navbar,

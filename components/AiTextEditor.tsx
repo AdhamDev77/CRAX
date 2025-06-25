@@ -13,6 +13,9 @@ import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
 import Placeholder from "@tiptap/extension-placeholder";
 import Underline from "@tiptap/extension-underline";
+import MediaUploader from './MediaUploader';
+import Image from "@tiptap/extension-image";
+
 
 import {
   Dialog,
@@ -102,6 +105,70 @@ const LineHeightExtension = Extension.create({
           return this.options.types.every((type) =>
             commands.updateAttributes(type, { lineHeight })
           );
+        },
+    };
+  },
+});
+
+const TextBackgroundImage = Extension.create({
+  name: "textBackgroundImage",
+  addOptions() {
+    return {
+      types: ["textStyle"],
+    };
+  },
+  addGlobalAttributes() {
+    return [
+      {
+        types: this.options.types,
+        attributes: {
+          backgroundImage: {
+            default: null,
+            parseHTML: (element) => {
+              const bgImage = element.style.backgroundImage;
+              return bgImage && bgImage !== 'none' ? bgImage : null;
+            },
+            renderHTML: (attributes) => {
+              if (!attributes.backgroundImage) return {};
+              return {
+                style: `
+                  background-image: ${attributes.backgroundImage}; 
+                  -webkit-background-clip: text; 
+                  background-clip: text; 
+                  color: transparent; 
+                  background-size: cover; 
+                  background-position: center; 
+                  background-repeat: no-repeat; 
+                  font-weight: bold;
+                  -webkit-text-fill-color: transparent;
+                  display: inline-block;
+                `,
+                class: 'text-background-image'
+              };
+            },
+          },
+        },
+      },
+    ];
+  },
+  addCommands() {
+    return {
+      setTextBackgroundImage:
+        (imageUrl) =>
+        ({ chain }) => {
+          if (!imageUrl) {
+            return chain().unsetMark("textStyle").run();
+          }
+          return chain()
+            .setMark("textStyle", { 
+              backgroundImage: `url("${imageUrl}")` 
+            })
+            .run();
+        },
+      removeTextBackgroundImage:
+        () =>
+        ({ chain }) => {
+          return chain().unsetMark("textStyle").run();
         },
     };
   },
@@ -261,63 +328,65 @@ export const AiTextEditor: React.FC<NovelEditorProps> = ({
   };
 
   const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        bulletList: {
-          keepMarks: true,
-          keepAttributes: false,
-        },
-        orderedList: {
-          keepMarks: true,
-          keepAttributes: false,
-        },
-        heading: {
-          levels: [1, 2, 3],
-        },
-      }),
-      TextAlign.configure({
-        types: ["heading", "paragraph"],
-        alignments: ["left", "center", "right"],
-        defaultAlignment: "left",
-      }),
-      TextStyle,
-      Typography,
-      Focus.configure({
-        className: "ring-2 ring-blue-500",
-        mode: "all",
-      }),
-      Color.configure({
-        types: ["textStyle"],
-      }),
-      Highlight.configure({
-        multicolor: true,
-        HTMLAttributes: {
-          class: "highlight-marker",
-        },
-      }),
-      TaskList.configure({
-        HTMLAttributes: {
-          class: "task-list",
-        },
-      }),
-      TaskItem.configure({
-        nested: true,
-        HTMLAttributes: {
-          class: "task-item",
-        },
-      }),
-      Placeholder.configure({
-        placeholder: ({ node }) => {
-          if (node.type.name === "heading") return "What's the title?";
-          return "Press '/' for commands, or start writing...";
-        },
-        showOnlyCurrent: true,
-      }),
-      CustomUnderline,
-      FontSize,
-      LineHeightExtension,
-      BackgroundColor,
-    ],
+  extensions: [
+    StarterKit.configure({
+      bulletList: {
+        keepMarks: true,
+        keepAttributes: false,
+      },
+      orderedList: {
+        keepMarks: true,
+        keepAttributes: false,
+      },
+      heading: {
+        levels: [1, 2, 3],
+      },
+    }),
+    TextAlign.configure({
+      types: ["heading", "paragraph"],
+      alignments: ["left", "center", "right"],
+      defaultAlignment: "left",
+    }),
+    TextStyle,
+    Typography,
+    Focus.configure({
+      className: "ring-2 ring-blue-500",
+      mode: "all",
+    }),
+    Color.configure({
+      types: ["textStyle"],
+    }),
+    Highlight.configure({
+      multicolor: true,
+      HTMLAttributes: {
+        class: "highlight-marker",
+      },
+    }),
+    TaskList.configure({
+      HTMLAttributes: {
+        class: "task-list",
+      },
+    }),
+    TaskItem.configure({
+      nested: true,
+      HTMLAttributes: {
+        class: "task-item",
+      },
+    }),
+    Placeholder.configure({
+      placeholder: ({ node }) => {
+        if (node.type.name === "heading") return "What's the title?";
+        return "Press '/' for commands, or start writing...";
+      },
+      showOnlyCurrent: true,
+    }),
+    CustomUnderline,
+    FontSize,
+    LineHeightExtension,
+    BackgroundColor,
+    // Add the Text Background Image extension
+    TextBackgroundImage,
+  ],
     content: value || "",
     onUpdate: ({ editor }) => {
       const htmlContent = editor.getHTML();
@@ -330,6 +399,30 @@ export const AiTextEditor: React.FC<NovelEditorProps> = ({
       },
     },
   });
+
+const handleImageSelect = (imageUrl: string | null) => {
+  if (!editor) return;
+  console.log('Selected image URL:', imageUrl);
+  
+  // Check if there's selected text
+  const { from, to } = editor.state.selection;
+  const hasSelection = from !== to;
+  
+  if (!hasSelection) {
+    // If no text is selected, show an alert or select some text first
+    console.warn('Please select some text first to apply the background image');
+    return;
+  }
+  
+  if (imageUrl) {
+    // Apply image background to selected text
+    editor.chain().focus().setTextBackgroundImage(imageUrl).run();
+  } else {
+    // Remove image background from selected text
+    editor.chain().focus().removeTextBackgroundImage().run();
+  }
+};
+
 
   useEffect(() => {
     setMounted(true);
@@ -744,6 +837,14 @@ export const AiTextEditor: React.FC<NovelEditorProps> = ({
             ))}
           </div>
 
+          <div className="flex gap-2 border-t pt-2">
+  <MediaUploader
+    onImageSelect={handleImageSelect}
+    withMediaLibrary={true}
+    withUnsplash={true}
+  />
+</div>
+
           {/* Editor Content */}
           <div className="prose-container relative">
             <EditorContent
@@ -756,3 +857,34 @@ export const AiTextEditor: React.FC<NovelEditorProps> = ({
     </Dialog>
   );
 };
+const customStyles = `
+  .highlight-marker {
+    background-color: #fef08a;
+    border-radius: 0.25rem;
+    padding: 0.1rem 0.2rem;
+  }
+  .task-list {
+    list-style: none;
+    padding-left: 0;
+  }
+  .task-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .ProseMirror img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+    cursor: pointer;
+  }
+  .ProseMirror img:hover {
+    opacity: 0.8;
+    transition: opacity 0.2s;
+  }
+  .ProseMirror img.ProseMirror-selectednode {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+`;

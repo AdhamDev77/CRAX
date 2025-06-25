@@ -152,9 +152,9 @@ useLayoutEffect(() => {
   useEffect(() => {
     if (!isOpen) return;
 
-    const handleReposition = useCallback(() => {
+const handleReposition = () => {
   if (componentElement && popupRef.current) calculatePosition();
-}, [componentElement, calculatePosition]);
+};
 
 
     const debouncedReposition = debounce(handleReposition, 200);
