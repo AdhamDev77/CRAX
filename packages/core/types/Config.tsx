@@ -19,6 +19,7 @@ export type ComponentConfig<
   label?: any;
   image?: any;
   icon?: any;
+  html?: any;
   defaultProps?: FieldProps;
   fields?: Fields<FieldProps>;
   permissions?: Partial<Permissions>;

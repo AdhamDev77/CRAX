@@ -7,6 +7,7 @@ import { AiTextEditor } from "@/components/AiTextEditor";
 import { spacingOptions } from "@/config/options";
 import MotionAdjustor from '@/components/MotionAdjustor';
 import { getResponsiveSpacingStyles, getResponsiveTypographyStyles } from '@/lib/responsiveSpacing';
+import { renderToStaticMarkup } from 'react-dom/server';
 
 interface AnimationConfig {
   type: string;
@@ -105,8 +106,121 @@ const processHtmlWithFluidStyles = (html: string): string => {
   return doc.body.innerHTML;
 };
 
+// Render function that returns the JSX
+const renderComponent = ({ text, bgColor, paddingX, paddingY, animation = defaultAnimation }: Heading1Props) => {
+  // Generate fluid spacing styles
+  const fluidStyles = getResponsiveSpacingStyles(
+    `${paddingY} ${paddingX} ${paddingY} ${paddingX}`,
+    '0px 0px 0px 0px'
+  );
+
+  const sanitizeHtml = (html: string): string => {
+    return html.replace(
+      /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+      ""
+    );
+  };
+
+  const currentAnimation = { ...defaultAnimation, ...animation };
+
+  const getTransition = () => {
+    if (currentAnimation.useSpring) {
+      return {
+        type: "spring",
+        stiffness: currentAnimation.stiffness,
+        damping: currentAnimation.damping,
+        mass: currentAnimation.mass,
+        velocity: currentAnimation.velocity,
+        bounce: currentAnimation.bounce,
+        restDelta: 0.001
+      };
+    }
+    
+    return {
+      duration: currentAnimation.duration,
+      ease: currentAnimation.ease,
+      delay: currentAnimation.delay,
+      repeat: currentAnimation.repeat,
+      repeatType: currentAnimation.repeat > 0 ? "reverse" as const : undefined,
+    };
+  };
+
+  const variants = animationTypes[currentAnimation.type || 'fade'];
+
+  // Process the HTML content with fluid typography
+  const processedHtml = processHtmlWithFluidStyles(sanitizeHtml(text));
+
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        initial={variants.initial}
+        animate={variants.animate}
+        transition={getTransition()}
+        style={{
+          ...fluidStyles,
+        }}
+        className="text-component max-md:text-center"
+      >
+        <div
+          dangerouslySetInnerHTML={{
+            __html: processedHtml
+          }}
+          className="text-content"
+        />
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
+// Generate HTML from the render function (simplified version without motion)
+const generateHtml = () => {
+  const defaultProps = {
+    text: `<span style="font-size: max(30px, min(3.3333333333333335vw, 40px))">Heading 1</span>`,
+    bgColor: "#ffffff",
+    paddingX: "0px",
+    paddingY: "0px",
+    animation: defaultAnimation,
+  };
+  
+  // Create a simplified version without Framer Motion for HTML generation
+  const SimplifiedComponent = ({ text, bgColor, paddingX, paddingY }: Heading1Props) => {
+    const fluidStyles = getResponsiveSpacingStyles(
+      `${paddingY} ${paddingX} ${paddingY} ${paddingX}`,
+      '0px 0px 0px 0px'
+    );
+
+    const sanitizeHtml = (html: string): string => {
+      return html.replace(
+        /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+        ""
+      );
+    };
+
+    const processedHtml = processHtmlWithFluidStyles(sanitizeHtml(text));
+
+    return (
+      <div
+        style={{
+          ...fluidStyles,
+        }}
+        className="text-component max-md:text-center"
+      >
+        <div
+          dangerouslySetInnerHTML={{
+            __html: processedHtml
+          }}
+          className="text-content"
+        />
+      </div>
+    );
+  };
+  
+  return renderToStaticMarkup(<SimplifiedComponent {...defaultProps} />);
+};
+
 export const Heading1: ComponentConfig<Heading1Props> = {
   label: 'Heading 1',
+  html: generateHtml(), // Dynamically generated from render function
   fields: {
     bgColor: {
       type: "custom",
@@ -151,70 +265,7 @@ export const Heading1: ComponentConfig<Heading1Props> = {
     animation: defaultAnimation,
   },
   
-  render: ({ text, bgColor, paddingX, paddingY, animation = defaultAnimation }: Heading1Props) => {
-    // Generate fluid spacing styles
-    const fluidStyles = getResponsiveSpacingStyles(
-      `${paddingY} ${paddingX} ${paddingY} ${paddingX}`,
-      '0px 0px 0px 0px'
-    );
-
-    const sanitizeHtml = (html: string): string => {
-      return html.replace(
-        /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
-        ""
-      );
-    };
-
-    const currentAnimation = { ...defaultAnimation, ...animation };
-
-    const getTransition = () => {
-      if (currentAnimation.useSpring) {
-        return {
-          type: "spring",
-          stiffness: currentAnimation.stiffness,
-          damping: currentAnimation.damping,
-          mass: currentAnimation.mass,
-          velocity: currentAnimation.velocity,
-          bounce: currentAnimation.bounce,
-          restDelta: 0.001
-        };
-      }
-      
-      return {
-        duration: currentAnimation.duration,
-        ease: currentAnimation.ease,
-        delay: currentAnimation.delay,
-        repeat: currentAnimation.repeat,
-        repeatType: currentAnimation.repeat > 0 ? "reverse" as const : undefined,
-      };
-    };
-
-    const variants = animationTypes[currentAnimation.type || 'fade'];
-
-    // Process the HTML content with fluid typography
-    const processedHtml = processHtmlWithFluidStyles(sanitizeHtml(text));
-
-    return (
-      <AnimatePresence mode="wait">
-        <motion.div
-          initial={variants.initial}
-          animate={variants.animate}
-          transition={getTransition()}
-          style={{
-            ...fluidStyles,
-          }}
-          className="text-component max-md:text-center"
-        >
-          <div
-            dangerouslySetInnerHTML={{
-              __html: processedHtml
-            }}
-            className="text-content"
-          />
-        </motion.div>
-      </AnimatePresence>
-    );
-  },
+  render: renderComponent,
 };
 
 export const useTextComponent = (props: Partial<Heading1Props>) => {

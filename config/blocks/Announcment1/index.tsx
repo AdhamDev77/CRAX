@@ -5,6 +5,7 @@ import BoxShadowAdjustor from "@/components/BoxShadowAdjustor";
 import ColorPanel from "@/components/ColorPanel";
 import MediaUploader from "@/components/MediaUploader";
 import SpacingAdjustor from "@/components/SpacingAdjustor";
+import Image from "next/image";
 
 export type Announcement1Props = {
   MainText?: string;
@@ -21,6 +22,7 @@ export type Announcement1Props = {
   fontSize?: string;
   fontWeight?: string;
   imageUrl?: string;
+  isPreview?: boolean; // New prop for preview mode
 };
 
 export const Announcement1: ComponentConfig<Announcement1Props> = {
@@ -147,6 +149,7 @@ export const Announcement1: ComponentConfig<Announcement1Props> = {
     fontSize: "text-base",
     fontWeight: "font-medium",
     imageUrl: "",
+    isPreview: false,
   },
   render: ({
     MainText,
@@ -160,49 +163,79 @@ export const Announcement1: ComponentConfig<Announcement1Props> = {
     fontSize,
     fontWeight,
     imageUrl,
+    isPreview = false,
   }: Announcement1Props) => {
+    // Preview mode adjustments
+    const previewStyles = isPreview
+      ? {
+          transform: "scale(0.9)",
+          pointerEvents: "none",
+          margin: "0 auto",
+          maxWidth: "320px",
+        }
+      : {};
+
     return (
       <div
         style={{
           backgroundColor: bgColor,
           color: textColor,
           borderRadius,
-          padding: spacing?.padding,
-          margin: spacing?.margin,
+          padding: isPreview ? "12px" : spacing?.padding,
+          margin: isPreview ? "0" : spacing?.margin,
           boxShadow,
+          transition: "all 0.2s ease",
+          ...previewStyles,
         }}
-        className="backdrop-blur-lg"
+        className={`backdrop-blur-lg ${isPreview ? "border border-gray-200" : ""}`}
       >
-        <div className="max-w-[85rem] px-4 py-4 sm:px-6 lg:px-8 mx-auto">
-          <div className="grid justify-center sm:grid-cols-2 sm:items-center gap-4">
-            <div className={`flex items-center gap-x-3 md:gap-x-5`}>
+        <div className={`${isPreview ? "px-2 py-2" : "px-4 py-4 sm:px-6 lg:px-8"} mx-auto`}>
+          <div className={`grid ${isPreview ? "gap-2" : "gap-4"} justify-center sm:grid-cols-2 sm:items-center`}>
+            <div className={`flex items-center ${isPreview ? "gap-x-2" : "gap-x-3 md:gap-x-5"}`}>
               {imageUrl && (
-                <img
-                  src={imageUrl}
-                  alt="Logo"
-                  className={`shrink-0 size-10 md:size-14 ${shown}`}
-                />
+                isPreview ? (
+                  <div className={`relative shrink-0 ${shown} ${isPreview ? "w-6 h-6" : "size-10 md:size-14"}`}>
+                    <Image
+                      src={imageUrl}
+                      alt="Logo"
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                ) : (
+                  <img
+                    src={imageUrl}
+                    alt="Logo"
+                    className={`shrink-0 ${isPreview ? "w-6 h-6" : "size-10 md:size-14"} ${shown}`}
+                  />
+                )
               )}
               <div className="grow">
-                <p className={`${fontSize} ${fontWeight}`}>{MainText}</p>
-                <p className="text-sm md:text-base">{SecondaryText}</p>
+                <p className={`${fontSize} ${fontWeight} ${isPreview ? "truncate text-xs" : ""}`}>
+                  {MainText}
+                </p>
+                {!isPreview && (
+                  <p className="text-sm md:text-base">{SecondaryText}</p>
+                )}
               </div>
             </div>
 
-            <div className="text-center sm:text-start flex sm:justify-end max-md:justify-center sm:items-center gap-x-3 md:gap-x-4">
-              <a
-                className="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-full border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-                href="#"
-              >
-                Free trial
-              </a>
-              <a
-                className="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-full border border-gray-800 text-gray-800 hover:border-gray-500 hover:text-gray-500 focus:outline-none focus:text-gray-500 disabled:opacity-50 disabled:pointer-events-none dark:border-white dark:text-white dark:hover:text-neutral-300 dark:hover:border-neutral-300 dark:focus:text-neutral-300 dark:focus:border-neutral-300"
-                href="#"
-              >
-                Buy now
-              </a>
-            </div>
+            {!isPreview && (
+              <div className="text-center sm:text-start flex sm:justify-end max-md:justify-center sm:items-center gap-x-3 md:gap-x-4">
+                <a
+                  className="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-full border border-transparent bg-blue-600 text-white hover:bg-blue-700"
+                  href="#"
+                >
+                  Free trial
+                </a>
+                <a
+                  className="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-full border border-gray-800 text-gray-800 hover:border-gray-500 hover:text-gray-500 dark:border-white dark:text-white"
+                  href="#"
+                >
+                  Buy now
+                </a>
+              </div>
+            )}
           </div>
         </div>
       </div>
