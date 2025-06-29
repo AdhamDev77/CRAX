@@ -1,9 +1,10 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, { useContext, useMemo, useState, useEffect } from "react";
 import Image from "next/image";
 import { Maximize2, Shapes, X } from "lucide-react";
 import { DragIcon } from "../DragIcon";
 import { Draggable } from "../Draggable";
 import { Droppable } from "../Droppable";
+// import { useBrandIdentity } from "@/components/BrandIdentityPanel"; // Removed because module does not exist
 
 const drawerContext = React.createContext<{ droppableId: string }>({
   droppableId: "",
@@ -37,7 +38,13 @@ const DrawerDraggable = ({
   </Draggable>
 );
 
-const ImagePreview = ({ src, onClose }: { src: string; onClose: () => void }) => (
+const ImagePreview = ({
+  src,
+  onClose,
+}: {
+  src: string;
+  onClose: () => void;
+}) => (
   <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
     <div className="relative max-w-4xl w-full mx-4 max-h-[85vh] overflow-auto">
       <Image
@@ -66,9 +73,13 @@ const DrawerItem = ({
   html,
   index,
   isDragDisabled,
+  preview,
 }: {
   name: string;
-  children?: (props: { children: React.ReactNode; name: string }) => React.ReactElement;
+  children?: (props: {
+    children: React.ReactNode;
+    name: string;
+  }) => React.ReactElement;
   id?: string;
   label?: any;
   html?: any;
@@ -76,10 +87,19 @@ const DrawerItem = ({
   icon?: React.ReactNode;
   index: number;
   isDragDisabled?: boolean;
+  preview?: React.ReactNode | ((props: any) => React.ReactNode);
 }) => {
   const ctx = useContext(drawerContext);
   const [showPreview, setShowPreview] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
+  const [previewRef, setPreviewRef] = useState<HTMLDivElement | null>(null);
+  const [calculatedHeight, setCalculatedHeight] = useState<number | null>(null);
+  const [calculatedScale, setCalculatedScale] = useState<number | null>(null);
   const resolvedId = `${ctx.droppableId}::${id || name}`;
+
+  // Get brand identity (colors, etc.) from context if available
+  const brand = {};
 
   const CustomInner = useMemo(
     () =>
@@ -92,45 +112,114 @@ const DrawerItem = ({
     [children]
   );
 
+  // Calculate scale based on container width (assuming components are designed for ~1200px width)
+  const componentDesignWidth = 1200;
+
+  // Effect to calculate and store both scale and height when refs are available
+  useEffect(() => {
+    if (
+      previewRef &&
+      containerRef &&
+      previewRef.scrollHeight > 0 &&
+      containerRef.offsetWidth > 0
+    ) {
+      const containerWidth = containerRef.offsetWidth;
+      const scale = containerWidth / componentDesignWidth;
+      const previewHeight = previewRef.scrollHeight;
+      const scaledHeight = previewHeight * scale;
+
+      setCalculatedScale(scale);
+      setCalculatedHeight(scaledHeight);
+    }
+  }, [previewRef, containerRef, componentDesignWidth]);
+
+  // Use stored values or fallback
+  const finalScale = calculatedScale || 300 / componentDesignWidth; // fallback scale
+  const finalHeight = calculatedHeight || "auto";
+
   return (
     <>
-      <DrawerDraggable id={resolvedId} index={index} isDragDisabled={isDragDisabled}>
+      <DrawerDraggable
+        id={resolvedId}
+        index={index}
+        isDragDisabled={isDragDisabled}
+      >
         <CustomInner name={name}>
           <div
             className={`relative group bg-white dark:bg-gray-800 rounded-lg overflow-hidden transition-all duration-200 hover:-translate-y-1 ${
-              !image ? "border border-gray-200 dark:border-gray-700" : ""
+              !image && !preview
+                ? "border border-gray-200 dark:border-gray-700"
+                : ""
             }`}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
           >
-            <div style={{ padding: image ? "0px" : "8px" }}>
-              {image ? (
-                <div className="relative aspect-video w-full">
-                  <Image
-                    src={image}
-                    alt={label || name}
-                    fill
-                    className="object-cover rounded-t-lg"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                  <button
-                    onClick={() => setShowPreview(true)}
-                    className="absolute top-2 right-2 p-1 bg-white/80 dark:bg-gray-700/80 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <Maximize2 size={16} />
-                  </button>
-                </div>
-              ) : html ? (
-                <div className="p-2 prose dark:prose-invert max-w-none">
-                  <div dangerouslySetInnerHTML={{ __html: html }} />
-                </div>
-              ) : (
-                <div className="flex items-center gap-2 p-2">
-                  {icon && <div className="text-blue-600">{icon}</div>}
-                  <div className="flex-1 truncate text-sm font-medium">
-                    {label || name}
+            <div style={{ padding: image || preview ? "0px" : "8px" }}>
+              {/* --- MAIN PREVIEW CONTENT --- */}
+              <>
+                {/* Icon displayed first */}
+                {icon && (
+                  <div className="flex items-center mb-2 text-black gap-2">
+                    {icon}
+                    <span>{label || name}</span>
                   </div>
-                  <DragIcon isDragDisabled={isDragDisabled} />
-                </div>
-              )}
+                )}
+
+                {preview && !icon ? (
+                  <div className="w-full mb-2">
+                    <div
+                      ref={setContainerRef}
+                      className="overflow-hidden rounded-lg bg-gray-50 dark:bg-gray-900 relative"
+                      style={{ width: "100%", height: finalHeight }}
+                    >
+                      <div
+                        ref={setPreviewRef}
+                        style={{
+                          transform: `scale(${finalScale})`,
+                          transformOrigin: "top left",
+                          width: componentDesignWidth,
+                          height: "fit-content",
+                        }}
+                      >
+                        {typeof preview === "function"
+                          ? preview({ ...brand, isPreview: true })
+                          : preview}
+                      </div>
+                    </div>
+                  </div>
+                ) : image ? (
+                  <div className="relative aspect-video w-full">
+                    <Image
+                      src={image}
+                      alt={label || name}
+                      fill
+                      className="object-cover rounded-t-lg"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                    <button
+                      onClick={() => setShowPreview(true)}
+                      className="absolute top-2 right-2 p-1 bg-white/80 dark:bg-gray-700/80 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <Maximize2 size={16} />
+                    </button>
+                  </div>
+                ) : html ? (
+                  <div className="p-2 prose dark:prose-invert max-w-none">
+                    <div dangerouslySetInnerHTML={{ __html: html }} />
+                  </div>
+                ) : (
+                  <>
+                    {!icon && (
+                      <div className="flex items-center gap-2 p-2">
+                        <div className="flex-1 truncate text-sm font-medium">
+                          {label || name}
+                        </div>
+                        <DragIcon isDragDisabled={isDragDisabled} />
+                      </div>
+                    )}
+                  </>
+                )}
+              </>
             </div>
           </div>
         </CustomInner>

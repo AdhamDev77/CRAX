@@ -21,6 +21,7 @@ import {
 import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import "./styles.css";
+import { BrandProvider } from "../../packages/core/components/Puck/components/BrandSidebar";
 
 // Define each font loader at the module level
 const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-inter" });
@@ -67,6 +68,7 @@ export default async function LocaleLayout({
         suppressHydrationWarning
       >
         <NextIntlClientProvider messages={messages} locale={locale}>
+          <BrandProvider defaultTheme="modern">
           <Suspense fallback={null}>
             <ThemeProvider
               attribute="class"
@@ -84,6 +86,7 @@ export default async function LocaleLayout({
               </ClientProviders>
             </ThemeProvider>
           </Suspense>
+          </BrandProvider>
         </NextIntlClientProvider>
         <Analytics />
       </body>

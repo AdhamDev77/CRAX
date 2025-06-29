@@ -6,6 +6,7 @@ import MediaUploader from "@/components/MediaUploader";
 import ColorPickerComponent from "@/components/ColorPicker";
 import SpacingAdjustor from "@/components/SpacingAdjustor";
 import ColorPanel from "@/components/ColorPanel";
+import { useBrand } from "@/packages/core/components/Puck/components/BrandSidebar";
 
 export type NavbarLink = {
   name: string;
@@ -195,14 +196,14 @@ export const Navbar: ComponentConfig<NavbarProps> = {
     logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/TK_Maxx_Logo.svg/2560px-TK_Maxx_Logo.svg.png",
     logoHeight: 40,
     direction: "ltr",
-    bgColor: "#ffffff",
-    fontColor: "#1f2937",
+    bgColor: "",
+    fontColor: "",
     fontSize: "text-base",
     fontWeight: "font-medium",
     spacing: { padding: "10px 0px 10px 0px", margin: "0px 0px 0px 0px" },
     itemSpacing: "gap-4",
     borderBottom: true,
-    borderColor: "#e5e7eb",
+    borderColor: "",
     links: [
       { name: "Home", url: "/", type: "single" },
       { name: "About", url: "/about", type: "single" },
@@ -240,6 +241,10 @@ export const Navbar: ComponentConfig<NavbarProps> = {
     borderColor,
     links,
   }: NavbarProps) => {
+    const { getColor, getFont, currentTheme } = useBrand();
+    const resolvedBgColor = bgColor || getColor("background");
+    const resolvedFontColor = fontColor || getColor("primary");
+    const resolvedBorderColor = borderColor || getColor("accent");
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [openSubmenu, setOpenSubmenu] = useState(null);
     const submenuRefs = useRef([]);
@@ -274,7 +279,7 @@ export const Navbar: ComponentConfig<NavbarProps> = {
               className={`flex ${
                 direction == "rtl" ? "flex-row-reverse" : "flex-row"
               } items-center ${fontSize} ${fontWeight} gap-2 px-3 py-2 rounded-md`}
-              style={{ color: fontColor }}
+              style={{ color: resolvedFontColor }}
             >
               {link.name}
               <ChevronDown
@@ -292,15 +297,15 @@ export const Navbar: ComponentConfig<NavbarProps> = {
                   ? "opacity-100 translate-y-0" 
                   : "opacity-0 -translate-y-4 pointer-events-none"}`}
               style={{
-                backgroundColor: bgColor,
-                color: fontColor,
+                backgroundColor: resolvedBgColor,
+                color: resolvedFontColor,
               }}
             >
               {link.submenu?.map((sublink, subIdx) => (
                 <li key={subIdx}>
                   <a
                     href={sublink.url}
-                    style={{ color: fontColor }}
+                    style={{ color: resolvedFontColor }}
                     className={`block px-4 py-2 ${fontSize} ${fontWeight}`}
                     onClick={(e) => {
                       e.stopPropagation();
@@ -318,7 +323,7 @@ export const Navbar: ComponentConfig<NavbarProps> = {
       return (
         <a
           href={link.url}
-          style={{ color: fontColor }}
+          style={{ color: resolvedFontColor }}
           className={`px-3 py-2 ${fontSize} ${fontWeight} rounded-md`}
         >
           {link.name}
@@ -330,8 +335,8 @@ export const Navbar: ComponentConfig<NavbarProps> = {
       <nav
         className={`${borderBottom ? "border-b" : ""}`}
         style={{
-          background: bgColor,
-          borderColor: borderBottom ? borderColor : "transparent",
+          background: resolvedBgColor,
+          borderColor: borderBottom ? resolvedBorderColor : "transparent",
           padding: spacing.padding,
           margin: spacing.margin,
         }}
@@ -365,7 +370,7 @@ export const Navbar: ComponentConfig<NavbarProps> = {
               <button
                 type="button"
                 className="inline-flex items-center justify-center p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
-                style={{ color: fontColor }}
+                style={{ color: resolvedFontColor }}
                 aria-controls="mobile-menu"
                 aria-expanded={mobileMenuOpen}
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

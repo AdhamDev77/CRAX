@@ -8,7 +8,6 @@ import {
   useState,
 } from "react";
 import { DragStart, DragUpdate } from "@measured/dnd";
-
 import type {
   UiState,
   IframeConfig,
@@ -28,6 +27,7 @@ import { usePlaceholderStyle } from "../../lib/use-placeholder-style";
 
 import { SidebarSection } from "../SidebarSection";
 import {
+  Brush,
   ChevronDown,
   ChevronUp,
   Globe,
@@ -68,6 +68,7 @@ import FontSelector from "../../../../components/FontSelector";
 import getSitePath from "../../../../hooks/getSitePath";
 import EditTabs from "../EditTabs";
 import { ViewportControls } from "../ViewportControls";
+import { BrandSidebar, useBrand } from "./components/BrandSidebar";
 
 const getClassName = getClassNameFactory("Puck", styles);
 const getLayoutClassName = getClassNameFactory("PuckLayout", styles);
@@ -502,6 +503,9 @@ export function Puck<
         setZoomConfig: () => {},
       };
 
+  const [showBrandIdentity, setShowBrandIdentity] = useState(false);
+  const { getColor, getFont, currentTheme } = useBrand();
+
   return (
     <div className={`Puck ${getClassName()}`}>
       <AppProvider
@@ -669,37 +673,51 @@ export function Puck<
                                 >
                                   <div className="relative">
                                     {/* Add Components Button */}
-                                   <div className="flex gap-2">
-  <button
-    onClick={() => {
-      toggleSidebars("left");
-    }}
-    className={`
-      flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm
-      transition-all duration-200 
-      ${leftSideBarVisible 
-        ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300' 
-        : 'bg-blue-600 text-white hover:bg-blue-700'
-      }
-    `}
-  >
-    {leftSideBarVisible ? (
-      <>
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        </svg>
-        Hide Components
-      </>
-    ) : (
-      <>
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-        </svg>
-        Add Components
-      </>
-    )}
-  </button>
-</div>
+                                    <div className="flex gap-2">
+                                      <button
+                                        onClick={() => {
+                                          toggleSidebars("left");
+                                        }}
+                                        className={`
+                                          flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm
+                                          transition-all duration-200 
+                                          ${leftSideBarVisible 
+                                            ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300' 
+                                            : 'bg-blue-600 text-white hover:bg-blue-700'
+                                          }
+                                        `}
+                                      >
+                                        {leftSideBarVisible ? (
+                                          <>
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                            Hide Components
+                                          </>
+                                        ) : (
+                                          <>
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                            </svg>
+                                            Add Components
+                                          </>
+                                        )}
+                                      </button>
+                                      <button
+                                        onClick={() => setShowBrandIdentity((prev) => !prev)}
+                                        className={`
+                                          flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm
+                                          transition-all duration-200
+                                          ${showBrandIdentity
+                                            ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300' 
+                                            : 'bg-blue-600 text-white hover:bg-blue-700'
+                                          }
+                                        `}
+                                      >
+                                        <Brush className="w-4 h-4" />
+                                        Site Theme
+                                      </button>
+                                    </div>
                                   </div>
                                 </div>
                                 {/* <div
@@ -844,23 +862,7 @@ export function Puck<
                               }
                             />
                             {editSection === "global" && (
-                              <div className="px-4 py-2 flex flex-col gap-2">
-                                <ColorPicker
-                                  value={bgColorInternal}
-                                  onChange={(bgColor: string) => {
-                                    setBgColorInternal(bgColor); // Update bgColor state
-                                    handleSubmit({ bgColor }); // Submit the form with updated bgColor and font
-                                  }}
-                                  name={"Main Background Color"}
-                                />
-                                <FontSelector
-                                  selectedFont={fontInternal}
-                                  onChange={(font: string) => {
-                                    setFontInternal(font); // Update font state
-                                    handleSubmit({ font }); // Submit the form with updated font and bgColor
-                                  }}
-                                />
-                              </div>
+                              <BrandSidebar open={showBrandIdentity} onClose={() => setShowBrandIdentity(false)} />
                             )}
 
                             <Fields type={editSection} />

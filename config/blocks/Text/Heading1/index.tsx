@@ -7,7 +7,7 @@ import { AiTextEditor } from "@/components/AiTextEditor";
 import { spacingOptions } from "@/config/options";
 import MotionAdjustor from '@/components/MotionAdjustor';
 import { getResponsiveSpacingStyles, getResponsiveTypographyStyles } from '@/lib/responsiveSpacing';
-import { renderToStaticMarkup } from 'react-dom/server';
+import { useBrand } from '@/packages/core/components/Puck/components/BrandSidebar';
 
 interface AnimationConfig {
   type: string;
@@ -29,6 +29,7 @@ export type Heading1Props = {
   paddingY: string;
   bgColor: string;
   animation?: Partial<AnimationConfig>;
+  isPreview?: boolean;
 };
 
 const defaultAnimation: AnimationConfig = {
@@ -80,39 +81,81 @@ const animationTypes = {
   }
 };
 
-// Function to process HTML and add fluid typography styles
-const processHtmlWithFluidStyles = (html: string): string => {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
-
-  // Process all elements with font-size
-  doc.querySelectorAll('[style*="font-size"]').forEach(el => {
-    const style = el.getAttribute('style') || '';
-    const fontSizeMatch = style.match(/font-size:\s*(\d+)px/);
-    if (fontSizeMatch) {
-      const fontSize = parseInt(fontSizeMatch[1], 10);
-      const lineHeight = fontSize * 1.2; // Default line height ratio
-      const fluidStyles = getResponsiveTypographyStyles(fontSize, lineHeight, 0.75);
-      
-      // Update the style attribute with fluid values
-      const newStyle = style.replace(
-        /font-size:\s*\d+px/,
-        `font-size: ${fluidStyles.fontSize}`
-      );
-      el.setAttribute('style', newStyle);
-    }
-  });
-
-  return doc.body.innerHTML;
+// Fallback function for responsive spacing if the utility doesn't exist
+const getFallbackSpacingStyles = (padding: string) => {
+  return {
+    padding: padding || '0px',
+  };
 };
 
-// Render function that returns the JSX
-const renderComponent = ({ text, bgColor, paddingX, paddingY, animation = defaultAnimation }: Heading1Props) => {
-  // Generate fluid spacing styles
-  const fluidStyles = getResponsiveSpacingStyles(
-    `${paddingY} ${paddingX} ${paddingY} ${paddingX}`,
-    '0px 0px 0px 0px'
-  );
+// Fallback function for responsive typography if the utility doesn't exist
+const getFallbackTypographyStyles = (html: string): string => {
+  // Return the HTML as-is if we can't process it
+  return html;
+};
+
+// Function to process HTML and add fluid typography styles
+const processHtmlWithFluidStyles = (html: string): string => {
+  
+  try {
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined' || !window.DOMParser) {
+      return getFallbackTypographyStyles(html);
+    }
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    // Process all elements with font-size
+    doc.querySelectorAll('[style*="font-size"]').forEach(el => {
+      const style = el.getAttribute('style') || '';
+      const fontSizeMatch = style.match(/font-size:\s*(\d+)px/);
+      if (fontSizeMatch) {
+        const fontSize = parseInt(fontSizeMatch[1], 10);
+        const lineHeight = fontSize * 1.2; // Default line height ratio
+        
+        // Try to use the responsive typography utility, fallback if it fails
+        try {
+          const fluidStyles = getResponsiveTypographyStyles(fontSize, lineHeight, 0.75);
+          const newStyle = style.replace(
+            /font-size:\s*\d+px/,
+            `font-size: ${fluidStyles.fontSize}`
+          );
+          el.setAttribute('style', newStyle);
+        } catch (error) {
+          // Keep original styles if utility fails
+          console.warn('Responsive typography utility failed, using original styles');
+        }
+      }
+    });
+
+    return doc.body.innerHTML;
+  } catch (error) {
+    console.warn('HTML processing failed, using original HTML');
+    return html;
+  }
+};
+
+// The render function extracted as a separate component
+const Heading1Component = ({ 
+  text, 
+  bgColor = "#ffffff", 
+  paddingX = "0px", 
+  paddingY = "0px", 
+  animation = defaultAnimation,
+  isPreview = false 
+}: Heading1Props) => {
+  // Generate fluid spacing styles with fallback
+  let fluidStyles;
+  try {
+    fluidStyles = getResponsiveSpacingStyles(
+      `${paddingY} ${paddingX} ${paddingY} ${paddingX}`,
+      '0px 0px 0px 0px'
+    );
+  } catch (error) {
+    // Fallback to simple padding if utility fails
+    fluidStyles = getFallbackSpacingStyles(`${paddingY} ${paddingX}`);
+  }
 
   const sanitizeHtml = (html: string): string => {
     return html.replace(
@@ -150,6 +193,26 @@ const renderComponent = ({ text, bgColor, paddingX, paddingY, animation = defaul
   // Process the HTML content with fluid typography
   const processedHtml = processHtmlWithFluidStyles(sanitizeHtml(text));
 
+  // For preview mode, disable animations to prevent issues
+  if (isPreview) {
+    return (
+      <div
+        style={{
+          ...fluidStyles,
+          backgroundColor: bgColor,
+        }}
+        className="text-component max-md:text-center"
+      >
+        <div
+          dangerouslySetInnerHTML={{
+            __html: processedHtml
+          }}
+          className="text-content"
+        />
+      </div>
+    );
+  }
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -158,6 +221,7 @@ const renderComponent = ({ text, bgColor, paddingX, paddingY, animation = defaul
         transition={getTransition()}
         style={{
           ...fluidStyles,
+          backgroundColor: bgColor,
         }}
         className="text-component max-md:text-center"
       >
@@ -172,55 +236,9 @@ const renderComponent = ({ text, bgColor, paddingX, paddingY, animation = defaul
   );
 };
 
-// Generate HTML from the render function (simplified version without motion)
-const generateHtml = () => {
-  const defaultProps = {
-    text: `<span style="font-size: max(30px, min(3.3333333333333335vw, 40px))">Heading 1</span>`,
-    bgColor: "#ffffff",
-    paddingX: "0px",
-    paddingY: "0px",
-    animation: defaultAnimation,
-  };
-  
-  // Create a simplified version without Framer Motion for HTML generation
-  const SimplifiedComponent = ({ text, bgColor, paddingX, paddingY }: Heading1Props) => {
-    const fluidStyles = getResponsiveSpacingStyles(
-      `${paddingY} ${paddingX} ${paddingY} ${paddingX}`,
-      '0px 0px 0px 0px'
-    );
-
-    const sanitizeHtml = (html: string): string => {
-      return html.replace(
-        /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
-        ""
-      );
-    };
-
-    const processedHtml = processHtmlWithFluidStyles(sanitizeHtml(text));
-
-    return (
-      <div
-        style={{
-          ...fluidStyles,
-        }}
-        className="text-component max-md:text-center"
-      >
-        <div
-          dangerouslySetInnerHTML={{
-            __html: processedHtml
-          }}
-          className="text-content"
-        />
-      </div>
-    );
-  };
-  
-  return renderToStaticMarkup(<SimplifiedComponent {...defaultProps} />);
-};
-
+// ComponentConfig for the form fields - following the same pattern as CardLink
 export const Heading1: ComponentConfig<Heading1Props> = {
   label: 'Heading 1',
-  html: generateHtml(), // Dynamically generated from render function
   fields: {
     bgColor: {
       type: "custom",
@@ -258,14 +276,31 @@ export const Heading1: ComponentConfig<Heading1Props> = {
     paddingY: { type: "select", options: spacingOptions },
   },
   defaultProps: {
-    text: `<span style="font-size: max(30px, min(3.3333333333333335vw, 40px))">Heading 1</span>`,
+    text: `<span style="font-size: max(30px, min(3.3333333333333335vw, 28px))">Heading 1</span>`,
     bgColor: "#ffffff",
     paddingX: "0px",
     paddingY: "0px",
     animation: defaultAnimation,
   },
   
-  render: renderComponent,
+  // Render function directly in the config like CardLink
+  render: ({ 
+    text, 
+    bgColor = "#ffffff", 
+    paddingX = "0px", 
+    paddingY = "0px", 
+    animation = defaultAnimation,
+    isPreview = false 
+  }: Heading1Props) => {
+    return <Heading1Component 
+      text={text}
+      bgColor={bgColor}
+      paddingX={paddingX}
+      paddingY={paddingY}
+      animation={animation}
+      isPreview={isPreview}
+    />;
+  },
 };
 
 export const useTextComponent = (props: Partial<Heading1Props>) => {
@@ -284,3 +319,9 @@ export const useTextComponent = (props: Partial<Heading1Props>) => {
     },
   };
 };
+
+// Export the component for use in previews
+export { Heading1Component };
+
+// Export as default to match your import pattern
+export default Heading1;

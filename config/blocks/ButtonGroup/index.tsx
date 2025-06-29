@@ -102,7 +102,7 @@ export const ButtonGroup: ComponentConfig<ButtonGroupProps> = {
                     : "none",
               }}
               href={button.href}
-              tabIndex={puck.isEditing ? -1 : undefined}
+              // tabIndex={puck.isEditing ? -1 : undefined}
             >
               <span
                 style={{

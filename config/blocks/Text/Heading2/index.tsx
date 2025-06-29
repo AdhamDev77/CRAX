@@ -7,6 +7,7 @@ import { AiTextEditor } from "@/components/AiTextEditor";
 import { spacingOptions } from "@/config/options";
 import MotionAdjustor from '@/components/MotionAdjustor';
 import { getResponsiveSpacingStyles, getResponsiveTypographyStyles } from '@/lib/responsiveSpacing';
+import { useBrand } from '@/packages/core/components/Puck/components/BrandSidebar';
 
 interface AnimationConfig {
   type: string;
@@ -28,6 +29,7 @@ export type Heading2Props = {
   paddingY: string;
   bgColor: string;
   animation?: Partial<AnimationConfig>;
+  type?: "heading" | "body"; // Add type prop
 };
 
 const defaultAnimation: AnimationConfig = {
@@ -79,35 +81,113 @@ const animationTypes = {
   }
 };
 
-// Function to process HTML and add fluid typography styles
-const processHtmlWithFluidStyles = (html: string): string => {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
+// Enhanced function to process HTML and add fluid typography styles with proper defaults
+const processHtmlWithFluidStyles = (
+  html: string,
+  brandColor: string,
+  brandFont: string,
+  componentType: "heading" | "body" = "heading"
+): string => {
+  // Create a temporary div to work with DOM
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = html;
 
-  // Process all elements with font-size
-  doc.querySelectorAll('[style*="font-size"]').forEach(el => {
-    const style = el.getAttribute('style') || '';
-    const fontSizeMatch = style.match(/font-size:\s*(\d+)px/);
+  // Function to check if element has user-defined styles
+  const hasUserDefinedColor = (element: HTMLElement): boolean => {
+    const style = element.getAttribute('style') || '';
+    return style.includes('color:') || element.style.color !== '';
+  };
+
+  const hasUserDefinedFont = (element: HTMLElement): boolean => {
+    const style = element.getAttribute('style') || '';
+    return style.includes('font-family:') || element.style.fontFamily !== '';
+  };
+
+  // Function to update element styles intelligently
+  const updateElementStyles = (element: HTMLElement) => {
+    const currentStyle = element.getAttribute('style') || '';
+    let newStyle = currentStyle;
+
+    // Handle font-size with fluid typography
+    const fontSizeMatch = currentStyle.match(/font-size:\s*([^;]+)/);
     if (fontSizeMatch) {
-      const fontSize = parseInt(fontSizeMatch[1], 10);
-      const lineHeight = fontSize * 1.2; // Default line height ratio
-      const fluidStyles = getResponsiveTypographyStyles(fontSize, lineHeight, 0.75);
+      const originalFontSize = fontSizeMatch[1];
       
-      // Update the style attribute with fluid values
-      const newStyle = style.replace(
-        /font-size:\s*\d+px/,
-        `font-size: ${fluidStyles.fontSize}`
-      );
-      el.setAttribute('style', newStyle);
+      // Extract numeric value if it's in pixels
+      const pxMatch = originalFontSize.match(/(\d+(?:\.\d+)?)px/);
+      if (pxMatch) {
+        const fontSize = parseFloat(pxMatch[1]);
+        const lineHeight = fontSize * 1.2;
+        const fluidStyles = getResponsiveTypographyStyles(fontSize, lineHeight, 0.75);
+        newStyle = newStyle.replace(/font-size:\s*[^;]+/, `font-size: ${fluidStyles.fontSize}`);
+      }
+    }
+
+    // Apply brand color only if user hasn't set a custom color
+    if (brandColor && !hasUserDefinedColor(element)) {
+      newStyle = newStyle ? `${newStyle}; color: ${brandColor}` : `color: ${brandColor}`;
+    }
+
+    // Apply brand font only if user hasn't set a custom font
+    if (brandFont && !hasUserDefinedFont(element)) {
+      newStyle = newStyle ? `${newStyle}; font-family: ${brandFont}` : `font-family: ${brandFont}`;
+    }
+
+    // Clean up style string
+    newStyle = newStyle
+      .replace(/;\s*;/g, ';') // Remove double semicolons
+      .replace(/^;\s*/, '') // Remove leading semicolon
+      .replace(/\s*;$/, ''); // Remove trailing semicolon
+
+    if (newStyle) {
+      element.setAttribute('style', newStyle);
+    }
+  };
+
+  // Process all elements with existing styles first
+  const elementsWithStyle = tempDiv.querySelectorAll('[style]');
+  elementsWithStyle.forEach(el => updateElementStyles(el as HTMLElement));
+
+  // For elements without styles, add default brand styles
+  const allElements = tempDiv.querySelectorAll('*');
+  allElements.forEach(el => {
+    const element = el as HTMLElement;
+    // Only apply to text-containing elements that don't have styles
+    if (element.textContent && 
+        element.textContent.trim() && 
+        !element.getAttribute('style') &&
+        !element.querySelector('*')) { // Only leaf elements
+      let defaultStyle = '';
+      if (brandColor) defaultStyle += `color: ${brandColor}`;
+      if (brandFont) defaultStyle += defaultStyle ? `; font-family: ${brandFont}` : `font-family: ${brandFont}`;
+      if (defaultStyle) element.setAttribute('style', defaultStyle);
     }
   });
 
-  return doc.body.innerHTML;
+  return tempDiv.innerHTML;
+};
+
+// Enhanced default styles function
+const getDefaultStyles = (brandColor: string, brandFont: string, type: "heading" | "body" = "heading") => {
+  return {
+    color: brandColor || 'inherit',
+    fontFamily: brandFont || 'inherit',
+    fontSize: type === "heading" ? '1.5em' : '1em',
+    fontWeight: type === "heading" ? '600' : '400',
+    lineHeight: type === "heading" ? '1.2' : '1.6',
+  };
 };
 
 export const Heading2: ComponentConfig<Heading2Props> = {
   label: 'Heading 2',
   fields: {
+    type: {
+      type: "select",
+      options: [
+        { value: "heading", label: "Heading Style" },
+        { value: "body", label: "Body Style" }
+      ],
+    },
     bgColor: {
       type: "custom",
       render: ({ name, onChange, value }) => {
@@ -119,12 +199,13 @@ export const Heading2: ComponentConfig<Heading2Props> = {
     text: {
       section: "content",
       type: "custom",
-      render: ({ name, onChange, value }) => {
+      render: ({ name, onChange, value, props }) => {
         return (
           <AiTextEditor
             name={name}
             value={value}
             onChange={(updatedContent) => onChange(updatedContent)}
+            type={props?.type || "heading"}
           />
         );
       },
@@ -149,9 +230,23 @@ export const Heading2: ComponentConfig<Heading2Props> = {
     paddingX: "0px",
     paddingY: "0px",
     animation: defaultAnimation,
+    type: "heading",
   },
-  
-  render: ({ text, bgColor, paddingX, paddingY, animation = defaultAnimation }: Heading2Props) => {
+
+  render: function Heading2Render({ 
+    text, 
+    bgColor, 
+    paddingX, 
+    paddingY, 
+    animation = defaultAnimation, 
+    type = "heading" 
+  }: Heading2Props) {
+    const { getColor, getFont } = useBrand();
+    
+    // Get appropriate brand colors and fonts based on type
+    const brandColor = type === "heading" ? getColor("primary") : getColor("secondary");
+    const brandFont = type === "heading" ? getFont("heading") : getFont("body");
+    
     // Generate fluid spacing styles
     const fluidStyles = getResponsiveSpacingStyles(
       `${paddingY} ${paddingX} ${paddingY} ${paddingX}`,
@@ -191,8 +286,12 @@ export const Heading2: ComponentConfig<Heading2Props> = {
 
     const variants = animationTypes[currentAnimation.type || 'fade'];
 
-    // Process the HTML content with fluid typography
-    const processedHtml = processHtmlWithFluidStyles(sanitizeHtml(text));
+    // Process the HTML content with proper brand defaults
+    const sanitizedText = sanitizeHtml(text);
+    const processedHtml = processHtmlWithFluidStyles(sanitizedText, brandColor, brandFont, type);
+    
+    // Enhanced default styles
+    const defaultStyles = getDefaultStyles(brandColor, brandFont, type);
 
     return (
       <AnimatePresence mode="wait">
@@ -202,14 +301,16 @@ export const Heading2: ComponentConfig<Heading2Props> = {
           transition={getTransition()}
           style={{
             ...fluidStyles,
+            backgroundColor: bgColor,
           }}
-          className="text-component max-md:text-center"
+          className={`text-component max-md:text-center ${type === "heading" ? "heading-component" : "body-component"}`}
         >
           <div
             dangerouslySetInnerHTML={{
               __html: processedHtml
             }}
             className="text-content"
+            style={defaultStyles}
           />
         </motion.div>
       </AnimatePresence>
@@ -230,6 +331,7 @@ export const useTextComponent = (props: Partial<Heading2Props>) => {
       paddingX: mergedProps.paddingX,
       paddingY: mergedProps.paddingY,
       animation: mergedProps.animation,
+      type: mergedProps.type,
     },
   };
 };
