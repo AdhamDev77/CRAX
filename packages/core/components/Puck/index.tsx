@@ -606,18 +606,6 @@ export function Puck<
                     zone: destination.droppableId,
                   });
                 }
-
-                if (droppedItem.destination) {
-                  setItemSelector({
-                    index: droppedItem.destination.index,
-                    zone: droppedItem.destination.droppableId,
-                  });
-
-                  // Auto-switch to content tab when component is selected
-                  if (editSection !== "content" && editSection !== "style") {
-                    setActiveEditSection("content");
-                  }
-                }
               }}
             >
               <DropZoneProvider
