@@ -67,6 +67,7 @@ type Category<ComponentName> = {
   type?: string;
   visible?: boolean;
   defaultExpanded?: boolean;
+  subcategories?: Record<string, Category<ComponentName>>;
 };
 
 export type Config<

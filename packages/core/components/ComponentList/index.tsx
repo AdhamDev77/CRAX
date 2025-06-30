@@ -3,6 +3,7 @@ import { Sidebar } from "../SidebarComponents";
 import { Drawer } from "../Drawer";
 import { LayoutGrid, Image, Type, MousePointerClick, Box, Bell, Bookmark, Clock, Landmark, Mail, MousePointer, Navigation, ScreenShare, Star } from "lucide-react";
 import { Card, CardContent } from "../../../../components/ui/card";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
 type CategoryKey = any;
 
@@ -11,6 +12,7 @@ interface ComponentListProps {
   title?: CategoryKey;
   children?: ReactNode;
   renderOutside?: boolean; // New prop to render children outside
+  isSubcategory?: boolean; // New prop to render as accordion
 }
 
 interface CategoryStyle {
@@ -115,9 +117,10 @@ const categoryStyles: Record<CategoryKey, CategoryStyle> = {
   },
 };
 
-export const ComponentList = ({ id, title, children, renderOutside }: ComponentListProps) => {
+export const ComponentList = ({ id, title, children, renderOutside, isSubcategory }: ComponentListProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [isAccordionOpen, setIsAccordionOpen] = useState(true);
 
   const handleOpenSidebar = () => setIsSidebarOpen(true);
   const handleCloseSidebar = () => setIsSidebarOpen(false);
@@ -129,6 +132,35 @@ export const ComponentList = ({ id, title, children, renderOutside }: ComponentL
     return <>{children}</>;
   }
 
+  // Accordion for subcategories
+  if (isSubcategory) {
+    return (
+      <div className="w-full">
+        <button
+          type="button"
+          onClick={() => setIsAccordionOpen((open) => !open)}
+          className="w-full flex items-center justify-between text-sm font-medium text-gray-800 dark:text-gray-200 mb-3 rounded hover:bg-muted transition"
+        >
+          <span>{title}</span>
+          {isAccordionOpen ? (
+            <ChevronDown className="w-4 h-4" />
+          ) : (
+            <ChevronRight className="w-4 h-4" />
+          )}
+        </button>
+  
+        <div
+          className={`transition-all overflow-hidden duration-300 ease-in-out ${
+            isAccordionOpen ? "max-h-[500px] mt-2" : "max-h-0"
+          }`}
+        >
+          <div className="pl-3">{children}</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Top-level category (default: card + sidebar)
   return (
     <>
       <Card className="w-full transition-all duration-300 hover:shadow-lg">
@@ -183,7 +215,7 @@ export const ComponentList = ({ id, title, children, renderOutside }: ComponentL
 // Parent container for grid layout
 export const ComponentGrid = ({ children }: { children: ReactNode }) => {
   return (
-    <div className="grid grid-cols-2 gap-2 pb-2">
+    <div className="flex flex-col gap-2 pb-2">
       {children}
     </div>
   );

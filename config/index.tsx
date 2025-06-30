@@ -42,7 +42,6 @@ import Root, { RootProps } from "./root";
 
 export type { RootProps } from "./root";
 
-
 export type Props = {
   ButtonGroup: ButtonGroupProps;
   ModernButtonGroup: ModernButtonGroupProps;
@@ -79,11 +78,10 @@ export type Props = {
   MasterComponent: MasterComponentProps;
   Map: MapProps;
   AdvancedProps: {
-  name: string;
-  content: any[];
-  zones: Record<string, any[]>;
-};
-
+    name: string;
+    content: any[];
+    zones: Record<string, any[]>;
+  };
 };
 
 export type UserConfig = any;
@@ -101,78 +99,172 @@ export const conf: UserConfig = {
     layout: {
       title: "Layout",
       type: "elements",
-      components: ["Flex", "Grid", "VerticalSpace", "Seperator"],
+      subcategories: {
+        containers: {
+          title: "Containers",
+          components: ["Flex", "Grid"],
+        },
+        spacing: {
+          title: "Spacing & Dividers",
+          components: ["VerticalSpace", "Seperator"],
+        },
+      },
     },
     navigation: {
       title: "Navigation",
       type: "components",
-      components: ["Navbar", "ModernNavbar"],
+      subcategories: {
+        navbar: {
+          title: "Navigation Bars",
+          components: ["Navbar", "ModernNavbar"],
+        },
+      },
     },
     announcements: {
       title: "Announcements",
       type: "components",
-      components: ["Announcement1"],
+      subcategories: {
+        banners: {
+          title: "Banner Announcements",
+          components: ["Announcement1"],
+        },
+      },
     },
     landing: {
       title: "Landing Sections",
       type: "sections",
-      components: ["Hero", "HeroAgency", "HeroImagesSlider"],
+      subcategories: {
+        hero: {
+          title: "Hero Sections",
+          components: ["Hero", "HeroAgency"],
+        },
+        sliders: {
+          title: "Image Sliders",
+          components: ["HeroImagesSlider"],
+        },
+      },
     },
     media: {
       title: "Media",
       type: "elements",
-      components: ["Image", "Video", "MapLocation", "Map"],
+      subcategories: {
+        images: {
+          title: "Images & Graphics",
+          components: ["Image"],
+        },
+        video: {
+          title: "Video Content",
+          components: ["Video"],
+        },
+        maps: {
+          title: "Maps & Location",
+          components: ["MapLocation", "Map"],
+        },
+      },
     },
     mediaComponents: {
       title: "Media",
       type: "components",
-      components: ["VideoSecion", "SocialPreview"],
+      subcategories: {
+        videoSections: {
+          title: "Video Sections",
+          components: ["VideoSecion"],
+        },
+        social: {
+          title: "Social Media",
+          components: ["SocialPreview"],
+        },
+      },
     },
     typography: {
       title: "Typography",
       type: "elements",
-      components: ["Heading", "Heading1", "Heading2"],
+      subcategories: {
+        headings: {
+          title: "Headings",
+          components: ["Heading", "Heading1", "Heading2"],
+        },
+      },
     },
     cards: {
       title: "Cards",
       type: "components",
-      components: [
-        "Card",
-        "CardLink",
-        "CardLink2",
-        "LensCard",
-        "SimpleCard",
-      ],
+      subcategories: {
+        basicCards: {
+          title: "Basic Cards",
+          components: ["Card", "SimpleCard"],
+        },
+        linkCards: {
+          title: "Interactive Cards",
+          components: ["CardLink", "CardLink2", "LensCard"],
+        },
+      },
     },
     logos: {
       title: "Partners",
       type: "components",
-      components: ["Logos", "PartnersAgency"],
-    },
-    logosSections: {
-      title: "Partners",
-      type: "sections",
-      components: ["PartnersAgency"],
+      subcategories: {
+        logoGrids: {
+          title: "Logo Displays",
+          components: ["Logos"],
+        },
+        partnerSections: {
+          title: "Partner Sections",
+          components: ["PartnersAgency"],
+        },
+      },
     },
     statistics: {
       title: "Social Proof",
       type: "sections",
-      components: ["Stats", "Testimonials"],
+      subcategories: {
+        stats: {
+          title: "Statistics",
+          components: ["Stats"],
+        },
+        testimonials: {
+          title: "Testimonials",
+          components: ["Testimonials"],
+        },
+      },
     },
     forms: {
       title: "Forms",
       type: "components",
-      components: ["ContactForm", "FAQ"],
+      subcategories: {
+        contact: {
+          title: "Contact Forms",
+          components: ["ContactForm"],
+        },
+        faq: {
+          title: "FAQ Sections",
+          components: ["FAQ"],
+        },
+      },
     },
     buttons: {
       title: "Buttons",
       type: "elements",
-      components: ["ButtonGroup", "ModernButtonGroup"],
+      subcategories: {
+        buttonGroups: {
+          title: "Button Groups",
+          components: ["ButtonGroup", "ModernButtonGroup"],
+        },
+      },
     },
     timeline: {
       title: "Timelines",
       type: "sections",
-      components: ["Timeline", "MasterComponent"],
+      subcategories: {
+        timelines: {
+          title: "Timeline Components",
+          components: ["Timeline"],
+        },
+        advanced: {
+          title: "Advanced Components",
+          components: ["MasterComponent"],
+        },
+      },
     },
   },
   components: {
@@ -241,8 +333,7 @@ export const initialData: Record<string, UserData> = {
       },
     ],
     root: { props: { title: "Puck Example", bgColor: "#fff", font: "" } },
-    },
   }
-
+};
 
 export default conf;

@@ -1,8 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
-import { Search } from "lucide-react";
 import { Config, UiState } from "../types";
-import { ComponentList } from "../components/ComponentList";
-import ComponentListSearch from "../components/ComponentListSearch";
+import { ComponentList, ComponentGrid } from "../components/ComponentList";
 
 // Cache for loaded components to avoid re-importing
 const componentCache = new Map<string, any>();
@@ -60,26 +58,24 @@ export const useComponentList = (config: Config, ui: UiState, type: string) => {
   }, [config.components]);
 
   useEffect(() => {
-    if (Object.keys(ui.componentList).length > 0 && loadedComponents.size > 0) {
+    if (Object.keys(config.categories || {}).length > 0 && loadedComponents.size > 0) {
       const matchedComponents: string[] = [];
-      let _componentList: ReactNode[];
+      let _componentList: ReactNode[] = [];
 
       // Filter categories based on type
-      const filteredCategories = Object.entries(ui.componentList).filter(
+      const filteredCategories = Object.entries(config.categories || {}).filter(
         ([categoryKey, category]) => {
-          const configCategory = config.categories?.[categoryKey];
-          return configCategory?.type === type;
+          return category?.type === type;
         }
       );
 
-      _componentList = filteredCategories
-        .map(([categoryKey, category]) => {
-          if (category.visible === false || !category.components) {
-            return null;
-          }
+      // Helper to render subcategories recursively
+      const renderSubcategories = (categoryKey: string, subcategories: Record<string, any>) => {
+        return Object.entries(subcategories).map(([subCategoryKey, subCategory]) => {
+          if (!subCategory.components || subCategory.components.length === 0) return null;
 
           // Filter components based on search query
-          const filteredComponents = category.components.filter(
+          const filteredComponents = (subCategory.components as string[]).filter(
             (componentName) => {
               const componentConf = config.components[componentName] || {};
               const label = (componentConf["label"] ?? componentName) as string;
@@ -90,70 +86,201 @@ export const useComponentList = (config: Config, ui: UiState, type: string) => {
             }
           );
 
-          if (filteredComponents.length === 0) {
-            return null;
-          }
+          if (filteredComponents.length === 0) return null;
 
           return (
+            <ComponentList
+              id={`${categoryKey}-${subCategoryKey}`}
+              key={`${categoryKey}-${subCategoryKey}`}
+              title={subCategory.title || subCategoryKey}
+              isSubcategory={true}
+            >
+              <ComponentGrid>
+                {filteredComponents.map((componentName: string, i: number) => {
+                  matchedComponents.push(componentName);
+                  const componentConf = config.components[componentName] || {};
+                  const LoadedComponent = loadedComponents.get(componentName);
+
+                  return (
+                    <ComponentList.Item
+                      key={componentName}
+                      label={(componentConf["label"] ?? componentName) as string}
+                      html={componentConf["html"]}
+                      primary={componentConf["primary"]}
+                      image={componentConf["image"]}
+                      icon={componentConf["icon"]}
+                      name={componentName}
+                      preview={
+                        LoadedComponent
+                          ? (props: any) => {
+                              if (LoadedComponent.render && typeof LoadedComponent.render === 'function') {
+                                const Component = LoadedComponent.render;
+                                return <Component {...LoadedComponent.defaultProps} {...props} />;
+                              } else if (typeof LoadedComponent.render === 'function') {
+                                return LoadedComponent.render({ ...LoadedComponent.defaultProps, ...props });
+                              } else if (typeof LoadedComponent === 'function') {
+                                return LoadedComponent({ ...LoadedComponent.defaultProps, ...props });
+                              }
+                              return null;
+                            }
+                          : undefined
+                      }
+                      index={i}
+                    />
+                  );
+                })}
+              </ComponentGrid>
+            </ComponentList>
+          );
+        });
+      };
+
+      // Process each category
+      filteredCategories.forEach(([categoryKey, category]) => {
+        if (!category || category.visible === false) {
+          return;
+        }
+
+        // If category has subcategories, render them nested under the parent category
+        if (category.subcategories && Object.keys(category.subcategories).length > 0) {
+          _componentList.push(
             <ComponentList
               id={categoryKey}
               key={categoryKey}
               title={category.title || categoryKey}
             >
-              {filteredComponents.map((componentName, i) => {
-                matchedComponents.push(componentName as string);
-                const componentConf = config.components[componentName] || {};
-                const LoadedComponent = loadedComponents.get(componentName);
-
-                return (
-                  <ComponentList.Item
-                    key={componentName}
-                    label={(componentConf["label"] ?? componentName) as string}
-                    html={componentConf["html"]}
-                    primary={componentConf["primary"]}
-                    image={componentConf["image"]}
-                    icon={componentConf["icon"]}
-                    name={componentName as string}
-                    preview={
-                      LoadedComponent
-                        ? (props: any) => {
-                            // Handle ComponentConfig objects
-                            if (LoadedComponent.render && typeof LoadedComponent.render === 'function') {
-                              const Component = LoadedComponent.render;
-                              return <Component {...LoadedComponent.defaultProps} {...props} />;
-                            }
-                            // Handle direct render methods
-                            else if (typeof LoadedComponent.render === 'function') {
-                              return LoadedComponent.render({ ...LoadedComponent.defaultProps, ...props });
-                            }
-                            // Handle direct React components
-                            else if (typeof LoadedComponent === 'function') {
-                              return LoadedComponent({ ...LoadedComponent.defaultProps, ...props });
-                            }
-                            return null;
-                          }
-                        : undefined
-                    }
-                    index={i}
-                  />
-                );
-              })}
+              {/* Render all subcategories as nested lists */}
+              {renderSubcategories(categoryKey, category.subcategories)}
             </ComponentList>
           );
-        })
-        .filter(Boolean);
+        } else {
+          // Handle categories without subcategories (legacy support)
+          const categoryComponents = (category.components || []) as string[];
+          if (categoryComponents.length === 0) return;
 
-      // Handle remaining components only if type is "elements"
+          // Filter components based on search query
+          const filteredComponents = categoryComponents.filter(
+            (componentName) => {
+              const componentConf = config.components[componentName] || {};
+              const label = (componentConf["label"] ?? componentName) as string;
+              return (
+                label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                componentName.toLowerCase().includes(searchQuery.toLowerCase())
+              );
+            }
+          );
+
+          if (filteredComponents.length === 0) return;
+
+          _componentList.push(
+            <ComponentList
+              id={categoryKey}
+              key={categoryKey}
+              title={category.title || categoryKey}
+            >
+              <ComponentGrid>
+                {filteredComponents.map((componentName: string, i: number) => {
+                  matchedComponents.push(componentName);
+                  const componentConf = config.components[componentName] || {};
+                  const LoadedComponent = loadedComponents.get(componentName);
+
+                  return (
+                    <ComponentList.Item
+                      key={componentName}
+                      label={(componentConf["label"] ?? componentName) as string}
+                      html={componentConf["html"]}
+                      primary={componentConf["primary"]}
+                      image={componentConf["image"]}
+                      icon={componentConf["icon"]}
+                      name={componentName}
+                      preview={
+                        LoadedComponent
+                          ? (props: any) => {
+                              if (LoadedComponent.render && typeof LoadedComponent.render === 'function') {
+                                const Component = LoadedComponent.render;
+                                return <Component {...LoadedComponent.defaultProps} {...props} />;
+                              } else if (typeof LoadedComponent.render === 'function') {
+                                return LoadedComponent.render({ ...LoadedComponent.defaultProps, ...props });
+                              } else if (typeof LoadedComponent === 'function') {
+                                return LoadedComponent({ ...LoadedComponent.defaultProps, ...props });
+                              }
+                              return null;
+                            }
+                          : undefined
+                      }
+                      index={i}
+                    />
+                  );
+                })}
+              </ComponentGrid>
+            </ComponentList>
+          );
+        }
+      });
+
+      // Handle remaining components that weren't matched to any category
       const remainingComponents = Object.keys(config.components).filter(
         (component) => matchedComponents.indexOf(component) === -1
       );
 
-      if (
-        remainingComponents.length > 0 &&
-        !ui.componentList.other?.components &&
-        ui.componentList.other?.visible !== false
-      ) {
-        // Add logic for remaining components if needed
+      if (remainingComponents.length > 0 && type === "elements") {
+        const filteredRemainingComponents = (remainingComponents as string[]).filter(
+          (componentName) => {
+            const componentConf = config.components[componentName] || {};
+            const label = (componentConf["label"] ?? componentName) as string;
+            return (
+              label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              componentName.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+          }
+        );
+
+        // if (filteredRemainingComponents.length > 0) {
+        //   const otherComponentsItem = (
+        //     <ComponentList
+        //       id="other"
+        //       key="other"
+        //       title="Other Components"
+        //     >
+        //       <ComponentGrid>
+        //         {filteredRemainingComponents.map((componentName: string, i: number) => {
+        //           const componentConf = config.components[componentName] || {};
+        //           const LoadedComponent = loadedComponents.get(componentName);
+
+        //           return (
+        //             <ComponentList.Item
+        //               key={componentName}
+        //               name={componentName}
+        //               label={(componentConf["label"] ?? componentName) as string}
+        //               image={componentConf["image"]}
+        //               html={componentConf["html"]}
+        //               primary={componentConf["primary"]}
+        //               icon={componentConf["icon"]}
+        //               preview={
+        //                 LoadedComponent
+        //                   ? (props: any) => {
+        //                       if (LoadedComponent.render && typeof LoadedComponent.render === 'function') {
+        //                         const Component = LoadedComponent.render;
+        //                         return <Component {...LoadedComponent.defaultProps} {...props} />;
+        //                       } else if (typeof LoadedComponent.render === 'function') {
+        //                         return LoadedComponent.render({ ...LoadedComponent.defaultProps, ...props });
+        //                       } else if (typeof LoadedComponent === 'function') {
+        //                         return LoadedComponent({ ...LoadedComponent.defaultProps, ...props });
+        //                       }
+        //                       return null;
+        //                     }
+        //                   : undefined
+        //               }
+        //               index={i}
+        //             />
+        //           );
+        //         })}
+        //       </ComponentGrid>
+        //     </ComponentList>
+        //   );
+
+        //   _componentList.push(otherComponentsItem);
+        // }
       }
 
       setComponentList(_componentList);
@@ -161,7 +288,6 @@ export const useComponentList = (config: Config, ui: UiState, type: string) => {
   }, [
     config.categories,
     config.components,
-    ui.componentList,
     type,
     searchQuery,
     loadedComponents,

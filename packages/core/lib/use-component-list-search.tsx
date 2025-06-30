@@ -1,8 +1,6 @@
-// use-component-list.ts
 import { ReactNode, useEffect, useState } from "react";
-import { Search } from "lucide-react";
 import { Config, UiState } from "../types";
-import { ComponentGrid, ComponentList } from "../components/ComponentList";
+import { ComponentGrid } from "../components/ComponentList";
 import ComponentListSearch from "../components/ComponentListSearch";
 
 // Cache for loaded components to avoid re-importing
@@ -65,26 +63,96 @@ export const useComponentListSearch = (
   }, [config.components]);
 
   useEffect(() => {
-    if (Object.keys(ui.componentList).length > 0 && loadedComponents.size > 0) {
+    if (Object.keys(config.categories || {}).length > 0 && loadedComponents.size > 0) {
       const matchedComponents: string[] = [];
-      let _componentList: ReactNode[];
+      let _componentList: ReactNode[] = [];
 
-      // Filter categories based on type
-      const filteredCategories = Object.entries(ui.componentList).filter(
-        ([categoryKey, category]) => {
-          const configCategory = config.categories?.[categoryKey];
-          return configCategory;
+      // Get all categories regardless of type for search
+      const allCategories = Object.entries(config.categories || {});
+
+      // Process each category
+      allCategories.forEach(([categoryKey, category]) => {
+        if (!category || category.visible === false) {
+          return;
         }
-      );
 
-      _componentList = filteredCategories
-        .map(([categoryKey, category]) => {
-          if (category.visible === false || !category.components) {
-            return null;
-          }
+        // Check if category has subcategories
+        if (category.subcategories && Object.keys(category.subcategories).length > 0) {
+          // Process subcategories
+          Object.entries(category.subcategories).forEach(([subCategoryKey, subCategory]) => {
+            if (!subCategory || !subCategory.components || subCategory.components.length === 0) return;
+
+            // Filter components based on search query
+            const filteredComponents = (subCategory.components as string[]).filter(
+              (componentName) => {
+                const componentConf = config.components[componentName] || {};
+                const label = (componentConf["label"] ?? componentName) as string;
+                return (
+                  label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                  componentName.toLowerCase().includes(searchQuery.toLowerCase())
+                );
+              }
+            );
+
+            if (filteredComponents.length === 0) return;
+
+            const componentListItem = (
+              <ComponentListSearch
+                id={`${categoryKey}-${subCategoryKey}`}
+                key={`${categoryKey}-${subCategoryKey}`}
+                title={`${category.title || categoryKey} - ${subCategory.title || subCategoryKey}`}
+              >
+                <ComponentGrid>
+                  {filteredComponents.map((componentName, i) => {
+                    matchedComponents.push(componentName as string);
+                    const componentConf = config.components[componentName] || {};
+                    const LoadedComponent = loadedComponents.get(componentName);
+
+                    return (
+                      <ComponentListSearch.Item
+                        key={componentName}
+                        label={(componentConf["label"] ?? componentName) as string}
+                        image={componentConf["image"]}
+                        html={componentConf["html"]}
+                        icon={componentConf["icon"]}
+                        name={componentName as string}
+                        preview={
+                          LoadedComponent
+                            ? (props: any) => {
+                                // Handle ComponentConfig objects
+                                if (LoadedComponent.render && typeof LoadedComponent.render === 'function') {
+                                  const Component = LoadedComponent.render;
+                                  return <Component {...LoadedComponent.defaultProps} {...props} />;
+                                }
+                                // Handle direct render methods
+                                else if (typeof LoadedComponent.render === 'function') {
+                                  return LoadedComponent.render({ ...LoadedComponent.defaultProps, ...props });
+                                }
+                                // Handle direct React components
+                                else if (typeof LoadedComponent === 'function') {
+                                  return LoadedComponent({ ...LoadedComponent.defaultProps, ...props });
+                                }
+                                return null;
+                              }
+                            : undefined
+                        }
+                        index={i}
+                      />
+                    );
+                  })}
+                </ComponentGrid>
+              </ComponentListSearch>
+            );
+
+            _componentList.push(componentListItem);
+          });
+        } else {
+          // Handle categories without subcategories (legacy support)
+          const categoryComponents = (category.components || []) as string[];
+          if (categoryComponents.length === 0) return;
 
           // Filter components based on search query
-          const filteredComponents = category.components.filter(
+          const filteredComponents = categoryComponents.filter(
             (componentName) => {
               const componentConf = config.components[componentName] || {};
               const label = (componentConf["label"] ?? componentName) as string;
@@ -95,11 +163,9 @@ export const useComponentListSearch = (
             }
           );
 
-          if (filteredComponents.length === 0) {
-            return null;
-          }
+          if (filteredComponents.length === 0) return;
 
-          return (
+          const componentListItem = (
             <ComponentListSearch
               id={categoryKey}
               key={categoryKey}
@@ -114,11 +180,11 @@ export const useComponentListSearch = (
                   return (
                     <ComponentListSearch.Item
                       key={componentName}
+                      name={componentName as string}
                       label={(componentConf["label"] ?? componentName) as string}
                       image={componentConf["image"]}
                       html={componentConf["html"]}
                       icon={componentConf["icon"]}
-                      name={componentName as string}
                       preview={
                         LoadedComponent
                           ? (props: any) => {
@@ -146,20 +212,18 @@ export const useComponentListSearch = (
               </ComponentGrid>
             </ComponentListSearch>
           );
-        })
-        .filter(Boolean);
 
-      // Handle remaining components only if type is "elements"
+          _componentList.push(componentListItem);
+        }
+      });
+
+      // Handle remaining components that weren't matched to any category
       const remainingComponents = Object.keys(config.components).filter(
         (component) => matchedComponents.indexOf(component) === -1
       );
 
-      if (
-        remainingComponents.length > 0 &&
-        !ui.componentList.other?.components &&
-        ui.componentList.other?.visible !== false
-      ) {
-        const filteredRemainingComponents = remainingComponents.filter(
+      if (remainingComponents.length > 0) {
+        const filteredRemainingComponents = (remainingComponents as string[]).filter(
           (componentName) => {
             const componentConf = config.components[componentName] || {};
             const label = (componentConf["label"] ?? componentName) as string;
@@ -171,52 +235,54 @@ export const useComponentListSearch = (
         );
 
         if (filteredRemainingComponents.length > 0) {
-          _componentList.push(
+          const otherComponentsItem = (
             <ComponentListSearch
               id="other"
               key="other"
-              title={ui.componentList.other?.title || "Other"}
+              title="Other Components"
             >
-              {filteredRemainingComponents.map((componentName, i) => {
-                const componentConf = config.components[componentName] || {};
-                const LoadedComponent = loadedComponents.get(componentName);
+              <ComponentGrid>
+                {filteredRemainingComponents.map((componentName: string, i: number) => {
+                  const componentConf = config.components[componentName] || {};
+                  const LoadedComponent = loadedComponents.get(componentName);
 
-                return (
-                  <ComponentListSearch.Item
-                    key={componentName}
-                    name={componentName as string}
-                    label={(componentConf["label"] ?? componentName) as string}
-                    image={
-                      (componentConf["image"] ||
-                        "https://static.vecteezy.com/system/resources/previews/010/434/242/non_2x/accept-and-decline-buttons-app-icons-set-ui-ux-user-interface-yes-or-no-click-approve-and-delete-hand-pushing-button-web-or-mobile-applications-isolated-illustrations-vector.jpg") as string
-                    }
-                    html={(componentConf["html"] ?? componentName) as string}
-                    preview={
-                      LoadedComponent
-                        ? (props: any) => {
-                            // Handle ComponentConfig objects
-                            if (LoadedComponent.render && typeof LoadedComponent.render === 'function') {
-                              const Component = LoadedComponent.render;
-                              return <Component {...LoadedComponent.defaultProps} {...props} />;
+                  return (
+                    <ComponentListSearch.Item
+                      key={componentName}
+                      name={componentName as string}
+                      label={(componentConf["label"] ?? componentName) as string}
+                      image={componentConf["image"]}
+                      html={componentConf["html"]}
+                      icon={componentConf["icon"]}
+                      preview={
+                        LoadedComponent
+                          ? (props: any) => {
+                              // Handle ComponentConfig objects
+                              if (LoadedComponent.render && typeof LoadedComponent.render === 'function') {
+                                const Component = LoadedComponent.render;
+                                return <Component {...LoadedComponent.defaultProps} {...props} />;
+                              }
+                              // Handle direct render methods
+                              else if (typeof LoadedComponent.render === 'function') {
+                                return LoadedComponent.render({ ...LoadedComponent.defaultProps, ...props });
+                              }
+                              // Handle direct React components
+                              else if (typeof LoadedComponent === 'function') {
+                                return LoadedComponent({ ...LoadedComponent.defaultProps, ...props });
+                              }
+                              return null;
                             }
-                            // Handle direct render methods
-                            else if (typeof LoadedComponent.render === 'function') {
-                              return LoadedComponent.render({ ...LoadedComponent.defaultProps, ...props });
-                            }
-                            // Handle direct React components
-                            else if (typeof LoadedComponent === 'function') {
-                              return LoadedComponent({ ...LoadedComponent.defaultProps, ...props });
-                            }
-                            return null;
-                          }
-                        : undefined
-                    }
-                    index={i}
-                  />
-                );
-              })}
+                          : undefined
+                      }
+                      index={i}
+                    />
+                  );
+                })}
+              </ComponentGrid>
             </ComponentListSearch>
           );
+
+          _componentList.push(otherComponentsItem);
         }
       }
 
@@ -225,8 +291,6 @@ export const useComponentListSearch = (
   }, [
     config.categories,
     config.components,
-    ui.componentList,
-    type,
     searchQuery,
     loadedComponents,
   ]);

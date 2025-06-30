@@ -810,6 +810,7 @@ export function Puck<
                                 value as "elements" | "components" | "sections"
                               )
                             }
+                           
                           />
                           <SidebarSection title="Components" noBorderTop>
                             <Components type={activeComponent} />

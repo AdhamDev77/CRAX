@@ -210,7 +210,7 @@ const DrawerItem = ({
                 )}
 
                 {preview && !icon ? (
-                  <div className="w-full mb-2">
+                  <div className="w-full">
                     <div
                       ref={setContainerRef}
                       className="overflow-hidden rounded-lg bg-gray-50 dark:bg-gray-900 relative"
