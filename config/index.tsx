@@ -13,7 +13,6 @@ import { Grid, GridProps } from "./blocks/Grid";
 import { Image, ImageProps } from "./blocks/Image";
 import { Logos, LogosProps } from "./blocks/Logos";
 import { Stats, StatsProps } from "./blocks/Stats";
-import { Heading1, Heading1Props } from "./blocks/Text/Heading1";
 import { Heading2, Heading2Props } from "./blocks/Text/Heading2";
 import { VerticalSpace, VerticalSpaceProps } from "./blocks/VerticalSpace";
 import { Seperator, SeperatorProps } from "./blocks/Seperator";
@@ -37,6 +36,7 @@ import { SimpleCard, SimpleCardProps } from "./blocks/SimpleCard";
 import { MasterComponent, MasterComponentProps } from "./blocks/MasterComponents";
 import { Map, MapProps } from "./blocks/Map";
 import { NestedContainer } from "./blocks/NestedComponent";
+import { CardCool, CardCoolProps } from "./blocks/CardCool";
 
 import Root, { RootProps } from "./root";
 
@@ -54,7 +54,6 @@ export type Props = {
   Logos: LogosProps;
   LensCard: LensProps;
   Stats: StatsProps;
-  Heading1: Heading1Props;
   Heading2: Heading2Props;
   VerticalSpace: VerticalSpaceProps;
   Seperator: SeperatorProps;
@@ -77,6 +76,7 @@ export type Props = {
   SimpleCard: SimpleCardProps;
   MasterComponent: MasterComponentProps;
   Map: MapProps;
+  CardCool: CardCoolProps;
   AdvancedProps: {
     name: string;
     content: any[];
@@ -182,7 +182,7 @@ export const conf: UserConfig = {
       subcategories: {
         headings: {
           title: "Headings",
-          components: ["Heading", "Heading1", "Heading2"],
+          components: ["Heading", "Heading2"],
         },
       },
     },
@@ -192,7 +192,7 @@ export const conf: UserConfig = {
       subcategories: {
         basicCards: {
           title: "Basic Cards",
-          components: ["Card", "SimpleCard"],
+          components: ["Card", "SimpleCard", "CardCool"],
         },
         linkCards: {
           title: "Interactive Cards",
@@ -274,7 +274,6 @@ export const conf: UserConfig = {
     CardLink,
     CardLink2,
     Seperator,
-    Heading1,
     Heading2,
     Hero,
     HeroImagesSlider,
@@ -302,7 +301,8 @@ export const conf: UserConfig = {
     SimpleCard,
     MasterComponent,
     Map,
-    NestedContainer
+    NestedContainer,
+    CardCool
   },
 };
 
