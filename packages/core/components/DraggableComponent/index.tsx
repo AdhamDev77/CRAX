@@ -200,11 +200,6 @@ export const DraggableComponent = ({
               ...style,
               ...provided.draggableProps.style,
               cursor: isModifierHeld || isDragDisabled ? "pointer" : "grab",
-              // Enhanced visual feedback for selected state
-              outline: isSelected ? "2px solid #3b82f6" : "none",
-              outlineOffset: isSelected ? "2px" : "0",
-              position: "relative",
-              transition: "outline 0.2s ease-in-out",
             }}
             onMouseOver={onMouseOver}
             onMouseOut={onMouseOut}
@@ -219,35 +214,35 @@ export const DraggableComponent = ({
               </div>
             )}
             
-            {/* Enhanced selection indicator */}
-            {isSelected && (
-  <div
-    className={getClassName("selectedIndicator")}
-    style={{
-      position: "absolute",
-      top: -8,  // These offsets should match the calculations in the popup
-      right: -8, // These offsets should match the calculations in the popup
-      width: "24px",  // Explicit width (12px icon + 4px padding * 2)
-      height: "24px", // Explicit height
-      backgroundColor: "#3b82f6",
-      color: "white",
-      padding: "4px",
-      borderRadius: "50%",
-      fontSize: "12px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      pointerEvents: "none",
-      zIndex: 10,
-      transform: `scale(${1 / zoomConfig.zoom})`,
-      transformOrigin: "center",
-      boxShadow: "0 2px 8px rgba(59, 130, 246, 0.3)",
-      animation: "pulse 2s infinite",
-    }}
-  >
-    <Settings size={12} />
-  </div>
-)}
+            {/* FIXED: Hide selection indicator during drag to prevent positioning issues */}
+            {isSelected && !snapshot.isDragging && (
+              <div
+                className={getClassName("selectedIndicator")}
+                style={{
+                  position: "absolute",
+                  top: -8,
+                  right: -8,
+                  width: "24px",
+                  height: "24px",
+                  backgroundColor: "#3b82f6",
+                  color: "white",
+                  padding: "4px",
+                  borderRadius: "50%",
+                  fontSize: "12px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  pointerEvents: "none",
+                  zIndex: 10,
+                  transform: `scale(${1 / zoomConfig.zoom})`,
+                  transformOrigin: "center",
+                  boxShadow: "0 2px 8px rgba(59, 130, 246, 0.3)",
+                  animation: "pulse 2s infinite",
+                }}
+              >
+                <Settings size={12} />
+              </div>
+            )}
 
             <div className={getClassName("overlay")} />
             <div className={getClassName("contents")}>{children}</div>
@@ -255,7 +250,7 @@ export const DraggableComponent = ({
         )}
       </El>
 
-      {/* Enhanced Component Popup with proper state management */}
+      {/* FIXED: Only show popup when not dragging */}
       {showPopup && isSelected && (
         <ComponentPopup
           isOpen={showPopup}

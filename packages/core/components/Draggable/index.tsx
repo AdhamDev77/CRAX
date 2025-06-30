@@ -76,10 +76,6 @@ export const Draggable = ({
             {...provided.dragHandleProps}
             style={{
               ...provided.draggableProps.style,
-              transform:
-                snapshot.isDragging || !disableAnimations
-                  ? provided.draggableProps.style?.transform
-                  : "translate(0px, 0px)",
               cursor: isDragDisabled ? "no-drop" : "grab",
             }}
           >
@@ -87,13 +83,17 @@ export const Draggable = ({
           </div>
           {/* See https://github.com/atlassian/react-beautiful-dnd/issues/216#issuecomment-906890987 */}
           {showShadow && snapshot.isDragging && (
-            <div
-              className={className && className(provided, snapshot)}
-              style={{ transform: "none !important" }}
-            >
-              {children(provided, snapshot)}
-            </div>
-          )}
+  <div
+    className={className && className(provided, snapshot)}
+    style={{ 
+      ...provided.draggableProps.style,
+      transform: "none !important",
+      position: "static"
+    }}
+  >
+    {children(provided, snapshot)}
+  </div>
+)}
         </>
       )}
     </El>

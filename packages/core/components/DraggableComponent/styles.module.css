@@ -9,6 +9,7 @@
     transparent
   ); */
 .DraggableComponent--isDragging {
+  z-index: 9999 !important;
   background: color-mix(in srgb, var(--puck-color-azure-08) 10%, transparent);
   overflow: hidden;
 }

@@ -4,6 +4,9 @@ import { Maximize2, Shapes, X } from "lucide-react";
 import { DragIcon } from "../DragIcon";
 import { Draggable } from "../Draggable";
 import { Droppable } from "../Droppable";
+import {
+  useBrand
+} from "../../../core/components/Puck/components/BrandSidebar";
 // import { useBrandIdentity } from "@/components/BrandIdentityPanel"; // Removed because module does not exist
 
 const drawerContext = React.createContext<{ droppableId: string }>({
@@ -71,6 +74,7 @@ const DrawerItem = ({
   image,
   icon,
   html,
+  primary,
   index,
   isDragDisabled,
   preview,
@@ -83,6 +87,7 @@ const DrawerItem = ({
   id?: string;
   label?: any;
   html?: any;
+  primary?: boolean;
   image?: string;
   icon?: React.ReactNode;
   index: number;
@@ -136,7 +141,46 @@ const DrawerItem = ({
   // Use stored values or fallback
   const finalScale = calculatedScale || 300 / componentDesignWidth; // fallback scale
   const finalHeight = calculatedHeight || "auto";
+  const { getColor, getFont } = useBrand();
+  const processHtml = (htmlString: string, primary: boolean) => {
+    if (!htmlString) return htmlString;
+    
+    let processedHtml = htmlString;
 
+  console.log(`primary: ${primary}`)
+    // Replace brandColor with actual color value
+    try {
+      if (typeof getColor === 'function') {
+        const color = primary ? getColor("primary") : getColor("secondary");
+        if (color) {
+          processedHtml = processedHtml.replace(/brandColor/g, color);
+          console.log("After brandColor replacement:", processedHtml);
+        }
+      } else {
+        console.log("getColor is not a function:", typeof getColor);
+      }
+    } catch (error) {
+      console.error(`Error getting color:`, error);
+    }
+  
+    // Replace brandFont with actual font value
+    try {
+      if (typeof getFont === 'function') {
+        const font = primary ? getFont("heading") : getFont("body");
+        if (font) {
+          processedHtml = processedHtml.replace(/brandFont/g, font);
+          console.log("After brandFont replacement:", processedHtml);
+        }
+      } else {
+        console.log("getFont is not a function:", typeof getFont);
+      }
+    } catch (error) {
+      console.error(`Error getting font:`, error);
+    }
+  
+    console.log("Final processed HTML:", processedHtml);
+    return processedHtml;
+  };
   return (
     <>
       <DrawerDraggable
@@ -147,7 +191,7 @@ const DrawerItem = ({
         <CustomInner name={name}>
           <div
             className={`relative group bg-white dark:bg-gray-800 rounded-lg overflow-hidden transition-all duration-200 hover:-translate-y-1 ${
-              !image && !preview
+              !image && !preview && !html
                 ? "border border-gray-200 dark:border-gray-700"
                 : ""
             }`}
@@ -205,7 +249,7 @@ const DrawerItem = ({
                   </div>
                 ) : html ? (
                   <div className="p-2 prose dark:prose-invert max-w-none">
-                    <div dangerouslySetInnerHTML={{ __html: html }} />
+                    <div dangerouslySetInnerHTML={{ __html: processHtml(html, primary || true) }} />
                   </div>
                 ) : (
                   <>

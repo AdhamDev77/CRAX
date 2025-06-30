@@ -110,6 +110,7 @@ export const useComponentList = (config: Config, ui: UiState, type: string) => {
                     key={componentName}
                     label={(componentConf["label"] ?? componentName) as string}
                     html={componentConf["html"]}
+                    primary={componentConf["primary"]}
                     image={componentConf["image"]}
                     icon={componentConf["icon"]}
                     name={componentName as string}

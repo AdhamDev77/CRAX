@@ -543,7 +543,7 @@ export function Puck<
         <appContext.Consumer>
           {({ resolveData }) => (
             <DragDropContext
-              autoScrollerOptions={{ disabled: dnd?.disableAutoScroll }}
+              autoScrollerOptions={{ disabled: false }}
               onDragUpdate={(update) => {
                 setDraggedItem({ ...draggedItem, ...update });
                 onDragStartOrUpdate(update);
@@ -606,7 +606,9 @@ export function Puck<
                     zone: destination.droppableId,
                   });
                 }
-              }}
+              }
+            
+            }
             >
               <DropZoneProvider
                 value={{
@@ -690,20 +692,6 @@ export function Puck<
                                             Add Components
                                           </>
                                         )}
-                                      </button>
-                                      <button
-                                        onClick={() => setShowBrandIdentity((prev) => !prev)}
-                                        className={`
-                                          flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm
-                                          transition-all duration-200
-                                          ${showBrandIdentity
-                                            ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300' 
-                                            : 'bg-blue-600 text-white hover:bg-blue-700'
-                                          }
-                                        `}
-                                      >
-                                        <Brush className="w-4 h-4" />
-                                        Site Theme
                                       </button>
                                     </div>
                                   </div>
