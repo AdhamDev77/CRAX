@@ -103,8 +103,10 @@ model Template {
 model Component {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   Image       String
-  name        String
+  name        String @unique
   description String?
+  category    String
+  subCategory String
   content     Json
   zones       Json
   createdAt   DateTime @default(now())

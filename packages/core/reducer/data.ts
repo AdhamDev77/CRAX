@@ -92,15 +92,37 @@ export function reduceData<UserData extends Data>(
     return insertAction(data, action, config);
   }
 
-    if (action.type === "loadLayout") {
-    const { content, zones } = action.data;
-
+  if (action.type === "loadLayout") {
+    const { content, zones = {}, destination } = action.data;
+  
+    // If no destination or content is not an array, just replace the entire content
+    if (!Array.isArray(content) || typeof destination !== "number") {
+      return {
+        ...data,
+        content: content || [],
+        zones,
+      };
+    }
+  
+    // Defensive: prevent mutating original data
+    const currentContent = Array.isArray(data.content) ? [...data.content] : [];
+  
+    // Insert the new content at the specified index (assuming content is array of items to insert)
+    const updatedContent = [
+      ...currentContent.slice(0, destination),
+      ...content,
+      ...currentContent.slice(destination),
+    ];
+  
     return {
       ...data,
-      content: content || [],
-      zones: zones || {},
+      content: updatedContent,
+      zones,
     };
   }
+  
+
+  
 
   if (action.type === "duplicate") {
     const item = getItem(

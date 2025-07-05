@@ -30,23 +30,112 @@ const COLOR_MAPPINGS = {
   borderColor: 'secondary',
 } as const;
 
-// Function to apply theme colors to data recursively
-function applyThemeToData(data: any, getColor: (colorName: string) => string): any {
+// Font mapping for automatic theme application
+const FONT_MAPPINGS = {
+  headingFont: 'heading',
+  titleFont: 'heading',
+  h1Font: 'heading',
+  h2Font: 'heading',
+  h3Font: 'heading',
+  h4Font: 'heading',
+  h5Font: 'heading',
+  h6Font: 'heading',
+  bodyFont: 'body',
+  textFont: 'body',
+  paragraphFont: 'body',
+  contentFont: 'body',
+  font: 'body',
+  fontFamily: 'body',
+} as const;
+
+// Function to apply theme colors and fonts to HTML text content
+function applyThemeToHtmlText(
+  htmlText: string,
+  type: string,
+  getColor: (colorName: string) => string,
+  getFont: (fontType: string) => string
+): string {
+  if (!htmlText || typeof htmlText !== 'string') return htmlText;
+
+  // Determine theme colors and fonts based on type
+  const themeColor = type === 'heading' ? getColor('primary') : getColor('secondary');
+  const themeFont = type === 'heading' ? getFont('heading') : getFont('body');
+
+  // Replace existing color styles with theme color
+  let updatedHtml = htmlText.replace(
+    /color:\s*[^;]+;?/gi,
+    `color: ${themeColor};`
+  );
+
+  // Replace existing font-family styles with theme font
+  updatedHtml = updatedHtml.replace(
+    /font-family:\s*[^;]+;?/gi,
+    `font-family: ${themeFont};`
+  );
+
+  // Add theme color if no color style exists
+  if (!/color:\s*/i.test(updatedHtml)) {
+    updatedHtml = updatedHtml.replace(
+      /(<[^>]*style\s*=\s*"[^"]*?)(")/gi,
+      `$1; color: ${themeColor};$2`
+    );
+    
+    // If no style attribute exists at all, add one to span elements
+    if (!/style\s*=/i.test(updatedHtml)) {
+      updatedHtml = updatedHtml.replace(
+        /<span(?![^>]*style)/gi,
+        `<span style="color: ${themeColor}; font-family: ${themeFont};"`
+      );
+    }
+  }
+
+  // Add theme font if no font-family style exists
+  if (!/font-family:\s*/i.test(updatedHtml)) {
+    updatedHtml = updatedHtml.replace(
+      /(<[^>]*style\s*=\s*"[^"]*?)(")/gi,
+      `$1; font-family: ${themeFont};$2`
+    );
+  }
+
+  return updatedHtml;
+}
+
+// Function to apply theme colors and fonts to data recursively
+function applyThemeToData(
+  data: any, 
+  getColor: (colorName: string) => string,
+  getFont: (fontType: string) => string
+): any {
   if (!data || typeof data !== 'object') return data;
 
   if (Array.isArray(data)) {
-    return data.map(item => applyThemeToData(item, getColor));
+    return data.map(item => applyThemeToData(item, getColor, getFont));
   }
 
   const result: any = {};
   
   for (const [key, value] of Object.entries(data)) {
     if (typeof value === 'object' && value !== null) {
-      result[key] = applyThemeToData(value, getColor);
-    } else if (typeof value === 'string' && key in COLOR_MAPPINGS) {
+      result[key] = applyThemeToData(value, getColor, getFont);
+    } else if (typeof value === 'string') {
+      // Handle text property with HTML content based on type
+      if (key === 'text' && data.type && (data.type === 'heading' || data.type === 'body')) {
+        result[key] = applyThemeToHtmlText(value, data.type, getColor, getFont);
+      }
       // Apply theme color if this is a color property
-      const colorType = COLOR_MAPPINGS[key as keyof typeof COLOR_MAPPINGS];
-      result[key] = getColor(colorType);
+      else if (key in COLOR_MAPPINGS) {
+        const colorType = COLOR_MAPPINGS[key as keyof typeof COLOR_MAPPINGS];
+        result[key] = getColor(colorType);
+      }
+      // Apply theme font if this is a font property
+      else if (key in FONT_MAPPINGS) {
+        const fontType = FONT_MAPPINGS[key as keyof typeof FONT_MAPPINGS];
+        result[key] = getFont(fontType);
+      }
+      // Keep original value for non-theme properties
+      else {
+        result[key] = value;
+      }
     } else {
       result[key] = value;
     }
@@ -65,7 +154,7 @@ function ClientInner({ isEdit }: { isEdit: boolean }) {
   const { sitePath } = useParams();
   const resolvedSitePath = Array.isArray(sitePath) ? sitePath.join("/") : sitePath || "";
   
-  const { currentTheme, getColor } = useBrand();
+  const { currentTheme, getColor, getFont } = useBrand();
 
   // Fetch site data
   useEffect(() => {
@@ -100,7 +189,7 @@ function ClientInner({ isEdit }: { isEdit: boolean }) {
     if (previousThemeId !== null && previousThemeId !== currentTheme.id) {
       const themedData = {
         ...originalData,
-        content: applyThemeToData(originalData.content, getColor)
+        content: applyThemeToData(originalData.content, getColor, getFont)
       };
 
       setSiteData(themedData);
@@ -109,7 +198,7 @@ function ClientInner({ isEdit }: { isEdit: boolean }) {
     
     // Update the previous theme ID
     setPreviousThemeId(currentTheme.id);
-  }, [currentTheme.id, originalData, getColor, previousThemeId]);
+  }, [currentTheme.id, originalData, getColor, getFont, previousThemeId]);
 
   // Update metadata
   useEffect(() => {

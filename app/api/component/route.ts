@@ -36,11 +36,23 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { name, description, image, content, zones } = body;
+    const { name, description, image, content, zones, category, subCategory } = body;
 
     if (!name) {
       return NextResponse.json(
         { error: "Component name is required" },
+        { status: 400 }
+      );
+    }
+    if (!category) {
+      return NextResponse.json(
+        { error: "Component category is required" },
+        { status: 400 }
+      );
+    }
+    if (!subCategory) {
+      return NextResponse.json(
+        { error: "Component Sub-category is required" },
         { status: 400 }
       );
     }
@@ -57,6 +69,8 @@ export async function POST(req: NextRequest) {
         name,
         description: description || "",
         Image: image || "",
+        category,
+        subCategory,
         content,
         zones,
       },

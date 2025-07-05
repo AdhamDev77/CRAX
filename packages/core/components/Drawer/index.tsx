@@ -77,6 +77,7 @@ const DrawerItem = ({
   primary,
   index,
   isDragDisabled,
+  isDbComponent,
   preview,
 }: {
   name: string;
@@ -92,6 +93,7 @@ const DrawerItem = ({
   icon?: React.ReactNode;
   index: number;
   isDragDisabled?: boolean;
+  isDbComponent?: boolean;
   preview?: React.ReactNode | ((props: any) => React.ReactNode);
 }) => {
   const ctx = useContext(drawerContext);
@@ -102,6 +104,7 @@ const DrawerItem = ({
   const [calculatedHeight, setCalculatedHeight] = useState<number | null>(null);
   const [calculatedScale, setCalculatedScale] = useState<number | null>(null);
   const resolvedId = `${ctx.droppableId}::${id || name}`;
+
 
   // Get brand identity (colors, etc.) from context if available
   const brand = {};

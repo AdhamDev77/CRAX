@@ -2,15 +2,22 @@ import { useComponentList } from "../../../../lib/use-component-list";
 import { useComponentListSearch } from "../../../../lib/use-component-list-search";
 import { useAppContext } from "../../context";
 import { ComponentList } from "../../../ComponentList";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { Search } from "lucide-react";
 
 export const Components = ({ type }: { type: string }) => {
   const { config, state, overrides } = useAppContext();
-  const { componentList } = useComponentList(config, state.ui, type);
+  const { componentList, dbComponentMap } = useComponentList(config, state.ui, type);
   const { componentListSearch, searchQuery, setSearchQuery } =
     useComponentListSearch(config, state.ui, type);
   const Wrapper = useMemo(() => overrides.components || "div", [overrides]);
+
+  // Expose dbComponentMap globally for drag-and-drop support
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      (window as any).__dbComponentMap = dbComponentMap;
+    }
+  }, [dbComponentMap]);
 
   // Determine what to render based on search query
   const hasSearchQuery = searchQuery.trim().length > 0;

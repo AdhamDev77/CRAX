@@ -14,6 +14,7 @@ export interface LoadLayoutAction {
   data: {
     content: any;
     zones?: any;
+    destination?: number;
   };
 }
 

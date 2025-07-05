@@ -5,14 +5,27 @@ import { useAppContext } from "../../context";
 import AutoFrame, { autoFrameContext } from "../../../AutoFrame";
 import styles from "./styles.module.css";
 import { getClassNameFactory } from "../../../../lib";
-import { insertComponent } from "../../../../lib/insert-component";
 import axios from "axios";
+import { useBrand } from '../BrandSidebar';
+import { ComponentPreview, applyThemeToData } from '../ComponentPreview';
+import { SectionsPreviewModal } from '../SectionsSidebar'; // Import the new modal
 
 const getClassName = getClassNameFactory("PuckPreview", styles);
 
+interface Section {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  subCategory?: string;
+  content: any;
+  zones?: any;
+  thumbnail?: string;
+}
+
 export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
-  const { config, dispatch, state, setStatus, iframe, overrides, resolveData } =
-    useAppContext();
+  const { config, dispatch, state, setStatus, iframe, overrides } = useAppContext();
+  const { getColor, getFont } = useBrand();
 
   const Page = useCallback<React.FC<any>>(
     (pageProps) =>
@@ -28,21 +41,57 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
   const rootProps = state.data.root.props || state.data.root;
 
   // Modal & Data states
-  const [open, setOpen] = useState(false);
-  const [components, setComponents] = useState<Array<any>>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [sections, setSections] = useState<Section[]>([]);
   const [loading, setLoading] = useState(false);
 
   const handleAddSectionClick = async () => {
-    setOpen(true); // show popup
-    setLoading(true); // show loader
+    setIsModalOpen(true);
+    setLoading(true);
     try {
-      const { data } = await axios.get("/api/component"); // Fetch available components
-      setComponents(data); // Save to state
+      const { data } = await axios.get("/api/component");
+      // Transform the data to match our Section interface
+      const transformedSections: Section[] = data.map((comp: any, index: number) => ({
+        id: comp.id || `section-${index}`,
+        name: comp.name || 'Untitled Section',
+        description: comp.description || 'No description available',
+        category: comp.category || 'Other',
+        subCategory: comp.subCategory,
+        content: comp.content,
+        zones: comp.zones,
+        thumbnail: comp.thumbnail
+      }));
+      setSections(transformedSections);
     } catch (error) {
-      console.error(error);
+      console.error('Error fetching sections:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSectionSelect = (section: Section) => {
+    // Apply theme to the section before dispatching
+    const themedSection = {
+      ...section,
+      content: applyThemeToData(section.content, getColor, getFont),
+      zones: section.zones ? applyThemeToData(section.zones, getColor, getFont) : section.zones
+    };
+
+    dispatch({
+      type: "loadLayout",
+      data: {
+        content: [
+          ...(state.data.content || []),
+          themedSection.content,
+        ],
+        zones: {
+          ...state.data.zones,
+          ...themedSection.zones,
+        },
+      },
+    });
+
+    setIsModalOpen(false);
   };
 
   return (
@@ -81,17 +130,17 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
               }}
             </autoFrameContext.Consumer>
 
-            {/* Add Section Button */}
+            {/* Enhanced Add Section Button */}
             <div className="w-full group/add-section">
               <div className="border-t border-b border-gray-300/60 py-8 px-4 hover:bg-gray-50/30 transition-colors duration-200">
                 <button
                   onClick={handleAddSectionClick}
-                  className="w-full max-w-[300px] mx-auto px-4 py-3 bg-white text-gray-800 font-medium rounded-lg flex flex-col items-center justify-center gap-1 border border-gray-300/80 hover:border-indigo-400 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                  className="w-full max-w-[300px] mx-auto px-6 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium rounded-xl flex flex-col items-center justify-center gap-2 hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transform hover:scale-105 transition-all duration-200"
                 >
-                  <div className="p-2 text-indigo-600 group-hover/add-section:text-indigo-700 transition-colors">
+                  <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="h-8 w-8"
+                      className="h-6 w-6"
                       viewBox="0 0 20 20"
                       fill="currentColor"
                     >
@@ -102,9 +151,9 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
                       />
                     </svg>
                   </div>
-                  <span className="text-lg font-normal">Add Section</span>
-                  <span className="text-xs text-gray-500 font-normal mt-1">
-                    Click to insert
+                  <span className="text-lg font-semibold">Add Section</span>
+                  <span className="text-sm text-white/80">
+                    Browse our section library
                   </span>
                 </button>
               </div>
@@ -123,58 +172,14 @@ export const Preview = ({ id = "puck-preview" }: { id?: string }) => {
         </div>
       )}
 
-      {/* Modal */}
-      {open && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl p-6 w-full h-full overflow-auto relative shadow-xl">
-            <button
-              onClick={() => setOpen(false)}
-              className="absolute top-2 right-2 text-2xl font-bold"
-            >
-              &times;
-            </button>
-            <h2 className="text-xl mb-4 font-semibold">Choose a Section</h2>
-
-            {loading ? (
-              <div>Loading components…</div>
-            ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-2 gap-4">
-                {components.map((comp, i) => (
-                  <div
-                    key={i}
-                    className="border p-2 rounded-lg hover:shadow cursor-pointer"
-                    onClick={() => {
-                      dispatch({
-                        type: "loadLayout",
-                        data: {
-                          content: [
-                            ...(state.data.content || []),
-                            comp.content,
-                          ],
-                          zones: {
-                            ...state.data.zones,
-                            ...comp.zones,
-                          },
-                        },
-                      });
-
-                      setOpen(false);
-                    }}
-                  >
-                    <img
-                      src={comp.Image}
-                      alt={comp.name}
-                      className="w-full object-cover mb-2 rounded"
-                    />
-                    <h3 className="font-medium text-gray-800">{comp.name}</h3>
-                    <p className="text-sm text-gray-500">{comp.description}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      {/* New Sections Preview Modal */}
+      <SectionsPreviewModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        sections={sections}
+        onSectionSelect={handleSectionSelect}
+        loading={loading}
+      />
     </div>
   );
 };

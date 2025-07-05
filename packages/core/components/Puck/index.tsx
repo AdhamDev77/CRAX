@@ -7,7 +7,10 @@ import {
   useReducer,
   useState,
 } from "react";
-import { DragStart, DragUpdate } from "@measured/dnd";
+import {
+  DragStart,
+  DragUpdate,
+} from "../../../../node_modules/@measured/dnd/dist/dnd";
 import type {
   UiState,
   IframeConfig,
@@ -545,45 +548,103 @@ export function Puck<
             <DragDropContext
               autoScrollerOptions={{ disabled: false }}
               onDragUpdate={(update) => {
+                console.log("update", update);
                 setDraggedItem({ ...draggedItem, ...update });
                 onDragStartOrUpdate(update);
               }}
               onBeforeDragStart={(start) => {
+                console.log("start", start);
                 onDragStartOrUpdate(start);
                 setItemSelector(null);
                 dispatch({ type: "setUi", ui: { isDragging: true } });
               }}
-              onDragEnd={(droppedItem) => {
+              onDragEnd={async (droppedItem) => {
                 if (editSection !== "content" && editSection !== "style") {
                   setActiveEditSection("content");
                 }
                 setDraggedItem(undefined);
                 dispatch({ type: "setUi", ui: { isDragging: false } });
-
+                
                 // User cancel drag
                 if (!droppedItem.destination) {
                   return;
                 }
-
+                
                 // New component
                 if (
                   droppedItem.source.droppableId.startsWith("component-list") &&
                   droppedItem.destination
                 ) {
-                  const [_, componentType] =
-                    droppedItem.draggableId.split("::");
-
-                  insertComponent(
-                    componentType || droppedItem.draggableId,
-                    droppedItem.destination.droppableId,
-                    droppedItem.destination!.index,
-                    { config, dispatch, resolveData, state: appState }
-                  );
-
+                  const [_, componentType] = droppedItem.draggableId.split("::");
+                  console.log(droppedItem)
+                  // Check if componentType starts with "db_"
+                  if (componentType && componentType.startsWith("db_")) {
+                    // Extract component ID by removing "db_" prefix
+                    const componentId = componentType.substring(3);
+                    
+                    try {
+                      // Make API call to fetch component data
+                      const response = await fetch(`/api/component/${componentId}`, {
+                        method: "GET",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                      });
+              
+                      if (!response.ok) {
+                        throw new Error(`Failed to fetch component: ${response.status}`);
+                      }
+              
+                      const dbComponentData = await response.json();
+              
+                      // Ensure content is an array and zones is an object
+                      const content = Array.isArray(dbComponentData.content) ? dbComponentData.content : [dbComponentData.content];
+                      const zones = dbComponentData.zones && typeof dbComponentData.zones === 'object' ? dbComponentData.zones : {};
+              
+                      // Debug logging to understand the structure
+                      console.log("DB Component Data:", dbComponentData);
+                      console.log("Content:", content);
+                      console.log("Zones:", zones);
+              
+                      // Dispatch the loaded layout with fetched data
+                      dispatch({
+                        type: "loadLayout",
+                        data: {
+                          content: [
+                            ...(appState.data.content || []),
+                            ...content,
+                          ],
+                          zones: {
+                            ...appState.data.zones,
+                            ...zones,
+                          },
+                          destination: droppedItem.destination.index,
+                        },
+                
+                      });
+                    } catch (error) {
+                      console.error("Failed to fetch DB component data:", error);
+                      // Fallback to inserting as regular component
+                      insertComponent(
+                        componentType || droppedItem.draggableId,
+                        droppedItem.destination.droppableId,
+                        droppedItem.destination.index,
+                        { config, dispatch, resolveData, state: appState }
+                      );
+                    }
+                  } else {
+                    // Regular component insertion
+                    insertComponent(
+                      componentType || droppedItem.draggableId,
+                      droppedItem.destination.droppableId,
+                      droppedItem.destination.index,
+                      { config, dispatch, resolveData, state: appState }
+                    );
+                  }
                   return;
                 } else {
+                  // Moving/reordering existing components
                   const { source, destination } = droppedItem;
-
                   if (source.droppableId === destination.droppableId) {
                     dispatch({
                       type: "reorder",
@@ -600,15 +661,12 @@ export function Puck<
                       destinationZone: destination.droppableId,
                     });
                   }
-
                   setItemSelector({
                     index: destination.index,
                     zone: destination.droppableId,
                   });
                 }
-              }
-            
-            }
+              }}
             >
               <DropZoneProvider
                 value={{
@@ -671,23 +729,44 @@ export function Puck<
                                         className={`
                                           flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm
                                           transition-all duration-200 
-                                          ${leftSideBarVisible 
-                                            ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300' 
-                                            : 'bg-blue-600 text-white hover:bg-blue-700'
+                                          ${
+                                            leftSideBarVisible
+                                              ? "bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300"
+                                              : "bg-blue-600 text-white hover:bg-blue-700"
                                           }
                                         `}
                                       >
                                         {leftSideBarVisible ? (
                                           <>
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                            <svg
+                                              className="w-4 h-4"
+                                              fill="none"
+                                              stroke="currentColor"
+                                              viewBox="0 0 24 24"
+                                            >
+                                              <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M6 18L18 6M6 6l12 12"
+                                              />
                                             </svg>
                                             Hide Components
                                           </>
                                         ) : (
                                           <>
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                            <svg
+                                              className="w-4 h-4"
+                                              fill="none"
+                                              stroke="currentColor"
+                                              viewBox="0 0 24 24"
+                                            >
+                                              <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                              />
                                             </svg>
                                             Add Components
                                           </>
@@ -810,7 +889,6 @@ export function Puck<
                                 value as "elements" | "components" | "sections"
                               )
                             }
-                           
                           />
                           <SidebarSection title="Components" noBorderTop>
                             <Components type={activeComponent} />
@@ -839,7 +917,10 @@ export function Puck<
                               }
                             />
                             {editSection === "global" && (
-                              <BrandSidebar open={showBrandIdentity} onClose={() => setShowBrandIdentity(false)} />
+                              <BrandSidebar
+                                open={showBrandIdentity}
+                                onClose={() => setShowBrandIdentity(false)}
+                              />
                             )}
 
                             <Fields type={editSection} />
